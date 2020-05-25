@@ -30,7 +30,34 @@ const Firebase = {
       .collection("users")
       .doc(`${userData.uid}`)
       .set(userData);
-  }
+  },
+  uid: () => {
+    return (firebase.auth().currentUser || {}).uid;
+  },
+  ref: messagesRef => {
+    return firebase.database().ref(messagesRef);
+  },
+  parse: snapshot => {
+    const { timestamp: numberStamp, text, user } = snapshot.val();
+    const { key: _id } = snapshot;
+    const timestamp = new Date(numberStamp);
+    const message = {
+      _id,
+      timestamp,
+      text,
+      user,
+    };
+    return message;
+  },
+  on: callback => {
+    this.ref
+      .limitToLast(20)
+      .on('child_added', snapshot => callback(this.parse(snapshot)))
+  },
+  timestamp: () => {
+    return firebase.database.ServerValue.TIMESTAMP;
+  },
+  
 };
 
 export default Firebase;

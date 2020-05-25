@@ -13,12 +13,36 @@ function Home({ navigation, firebase }) {
     }
   }
 
+  function goToUpload() {
+    navigation.navigate("Upload");
+  }
+
+  function goToChat() {
+    navigation.navigate("Chat", { name: "John Cena" } );
+  }
+
   return (
     <View style={styles.container}>
       <Text>Home</Text>
       <Button
         title="Signout"
         onPress={handleSignout}
+        titleStyle={{
+          color: "#F57C00"
+        }}
+        type="clear"
+      />
+      <Button
+        title="Upload"
+        onPress={goToUpload}
+        titleStyle={{
+          color: "#F57C00"
+        }}
+        type="clear"
+      />
+      <Button
+        title="Chat"
+        onPress={goToChat}
         titleStyle={{
           color: "#F57C00"
         }}
