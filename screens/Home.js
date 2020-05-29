@@ -18,7 +18,9 @@ function Home({ navigation, firebase }) {
   }
 
   function goToChat() {
-    navigation.navigate("Chat", { name: "John Cena" } );
+    let data = {"yolo": true}
+    firebase.pushToFirestore(data);
+    // navigation.navigate("Chat", { name: "John Cena" } );
   }
 
   return (
