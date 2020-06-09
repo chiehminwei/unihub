@@ -2,6 +2,11 @@ import * as firebase from "firebase";
 import "firebase/auth";
 import "firebase/firestore";
 import firebaseConfig from "./firebaseConfig";
+import Item from "./data/item";
+import Favorite from "./data/favorite";
+import History from "./data/history";
+import User from "./data/users";
+import UserPublic from "./data/user_public";
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -31,9 +36,11 @@ const Firebase = {
       .doc(`${userData.uid}`)
       .set(userData);
   },
-  
-
- 
+  ...Item, 
+  ...Favorite,
+  ...History,
+  ...User,
+  ...UserPublic
 
 };
 

@@ -1,17 +1,10 @@
-import React from "react";
+import * as React from 'react';
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
 import { withFirebaseHOC } from "../config/Firebase";
 
-function Home({ navigation, firebase }) {
-  async function handleSignout() {
-    try {
-      await firebase.signOut();
-      navigation.navigate("Auth");
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
+function SearchResultsScreen({ navigation, firebase }) {
 
   function goToItemDetail() {
     navigation.navigate("ItemDetail");
@@ -23,7 +16,7 @@ function Home({ navigation, firebase }) {
 
   return (
     <View style={styles.container}>
-      <Text>Home</Text>
+      <Text>Search Results!</Text>
       <Button
         title="Item Detail"
         onPress={goToItemDetail}
@@ -53,4 +46,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default withFirebaseHOC(Home);
+export default withFirebaseHOC(SearchResultsScreen);

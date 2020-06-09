@@ -5,9 +5,6 @@ import * as firebase from "firebase";
 
 
 class Chat extends React.Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: (navigation.state.params.name || {}).name || 'Chat!',
-  });
 
   state = {
     messages: [],
@@ -15,7 +12,7 @@ class Chat extends React.Component {
 
   get user() {
     return {
-      name: this.props.navigation.state.params.name,
+      name: this.props.route.params.name,
       _id: this.uid,
     };
   }
@@ -69,12 +66,17 @@ class Chat extends React.Component {
     this.ref.off();
   }
 
+  goToUserProfile = user => {
+    this.props.navigation.navigate("SellerProfile");
+  }
+
   render() {
     return (
       <GiftedChat
         messages={this.state.messages}
         onSend={this.send}
         user={this.user}
+        onPressAvatar={this.goToUserProfile}
       />
     );
   }
