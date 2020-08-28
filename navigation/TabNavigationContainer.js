@@ -17,7 +17,8 @@ import ChatScreen from '../screens/Chat';
 
 import PostStackScreen from '../screens/Upload';
 
-
+// import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Icon, withBadge } from 'react-native-elements';
 
 const HomeStack = createStackNavigator();
 
@@ -91,11 +92,52 @@ const Tab = createBottomTabNavigator();
 export default function AppContainer() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="History" component={HistoryStackScreen} />
-        <Tab.Screen name="Post" component={PostStackScreen} />
-        <Tab.Screen name="Chat" component={ChatStackScreen} />
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+
+            if (route.name === 'Home') {
+              iconName = 'home'
+            } else if (route.name === 'Group') {
+              iconName = 'group';
+            } else if (route.name === 'Message') {
+              iconName = 'message';
+            } else if (route.name === 'Favorite') {
+              iconName = 'favorite';
+            } else if (route.name === 'Profile') {
+              iconName = 'account-circle';
+            }
+
+            const hasNotification = route.name === 'Favorite';
+            const BadgedIcon = withBadge(1)(Icon);
+
+            if (!hasNotification) {
+              return (
+                <Icon
+                  name={iconName}
+                  color={color}
+                  size={size}
+                  onPress={() => console.log('hello')} />)
+            }
+
+            return (
+              <BadgedIcon
+                name={iconName}
+                color={color}
+                size={size}
+                onPress={() => console.log('hello')} />)
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}
+      >
+        <Tab.Screen name="Home" component={HomeStackScreen} options={{ tabBarBadge: 3 }} />
+        <Tab.Screen name="Group" component={HistoryStackScreen} />
+        <Tab.Screen name="Message" component={PostStackScreen} />
+        <Tab.Screen name="Favorite" component={ChatStackScreen} />
         <Tab.Screen name="Profile" component={ProfileStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>
