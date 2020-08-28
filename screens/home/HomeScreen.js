@@ -2,30 +2,32 @@ import React, { Component } from 'react';
 import { Text, View, StatusBar, TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '../../stylesheets/screenStyles';
-import SwitchIcon from '../../components/tools/SwitchIcon';
-import {styles} from '../../stylesheets/styles';
+import { styles } from '../../stylesheets/styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Search from '../../components/tools/Search';
-import SwitchContent from '../../components/tools/SwitchContent';
-
+import Search from '../../components/Search';
+import MapView from '../../components/MapView';
+import EventList from '../../components/lists/EventList';
 
 
 export class HomeScreen extends Component {
   constructor(){
     super()
     this.state = {
-      ismap : true
+      isMap : false,
+      iconName: 'navigation',
     }
-
-    this.changeType = this.changeType.bind(this)
   }
 
-  changeType (ismap) {
-    this.setState({ismap: ismap}) // left this.state.ismap right updated ismap from childs
+  changeType = () => {
+    let { isMap } = this.state;
+    isMap = !isMap;
+    const iconName = isMap ? 'navigation' : 'format-list-bulleted';
+    this.setState({ isMap, iconName });
   }
 
   render() {
     const { navigation } = this.props;
+    const { isMap, iconName } = this.state;
     
     return (
       <SafeAreaView style={screenStyles.safeArea} edges={['right','top','left']}>
@@ -59,11 +61,10 @@ export class HomeScreen extends Component {
               <View style={{flex:1,marginLeft:20}}>
                 <Search/>
               </View>
-              <View style={{marginLeft:20,marginRight:20}}>
-              <SwitchIcon
-                ismap = {this.state.ismap}
-                changeType = {this.changeType}
-              />
+              <View style={{marginLeft:20, marginRight:20}}>
+              <TouchableOpacity onPress={ this.changeType }>
+                <MaterialCommunityIcons name={ iconName } size={25} />
+              </TouchableOpacity>
               </View>
               <TouchableOpacity
                 style={{marginRight:20}}
@@ -77,7 +78,9 @@ export class HomeScreen extends Component {
 
 
         <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6}}>
-          <SwitchContent ismap={this.state.ismap}/>
+          <View style={{ flex: 1 }}>
+            { isMap ? <MapView/> : <EventList/> }
+          </View>
         </View>
           
         </View>

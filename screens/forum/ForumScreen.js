@@ -2,9 +2,9 @@ import React from 'react';
 import { Text, View, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '../../stylesheets/screenStyles';
-import { ForumTabNavigator } from '../../Navigators/ForumTabNavigator'
-// Import Header for HomeScreen
-import { ForumScreenHeader } from '../../components/screen_headers/ForumScreenHeader'
+import { ForumTabNavigator } from '../../navigation/ForumTabNavigator'
+import { ForumScreenHeader } from '../../components/headers/ForumScreenHeader'
+
 
 export function ForumScreen() {
   return (

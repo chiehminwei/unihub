@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import { Text, View } from 'react-native';
-import { ThreadContent } from '../../components/Lists/ThreadContent';
-import { GroupContent }  from '../../components/Lists/GroupContent';
-// import MapView from 'react-native-maps';
-
+import { ThreadList } from '../../components/lists/ThreadList';
+import { GroupList }  from '../../components/lists/GroupList';
 
 
 class DiscoverScreen extends Component{
@@ -14,4 +12,3 @@ class DiscoverScreen extends Component{
   }
 };
 export default DiscoverScreen;
-// export default SwitchContent;

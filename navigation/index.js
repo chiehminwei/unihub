@@ -3,7 +3,7 @@
 // import AuthNavigation from "./AuthNavigation";
 // import AppNavigation from "./AppNavigation";
 
-import AppContainer from "./TabNavigationContainer"
+import AppContainer from "./HomeAppTabNavigator";
 
 // const SwitchNavigator = createSwitchNavigator(
 //   {

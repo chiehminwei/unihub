@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '../../stylesheets/screenStyles'
 
 // Import Header for HomeScreen
-import { NotificationScreenHeader } from '../../components/screen_headers/NotificationScreenHeader'
+import { NotificationScreenHeader } from '../../components/headers/NotificationScreenHeader'
 
 export function NotificationScreen() {
   return (

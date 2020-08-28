@@ -6,14 +6,14 @@ import { ChatScreen } from '../screens/chat/ChatScreen';
 import { NotificationScreen } from '../screens/notification/NotificationScreen';
 
 // Navigators import
-import { ForumStackScreen } from '../Navigators/ForumStackScreen';
-import { HomeStackScreen } from '../Navigators/HomeStackScreen';
+import { ForumStackScreen } from './ForumStackScreen';
+import { HomeStackScreen } from './HomeStackScreen';
 import { ProfileDrawerNavigator } from './ProfileDrawerNavigator';
 
 const Tab = createBottomTabNavigator();
 
 
-export function HomeAppTabNavigator(){
+export default function HomeAppTabNavigator(){
   return(
     <Tab.Navigator
           screenOptions={({ route }) => ({
