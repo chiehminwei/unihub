@@ -16,18 +16,18 @@ export function ForumScreenHeader() {
           textAlign: 'center', 
       }}
     >
-      <View style={styles.forumheader}>
-        <Text style={styles.browse}>Forum</Text>
-          <TouchableOpacity
-            style={styles.search}
-            onPress={() => navigation.navigate('Search')}>
+      <View style={{flexDirection:'row', flex:1,justifyContent:'space-between',alignItems:'center'}}>
+        <Text style={styles.forum}> Forum </Text>
+        <TouchableOpacity
+          style={styles.search}
+          onPress={() => navigation.navigate('Search')}>
             <MaterialIcons name="search" size={30} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.plus}
-            onPress={() => navigation.navigate('CreateGroup')}>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.creategroup}
+          onPress={() => navigation.navigate('CreateGroup')}>
             <MaterialCommunityIcons name="plus-circle" size={30} />
-          </TouchableOpacity>
+        </TouchableOpacity>
       </View>
     </View>
   );

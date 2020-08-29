@@ -21,41 +21,45 @@ export const styles = StyleSheet.create({
             },
           // homescreen icon styles
           calendar: {
-              position: 'absolute',
-              bottom: 10,
-              left: 15,
+               marginLeft:20
             },
           filter: {
-              position: 'absolute',
-              bottom: 10,
-              right: 20,
+              marginRight:20
             },
           map: {
-              position: 'absolute',
-              bottom: 10,
-              right: 55,
+              marginLeft:20, 
+              marginRight:20
             },
-          // plus: {
-          //     position: 'absolute',
-          //     top: 20,
-          //     right: 20,
-          //   },
+          plus: {
+              marginRight:20
+            },
           homesearch: {
-              marginLeft: 20,
-              height:5,
+              flex:1,
+              marginLeft:20
             },
           
     // forumscreen styles
+    forum:{
+        color: '#121212',
+        marginLeft: 15,
+        fontSize: 36,
+        flex: 7
+    },
+
     search: {
-        position: 'absolute',
-        top: 20,
-        right: 50,
+        flex:1
       },
+
+    creategroup:{
+        flex:1,
+        marginRight:20
+    },
     
     forumheader: {
         flex: 1,
         backgroundColor: '#F3F3F3',
       },
+    
     
 
     // notificationscreen styles
@@ -77,10 +81,8 @@ export const styles = StyleSheet.create({
       }, 
 
     name: {
-        flex:4,
         color: '#121212',
         alignSelf: 'center',
-        marginTop:15,
         fontSize: 24,
       },
     

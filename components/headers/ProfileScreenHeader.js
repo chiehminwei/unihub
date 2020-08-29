@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text, Image } from 'react-native';
 import { styles } from '../../stylesheets/styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -16,16 +16,19 @@ export function ProfileScreenHeader() {
           textAlign: 'center', 
       }}
     >
-      <View style={{flexDirection:'row'},styles.nameheader}>
+      <View style={{flexDirection:'row', flex:1,alignItems:'center',margin:10}}>
             <View
-            style={{height:25, flex:1,widith:25, backgroundColor:'black'}}>
+            style={{height:70,width:70, flex:1.5, backgroundColor:'black',marginLeft:40,borderRadius:50}}>
             </View>
-            <TouchableOpacity
-            style={styles.calendar}
-            onPress={() => navigation.openDrawer()}>
-            <MaterialCommunityIcons name="menu" size={25} />
-          </TouchableOpacity>
-            <Text style={styles.name}>Yufan Wang</Text> 
+            <View style={{flex:7}}>
+              <Text style={styles.name} >Yufan Wang</Text> 
+            </View>
+            <View style={{flex:1, alignItems:'flex-end',marginRight:15}}> 
+              <TouchableOpacity
+              onPress={() => navigation.openDrawer()}>
+              <MaterialCommunityIcons name="menu" size={30} />
+              </TouchableOpacity>
+            </View>
       </View>
     </View>
   );

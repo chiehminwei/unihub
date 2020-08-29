@@ -17,11 +17,11 @@ class Search extends React.Component {
         placeholder="Search Here..."
         onChangeText={this.updateSearch}
         round
-        containerStyle = {{ padding:0,backgroundColor:'#F3F3F3',  borderBottomColor: 'transparent', borderTopColor: 'transparent',borderRadius:'20',alignItems:'center', justifyContent:'center' }}
-        inputContainerStyle ={{ backgroundColor:'white',alignItems:'center', justifyContent:'center', borderRadius:'20',Height: 12, minHeight: 10}}
+        containerStyle = {{ padding:0,backgroundColor:'#F3F3F3',  borderBottomColor: 'transparent', borderTopColor: 'transparent', borderRadius:20, alignItems:'center', justifyContent:'center' }}
+        inputContainerStyle ={{ backgroundColor:'white',alignItems:'center', justifyContent:'center', borderRadius:20, height:30, minHeight:20}}
         value={search}
       />
     );
   }
 }
-export default Search;
+export default Search; 

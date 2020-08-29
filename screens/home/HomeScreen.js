@@ -3,10 +3,11 @@ import { Text, View, StatusBar, TouchableOpacity} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '../../stylesheets/screenStyles';
 import { styles } from '../../stylesheets/styles';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { NaviButton } from '../../components/button/NaviButton';
 import Search from '../../components/Search';
 import MapView from '../../components/MapView';
 import EventList from '../../components/lists/EventList';
+
 
 
 export class HomeScreen extends Component {
@@ -39,38 +40,33 @@ export class HomeScreen extends Component {
               backgroundColor: '#F3F3F3', 
               alignSelf: 'stretch', 
               textAlign: 'center', 
-          }}
-        >
+          }}>
           <View style={styles.homeheader}>
             <View style={{flexDirection:'row',flex:1, justifyContent:'space-between',alignItems:'center'}}>
-              
-                <Text style={styles.browse}>Browse</Text>
-              
-                <TouchableOpacity
-                  style={{marginRight:20}}
-                  onPress={() => navigation.navigate('Create')}>
-                      <MaterialCommunityIcons name="plus-box" size={30} />
-                </TouchableOpacity>
+              <Text style={styles.browse}>Browse</Text>
+              <NaviButton onPress={() => navigation.navigate('Create')} 
+                          iconName='plus-box' 
+                          style={styles.plus} 
+                          size={30}/>
             </View>
-            <View style={{flexDirection:'row',flex:1, justifyContent:'space-between',alignItems:'center'}}>
-              <TouchableOpacity
-                style={{marginLeft:20}}
-                onPress={() => navigation.navigate('Calendar')}>
-                <MaterialCommunityIcons name="calendar" size={25} />
-              </TouchableOpacity>
-              <View style={{flex:1,marginLeft:20}}>
+            <View style={{flexDirection:'row',flex:1, 
+                          justifyContent:'space-between',
+                          alignItems:'center'}}>
+              <NaviButton onPress={() => navigation.navigate('Planner')} 
+                          iconName='calendar' 
+                          style={styles.calendar} 
+                          size={25}/>
+              <View style={styles.homesearch}>
                 <Search/>
               </View>
-              <View style={{marginLeft:20, marginRight:20}}>
-              <TouchableOpacity onPress={ this.changeType }>
-                <MaterialCommunityIcons name={ iconName } size={25} />
-              </TouchableOpacity>
-              </View>
-              <TouchableOpacity
-                style={{marginRight:20}}
-                onPress={() => navigation.navigate('Filter')}>
-                <MaterialCommunityIcons name="filter" size={25} />
-              </TouchableOpacity>
+              <NaviButton onPress={this.changeType} 
+                          iconName={iconName} 
+                          style={styles.map}
+                          size={25}/>
+              <NaviButton onPress={() => navigation.navigate('Filter')} 
+                          iconName='filter' 
+                          style={styles.filter} 
+                          size={25}/>
             </View>
           </View>
         </View>
