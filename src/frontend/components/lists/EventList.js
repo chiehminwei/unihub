@@ -14,6 +14,7 @@ const events = [
     eventLocation: 'Online',
     eventID: 'U123',
     eventDate: 'Monday July 3',
+    uri: 'https://picsum.photos/700',
   },
   {
     eventName: 'GoGOGO',
@@ -24,17 +25,18 @@ const events = [
     eventLocation: "Tim's House",
     eventID: 'U234',
     eventDate: 'MONDAY JULY 3',
+    uri: 'https://picsum.photos/700',
   },
 ];
 
 
-export default function EventList() {
+export default function EventList({ navigation }) {
 
   return(
     <FlatList
       keyExtractor={ (item) => item.eventID }
       data = { events }
-      renderItem={({ item }) => <EventItem event={ item }/>}
+      renderItem={({ item }) => <EventItem navigation={ navigation } event={ item }/>}
     />
   )
 }

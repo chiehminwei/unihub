@@ -11,8 +11,8 @@ const Tag = ({ text }) => (
   <Text style={{ marginRight: 5, color: blue }}>{ text }</Text>
 )
 
-const EventItem = ({ event }) => (
-  <Card style={{ margin: 10, flex:1 }}>
+const EventItem = ({ event, navigation }) => (
+  <Card style={{ margin: 10, flex:1 }} onPress={ () => navigation.navigate('EventDetail') }>
     <Card.Content>
       <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
         <Text style={{ textTransform: 'uppercase' }}>{ event.eventDate }</Text>
@@ -33,15 +33,15 @@ const EventItem = ({ event }) => (
             { event.tags.map(tag => <Tag key={tag} text={tag}/>)}
           </View>
         </View>
-        <Image source={{uri: 'https://picsum.photos/700'}}
+        <Image source={{uri: event.uri }}
         style={{width: 100, height: 100}} />
       </View>
     </Card.Content>
     <Divider style={{ marginTop: 15 }}/>
     <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-      <Button icon="message-processing">{ event.numMessages}</Button>
-      <Button icon="run">{ event.numGoing}</Button>
-      <Button icon="share"/>
+      <Button onPress={ () => navigation.navigate('EventDetail') } icon="message-processing">{ event.numMessages}</Button>
+      <Button onPress={ () => navigation.navigate('EventDetail') } icon="run">{ event.numGoing}</Button>
+      <Button onPress={ () => navigation.navigate('EventDetail') } icon="share"/>
     </Card.Actions>
   </Card>
 );

@@ -5,6 +5,7 @@ import HomeScreen  from '~/screens/home/HomeScreen';
 import FilterScreen from '~/screens/home/FilterScreen';
 import PlannerScreen from '~/screens/home/PlannerScreen';
 import CreateEventScreen from '~/screens/home/CreateEventScreen';
+import EventDetailScreen from '~/screens/home/EventDetailScreen';
 
 
 const HomeStack = createStackNavigator();
@@ -16,6 +17,7 @@ export function HomeStackScreen() {
       <HomeStack.Screen name="Filter" component={FilterScreen} />
       <HomeStack.Screen name="Planner" component={PlannerScreen} />
       <HomeStack.Screen name="Create" component={CreateEventScreen} />
+      <HomeStack.Screen name="EventDetail" component={EventDetailScreen} />      
     </HomeStack.Navigator>
   );
 }

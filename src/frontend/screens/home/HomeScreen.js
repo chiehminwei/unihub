@@ -76,7 +76,7 @@ export default class HomeScreen extends Component {
 
         <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6}}>
           <View style={{ flex: 1 }}>
-            { isMap ? <MapView/> : <EventList/> }
+            { isMap ? <MapView/> : <EventList navigation={navigation}/> }
           </View>
         </View>
           
