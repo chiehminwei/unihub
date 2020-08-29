@@ -20,8 +20,8 @@ export class HomeScreen extends Component {
 
   changeType = () => {
     let { isMap } = this.state;
-    isMap = !isMap;
     const iconName = isMap ? 'navigation' : 'format-list-bulleted';
+    isMap = !isMap;    
     this.setState({ isMap, iconName });
   }
 
