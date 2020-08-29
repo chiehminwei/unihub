@@ -1,7 +1,7 @@
 import React from "react";
-import AppContainer from "./navigation";
+import AppContainer from "~/navigation";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Firebase, { FirebaseProvider } from "./config/Firebase";
+import Firebase, { FirebaseProvider } from "~/../firebase/config/Firebase";
 import { Provider as PaperProvider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 
