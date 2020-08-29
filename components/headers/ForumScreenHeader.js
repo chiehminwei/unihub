@@ -3,6 +3,7 @@ import { View,TouchableOpacity,Text } from 'react-native';
 import { styles } from '../../stylesheets/styles';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { NaviButton } from '../button/NaviButton';
 
 
 export function ForumScreenHeader() {
@@ -18,16 +19,17 @@ export function ForumScreenHeader() {
     >
       <View style={{flexDirection:'row', flex:1,justifyContent:'space-between',alignItems:'center'}}>
         <Text style={styles.forum}> Forum </Text>
-        <TouchableOpacity
-          style={styles.search}
-          onPress={() => navigation.navigate('Search')}>
-            <MaterialIcons name="search" size={30} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.creategroup}
-          onPress={() => navigation.navigate('CreateGroup')}>
-            <MaterialCommunityIcons name="plus-circle" size={30} />
-        </TouchableOpacity>
+        <NaviButton onPress={() => navigation.navigate('Search')}
+                    iconName='search'
+                    size={30}
+                    style={styles.search}
+                    iconFamily={'material'}/>
+        
+        <NaviButton onPress={() => navigation.navigate('CreateGroup')}
+                    iconName='plus-circle'
+                    size={30}
+                    style={styles.search}
+                    iconFamily={'materialCommunity'}/>
       </View>
     </View>
   );

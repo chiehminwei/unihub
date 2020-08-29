@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, Image } from 'react-native';
 import { styles } from '../../stylesheets/styles';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { NaviButton } from '../button/NaviButton';
 //********* User Name Update*************/
 
 export function ProfileScreenHeader() {
@@ -24,10 +25,10 @@ export function ProfileScreenHeader() {
               <Text style={styles.name} >Yufan Wang</Text> 
             </View>
             <View style={{flex:1, alignItems:'flex-end',marginRight:15}}> 
-              <TouchableOpacity
-              onPress={() => navigation.openDrawer()}>
-              <MaterialCommunityIcons name="menu" size={30} />
-              </TouchableOpacity>
+              <NaviButton onPress={() => navigation.openDrawer()}
+                    iconName='menu'
+                    size={30}
+                    iconFamily={'materialCommunity'}/>
             </View>
       </View>
     </View>

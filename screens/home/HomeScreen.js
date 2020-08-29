@@ -39,15 +39,15 @@ export class HomeScreen extends Component {
               flex: 1,
               backgroundColor: '#F3F3F3', 
               alignSelf: 'stretch', 
-              textAlign: 'center', 
-          }}>
+              textAlign: 'center', }}>
           <View style={styles.homeheader}>
             <View style={{flexDirection:'row',flex:1, justifyContent:'space-between',alignItems:'center'}}>
               <Text style={styles.browse}>Browse</Text>
               <NaviButton onPress={() => navigation.navigate('Create')} 
                           iconName='plus-box' 
                           style={styles.plus} 
-                          size={30}/>
+                          size={30}
+                          iconFamily={'materialCommunity'}/>
             </View>
             <View style={{flexDirection:'row',flex:1, 
                           justifyContent:'space-between',
@@ -55,23 +55,24 @@ export class HomeScreen extends Component {
               <NaviButton onPress={() => navigation.navigate('Planner')} 
                           iconName='calendar' 
                           style={styles.calendar} 
-                          size={25}/>
+                          size={25}
+                          iconFamily={'materialCommunity'}/>
               <View style={styles.homesearch}>
                 <Search/>
               </View>
               <NaviButton onPress={this.changeType} 
                           iconName={iconName} 
                           style={styles.map}
-                          size={25}/>
+                          size={25}
+                          iconFamily={'materialCommunity'}/>
               <NaviButton onPress={() => navigation.navigate('Filter')} 
                           iconName='filter' 
                           style={styles.filter} 
-                          size={25}/>
+                          size={25}
+                          iconFamily={'materialCommunity'}/>
             </View>
           </View>
         </View>
-
-
 
         <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6}}>
           <View style={{ flex: 1 }}>

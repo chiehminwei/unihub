@@ -9,12 +9,11 @@ export function DiscoverFriendScreen() {
     <View style={{ backgroundColor:'white', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>ProfileDetail</Text>
       <TouchableOpacity
-      onPress={() => navigation.openDrawer()}>
-        <Text>
-          Go back
-        </Text>
+        onPress={() => navigation.navigate('HomeApp')}>
+          <Text>
+            Go back
+          </Text>
       </TouchableOpacity>
-      
     </View>
   );
 }

@@ -1,13 +1,22 @@
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
-export function NaviButton({ onPress, iconName, style, size }){
+
+function Icon({ iconFamily, iconName, size }){
+  if (iconFamily === 'material')
+  return <MaterialIcons name={iconName} size={size} />
+  else if (iconFamily === 'materialCommunity')
+  return <MaterialCommunityIcons name={iconName} size={size} />
+}
+
+export function NaviButton({ onPress, iconName, style, size ,iconFamily}){
   return(
   <TouchableOpacity
     style={style}
     onPress={onPress}>
-      <MaterialCommunityIcons name={iconName} size={size} />
+      <Icon iconName={iconName} iconFamily={iconFamily} size={size}/>
   </TouchableOpacity>
   )
 }
+
