@@ -61,16 +61,6 @@ export default class MapContent extends Component {
     const sliderWidth = 1000;
     const itemWidth = 200;
     return (
-      <View style={styles.container}>
-        {/* <View style={{ height: 200}}>
-          <Carousel
-            layout={'default'}
-            data={this.state.events}
-            renderItem={({ item }) => <EventItem event={ item }/>}
-            sliderWidth={sliderWidth}
-            itemWidth={itemWidth}
-          />
-        </View> */}
         <MapView
           style={styles.mapStyle}
           initialRegion={{
@@ -82,13 +72,13 @@ export default class MapContent extends Component {
         >
           {this.state.markers.map(marker => (
             <Marker
+              key={marker.title}
               coordinate={marker.latlng}
               title={marker.title}
               description={marker.description}
             />
           ))}
         </MapView>
-      </View>
     );
   }
 }
