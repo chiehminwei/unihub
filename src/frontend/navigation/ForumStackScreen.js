@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 //import screens
 import { ForumScreen } from '~/screens/forum/ForumScreen';
 import { ForumSearchScreen } from '~/screens/forum/ForumSearchScreen';
-import { CreateGroupScreen } from '~/screens/forum/CreateGroupScreen'
+import { CreateGroupScreen } from '~/screens/forum/CreateGroupScreen';
 
 
 const ForumStack = createStackNavigator();

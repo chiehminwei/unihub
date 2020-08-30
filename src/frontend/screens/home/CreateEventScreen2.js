@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 // import AnimatedMultistep from "react-native-animated-multistep";
 import AnimatedMultistep from "~/components/Stepper";
 
@@ -32,10 +32,7 @@ export default class App extends Component {
   /* render MultiStep */
   render() {
     return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
+      <View style={{ flex: 1 }}>
         <AnimatedMultistep
           steps={steps}
           onFinish={this.onFinish}
@@ -46,7 +43,7 @@ export default class App extends Component {
           comeInOnBack="fadeInLeft"
           OutOnBack="fadeOutRight"
         />
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
