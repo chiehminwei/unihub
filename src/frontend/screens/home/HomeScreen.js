@@ -5,7 +5,7 @@ import { screenStyles } from '~/stylesheets/screenStyles';
 import { styles } from '~/stylesheets/styles';
 import { NaviButton } from '~/components/button/NaviButton';
 import Search from '~/components/Search';
-import MapView from '~/components/MapView';
+import MapContent from '~/components/MapContent';
 import EventList from '~/components/lists/EventList';
 
 
@@ -76,7 +76,7 @@ export default class HomeScreen extends Component {
 
         <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6}}>
           <View style={{ flex: 1 }}>
-            { isMap ? <MapView/> : <EventList navigation={navigation}/> }
+            { isMap ? <MapContent/> : <EventList navigation={navigation}/> }
           </View>
         </View>
           
