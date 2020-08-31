@@ -10,14 +10,16 @@ import {
 } from 'react-native';
 import { Image, ButtonGroup, Button } from 'react-native-elements';
 import { List, Divider } from 'react-native-paper';
+import { Picker } from '@react-native-community/picker';
 import CalendarTimePicker from '~/components/CalendarTimePicker';
 import MapView, { Marker } from 'react-native-maps';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Fumi } from 'react-native-textinput-effects';
+import FumiPicker from '~/components/input/FumiPicker';
+import Collapsible from 'react-native-collapsible';
 import MultiLine from '~/components/input/MultiLine';
-import Upload from '~/components/Upload';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated'
 import * as Permissions from 'expo-permissions';
@@ -26,6 +28,8 @@ import * as firebase from 'firebase';
 import { withFirebaseHOC } from "~/../firebase/config/Firebase";
 const uuidv4 = require('random-uuid-v4');
 
+
+console.disableYellowBox = true;
 
 const CreateEventScreen = (props) => {
 
@@ -65,10 +69,14 @@ const CreateEventScreen = (props) => {
   // Group Name
   const [groupName, setGroupName] = useState('');
   const [groups, setGroups] = useState([]);
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const togglePicker = () => {
+    setPickerVisible(!pickerVisible);
+  }
   useEffect(() => {
-    const eligibleGroups = []; // TODO: check firebase for groups which current user has access to post
+    const eligibleGroups = ['', 'Group A', 'Group B']; // TODO: check firebase for groups which current user has access to post
     setGroups(eligibleGroups);
-  });
+  }, []);
 
   // Text Input
   const [eventName, setEventName] = useState('');
@@ -271,6 +279,31 @@ const CreateEventScreen = (props) => {
           buttons={eventTypes}
           containerStyle={{height: 60}}
         />
+        <FumiPicker
+          pickerVisible={pickerVisible}
+          togglePicker={togglePicker}
+          value={groupName}
+          editable={false}
+          label="Group"
+          iconClass={MaterialIcons}
+          iconName="group"
+          iconColor={'#f95a25'}
+          iconSize={20}
+          iconWidth={40}
+          inputPadding={16}
+        />
+        <Collapsible
+          collapsed={!pickerVisible}
+          duration={250}
+        >
+          <Picker
+            selectedValue={groupName}
+            onValueChange={(itemValue, itemIndex) => {
+              setGroupName(itemValue);
+            }}>
+            { groups.map(name => <Picker.Item key={name} label={name} value={name} />) }
+          </Picker>
+        </Collapsible>
         { EventNameInput }
         <CalendarTimePicker
           isCollapsed={startCollapsed}

@@ -102,7 +102,7 @@ const CalendarTimePicker = (props) => {
       <Collapsible
         collapsed={isCollapsed || !showCalendar}
         duration={250}
-        enablePointerEvents
+        // enablePointerEvents
       >
         <Calendar
           current={date}
@@ -126,7 +126,7 @@ const CalendarTimePicker = (props) => {
       <Collapsible
         collapsed={isCollapsed || showCalendar}
         duration={250}
-        enablePointerEvents
+        // enablePointerEvents
       >
         <DateTimePicker
           value={new Date(date)}
