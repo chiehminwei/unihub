@@ -59,22 +59,24 @@ function formatDateDisplay(date) {
 }
 
 const CalendarTimePicker = (props) => {
-  const { isCollapsed, setCollapse } = props; 
+  const { isCollapsed, setCollapse, setParentDate } = props; 
   const [showCalendar, setShowCalendar] = useState(true);
   const [date, setDate] = useState(new Date());
-  const [dateString, setDateString] = useState(formatDate(date));  
+  const [dateString, setDateString] = useState(formatDate(date));
 
   const onDayPress = (day) => {
     const { dateString } = day;
     let date = new Date(dateString);
     date = new Date(date.getTime() + date.getTimezoneOffset() * 60000)
     setDate(date);
+    setParentDate(date);
     setDateString(dateString);    
     setShowCalendar(false);
   }
 
   const onTimeChange = (event, date) => {
     setDate(date);
+    setParentDate(date);
   };
 
   const toggleCalendar = () => {

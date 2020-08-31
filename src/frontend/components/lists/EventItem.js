@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, Share } from 'react-native';
 import { IconButton, Avatar, Button, Card, Title, Subheading, Paragraph, Divider, Text } from 'react-native-paper';
 import AntIcon from "react-native-vector-icons/AntDesign";
 
@@ -10,6 +10,15 @@ const grey = '#6B878B';
 const Tag = ({ text }) => (
   <Text style={{ marginRight: 5, color: blue }}>{ text }</Text>
 )
+
+const share = (event) => {
+  const { eventName, description, url } = event;
+  Share.share({
+    // message: description,
+    title: `Check out this event on UniHub - ${eventName}`,
+    url: event.uri,
+  });
+};
 
 const EventItem = ({ event, navigation }) => (
   <Card style={{ margin: 10, flex:1 }} onPress={ () => navigation.navigate('EventDetail') }>
@@ -41,7 +50,7 @@ const EventItem = ({ event, navigation }) => (
     <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
       <Button onPress={ () => navigation.navigate('EventDetail') } icon="message-processing">{ event.numMessages}</Button>
       <Button onPress={ () => navigation.navigate('EventDetail') } icon="run">{ event.numGoing}</Button>
-      <Button onPress={ () => navigation.navigate('EventDetail') } icon="share"/>
+      <Button onPress={ () => share(event) } icon="share"/>
     </Card.Actions>
   </Card>
 );

@@ -15,6 +15,7 @@ const events = [
     eventID: 'U123',
     eventDate: 'Monday July 3',
     uri: 'https://picsum.photos/700',
+    description: 'Cool event',
   },
   {
     eventName: 'GoGOGO',
@@ -26,6 +27,7 @@ const events = [
     eventID: 'U234',
     eventDate: 'MONDAY JULY 3',
     uri: 'https://picsum.photos/700',
+    description: 'Cool event no no no',
   },
 ];
 
