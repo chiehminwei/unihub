@@ -1,52 +1,48 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
-// import AnimatedMultistep from "react-native-animated-multistep";
-import AnimatedMultistep from "~/components/Stepper";
-
-import BasicInfo from "~/components/form/BasicInfo";
-import Detail from "~/components/form/Detail";
-import Preview from "~/components/form/Preview";
+// import { Text, Button, ListItem } from 'react-native-elements';
+// import { List } from 'react-native-paper';
+import CalendarTimePicker from '~/components/CalendarTimePicker';
+import MapView, { Marker } from 'react-native-maps';
 
 
-const steps = [
-  { name: "Basic Info", component: BasicInfo },
-  { name: "Detail", component: Detail },
-  { name: "Preview", component: Preview },
-];
+const CreateEventScreen = (props) => {  
+  const [startCollapsed, setStartCollapse] = useState(true);
+  const [endCollapsed, setEndCollapse] = useState(true);
 
-/* Define your class */
-export default class App extends Component {
-
-  onNext = () => {
-    console.log("Next");
-  };
-
-  onBack = () => {
-    console.log("Back");
-  };
-
-  onFinish = finalState => {
-    console.log(finalState);
-  };
-
-  /* render MultiStep */
-  render() {
-    return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={styles.container}
-      >
-        <AnimatedMultistep
-          steps={steps}
-          onFinish={this.onFinish}
-          onBack={this.onBack}
-          onNext={this.onNext}
-          comeInOnNext="fadeInRight"
-          OutOnNext="fadeOutLeft"
-          comeInOnBack="fadeInLeft"
-          OutOnBack="fadeOutRight"
+  const handleToggle = (isCollapsed, position) => {
+    if (position === 'start') {
+      if (isCollapsed) {
+        setStartCollapse(isCollapsed);
+      }
+      else {
+        setStartCollapse(isCollapsed);
+        setEndCollapse(true);
+      }
+    }
+    else {
+      if (isCollapsed) {
+        setEndCollapse(isCollapsed);
+      }
+      else {
+        setEndCollapse(isCollapsed);
+        setStartCollapse(true);
+      }
+    }
+  }
+   
+  return (
+      <KeyboardAvoidingView>
+        <CalendarTimePicker
+          isCollapsed={startCollapsed}
+          setCollapse={(isCollapsed) => handleToggle(isCollapsed, 'start')}
+        />
+        <CalendarTimePicker
+          isCollapsed={endCollapsed}
+           setCollapse={(isCollapsed) => handleToggle(isCollapsed, 'end')}
         />
       </KeyboardAvoidingView>
-    );
-  }
+  );
 }
+
+export default CreateEventScreen;
