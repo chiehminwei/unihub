@@ -1,39 +1,72 @@
 import React,{useState, Component} from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList}  from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ThreadItem from './ThreadItem';
+import  ThreadItem from './ThreadItem';
 // import { styles } from '../stylesheets/styles';
 
 const threads = [
   {
-    threadTitle: 'Group THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
-    numFollowers: 10,
-    numGoing: 10,
-    eventLocation: 'Online',
+    groupName: 'Thon 2020',
+    userName: 'Jimmy Wei',
+    threadTitle: 'For the kid!!',
+    content: 'long_text',
+    numThumbsups: 20,
+    numComments: 10,
     groupID: 'U123',
-    eventDate: 'Monday July 3',
+    userID: 'Y123',
+    threadID: 'T123',
+    publishTime: 'MONDAY JULY 3',
+    uri:'https://picsum.photos/700',
   },
   {
-    threadTitle: 'Group THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
-    numFollowers: 10,
-    numGoing: 10,
-    eventLocation: "Tim's House",
+    groupName: 'ERO',
+    userName: 'Tim Wang',
+    threadTitle: 'Members recruitment',
+    content:'long_text',
+    numThumbsups: 100,
+    numComments: 20,
     groupID: 'U234',
-    eventDate: 'MONDAY JULY 3',
+    userID: 'Y234',
+    threadID: 'T234',
+    publishTime: 'MONDAY JULY 3',
+    uri:'https://picsum.photos/700',
   },
+  {
+    groupName: 'ERO',
+    userName: 'Tim Wang',
+    threadTitle: 'Members recruitment',
+    content:'long_text',
+    numThumbsups: 100,
+    numComments: 20,
+    groupID: 'U234',
+    userID: 'Y234',
+    threadID: 'T234',
+    publishTime: 'MONDAY JULY 3',
+    uri:'https://picsum.photos/700',
+  }, {
+    groupName: 'ERO',
+    userName: 'Tim Wang',
+    threadTitle: 'Members recruitment',
+    content:'long_text',
+    numThumbsups: 100,
+    numComments: 20,
+    groupID: 'U234',
+    userID: 'Y234',
+    threadID: 'T234',
+    publishTime: 'MONDAY JULY 3',
+    uri:'https://picsum.photos/700',
+  }, 
 ];
 
 
-export default function ThreadList() {
+export default function ThreadList({navigation}) {
 
   return(
       <FlatList
-        keyExtractor={ (item) => item.groupID }
+        keyExtractor={ (item) => item.threadID }
         data = { threads }
         renderItem={( {item} )=>( 
-          <ThreadItem thread={ item }/>
+          <ThreadItem thread={ item } navigation={ navigation }/>
         )}
       />
 

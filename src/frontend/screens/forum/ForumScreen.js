@@ -6,13 +6,28 @@ import { ForumTabNavigator } from '~/navigation/ForumTabNavigator'
 import { ForumScreenHeader } from '~/components/headers/ForumScreenHeader'
 
 
-export function ForumScreen() {
+// export function ForumScreen() {
+//   return (
+//     <SafeAreaView style={screenStyles.safeArea} edges={['right','top','left']}>
+//       <StatusBar barStyle="dark-content" />
+//       <ForumScreenHeader/>
+//       <View style={{ alignSelf: 'stretch', flex:8 }}>
+//         <ForumTabNavigator/>
+//       </View>
+//     </SafeAreaView>
+//   );
+// }
+
+
+export function ForumScreen (){
+
   return (
     <SafeAreaView style={screenStyles.safeArea} edges={['right','top','left']}>
       <StatusBar barStyle="dark-content" />
       <ForumScreenHeader/>
+
       <View style={{ alignSelf: 'stretch', flex:8 }}>
-        <ForumTabNavigator/>
+          <ForumTabNavigator />
       </View>
     </SafeAreaView>
   );

@@ -5,9 +5,10 @@ import GroupList from '~/components/lists/GroupList';
 
 class GroupScreen extends Component{
   render(){
+   const {navigation}=this.props
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <GroupList/>
+          <GroupList navigation={navigation}/>
         </View>
       )       
   }

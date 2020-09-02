@@ -1,14 +1,21 @@
 import React, {Component} from 'react';
-import { Text, View } from 'react-native';
-import { ThreadList } from '~/components/lists/ThreadList';
-import { GroupList }  from '~/components/lists/GroupList';
+import { Text, View, SectionList} from 'react-native';
+
+import DiscoverList from '../../components/lists/DiscoverList';
+
+
+
 
 
 class DiscoverScreen extends Component{
-
+  
   render(){
-      return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-             </View>       
+   const {navigation}=this.props
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <DiscoverList navigation={navigation}/>
+        </View>
+      )       
   }
 };
 export default DiscoverScreen;

@@ -2,8 +2,10 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import  AllScreen  from '~/screens/forum/AllScreen';
-import  GroupScreen  from '~/screens/forum/GroupScreen';
 import  DiscoverScreen  from '~/screens/forum/DiscoverScreen';
+import GroupScreen from '~/screens/forum/GroupScreen';
+
+
 
 
 const ForumTab = createMaterialTopTabNavigator();
@@ -28,3 +30,4 @@ export function ForumTabNavigator() {
       </ForumTab.Navigator>
     );
   }
+

@@ -6,28 +6,51 @@ import GroupItem from './GroupItem';
 
 const groups = [
   {
+    hostName:'Jimmy',
     groupName: 'Group THON 2020',
-    numFollowers: 10,
+    numMembers: 10,
     availability: "Public",
     groupID: 'U123',
+    description: 'long_text',
+    uri:'https://picsum.photos/700',
   },
   {
+    hostName:'Timmy',
     groupName: 'Gogogo',
-    numFollowers: 10,
+    numMembers: 10,
     availability: "Private",
     groupID: 'U234',
+    description: 'long_text',
+    uri:'https://picsum.photos/700',
+  },
+  {
+    hostName:'Timmy',
+    groupName: 'Gogogo',
+    numMembers: 10,
+    availability: "Private",
+    groupID: 'U234',
+    description: 'long_text',
+    uri:'https://picsum.photos/700',
+  },{
+    hostName:'Timmy',
+    groupName: 'Gogogo',
+    numMembers: 10,
+    availability: "Private",
+    groupID: 'U234',
+    description: 'long_text',
+    uri:'https://picsum.photos/700',
   },
 ];
 
 
-export default function GroupList() {
 
+export default function GroupList({navigation}) {
   return(
       <FlatList
       keyExtractor={ (item) => item.groupID }
       data = { groups }
       renderItem={( {item} )=>( 
-        <GroupItem group={ item }/>
+        <GroupItem group={ item } navigation={ navigation }/>
       )}/>
 
   )
