@@ -14,7 +14,7 @@ const longText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed d
           culpa qui officia deserunt mollit anim id est laborum.`
 const group = 
   {
-    hostNmae:'Jimmy',
+    hostName:'Jimmy',
     groupName: 'Group THON 2020',
     numMembers: 10,
     availability: "Public",
@@ -23,36 +23,36 @@ const group =
     uri:'https://picsum.photos/700',
   }
 const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
-  // const event = firebase(eventID)
-  // const {
-  // 	hostName,
-  // 	groupName,
-  // 	numMembers,
-  //   availability,
-  // 	groupID,
-  //   description,
-  //   uri
-  // } = group;
+  const  
+  {
+    hostName,
+    groupName,
+    numMembers,
+    availability,
+    // groupID,
+    description,
+    uri,
+  } = group
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <Text style={styles.groupName}>
-        	{ group.groupName }
+        	{ groupName }
         </Text>
         <Text style={styles.hostName}>
-        	{ group.hostName }
+        	{ hostName }
         </Text>
         <Image          
-        	source={ group.uri }
+        	source={{ uri }}
         	style={ styles.image }
         	PlaceholderContent={<ActivityIndicator />}
         />
         <Text style={styles.description}>
-          { group.availability }
+          { availability }
         </Text>
         <Text style={styles.description}>
-          { group.description }
+          { description }
         </Text>
       </ScrollView>
     </SafeAreaView>

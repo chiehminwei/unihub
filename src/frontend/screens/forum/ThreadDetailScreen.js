@@ -27,16 +27,21 @@ const thread =
     uri:'https://picsum.photos/700',
   }
 const ThreadDetailScreen = ({ threadID, navigation, firebase }) => {
-  // const event = firebase(eventID)
-  // const {
-  // 	hostName,
-  // 	groupName,
-  // 	numMembers,
-  //   availability,
-  // 	groupID,
-  //   description,
-  //   uri
-  // } = group;
+
+  const  
+  {
+    groupName,
+    userName,
+    threadTitle,
+    content,
+    numThumbsups,
+    numComments,
+    groupID,
+    userID,
+    // threadID,
+    publishTime,
+    uri,
+  } = thread
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,7 +56,7 @@ const ThreadDetailScreen = ({ threadID, navigation, firebase }) => {
         	{ thread.userName }
         </Text>
         <Image          
-        	source={ thread.uri }
+        	source={{ uri }}
         	style={ styles.image }
         	PlaceholderContent={<ActivityIndicator />}
         />

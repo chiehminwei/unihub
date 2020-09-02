@@ -34,7 +34,7 @@ const groups = [
     groupName: 'Gogogo',
     numMembers: 10,
     availability: "Private",
-    groupID: 'U234',
+    groupID: 'U345',
     description: 'long_text',
     uri:'https://picsum.photos/700',
   },{
@@ -42,7 +42,7 @@ const groups = [
     groupName: 'Gogogo',
     numMembers: 10,
     availability: "Private",
-    groupID: 'U234',
+    groupID: 'U456',
     description: 'long_text',
     uri:'https://picsum.photos/700',
   },
@@ -82,9 +82,9 @@ const threads = [
     content:'long_text',
     numThumbsups: 100,
     numComments: 20,
-    groupID: 'U234',
-    userID: 'Y234',
-    threadID: 'T234',
+    groupID: 'U345',
+    userID: 'Y345',
+    threadID: 'T345',
     publishTime: 'MONDAY JULY 3',
     uri:'https://picsum.photos/700',
   }, {
@@ -94,34 +94,27 @@ const threads = [
     content:'long_text',
     numThumbsups: 100,
     numComments: 20,
-    groupID: 'U234',
-    userID: 'Y234',
-    threadID: 'T234',
+    groupID: 'U456',
+    userID: 'Y456',
+    threadID: 'T456',
     publishTime: 'MONDAY JULY 3',
     uri:'https://picsum.photos/700',
   }, 
 ];
-function Item({item,navigation}) {
-   
-if ( item === 'Hot threads') return <ThreadItem thread={item} navigation={navigation}/>
-// else if (item === 'Popular Groups')
-return <GroupItem group={item} navigation={navigation}/>
-
-}
 
 export default function DiscoverList({navigation}) {
  
   return(
     <SectionList 
-   renderSectionHeader={({ section: { title } }) => <Text style={{ fontWeight: 'bold' }}>{title}</Text>} 
-   sections={[ 
-     { title: 'Groups', data: groups, renderItem: ({ item }) =>  <GroupItem group={ item } navigation={ navigation }/> }, 
-     { title: 'Threads', data: threads, renderItem: ({ item }) =>  <ThreadItem thread={ item } navigation={ navigation }/>}, 
-    ]} 
-   keyExtractor={(item, index) => item.name + index} 
- />
-    )
-  }
+      renderSectionHeader={({ section: { title } }) => <Text style={{ fontWeight: 'bold' }}>{title}</Text>} 
+      sections={[ 
+        { title: 'Groups', data: groups, renderItem: ({ item }) =>  <GroupItem group={ item } navigation={ navigation }/> }, 
+        { title: 'Threads', data: threads, renderItem: ({ item }) =>  <ThreadItem thread={ item } navigation={ navigation }/>}, 
+      ]} 
+      keyExtractor={(item, index) => item + index} 
+    />
+  )
+}
 
 
  

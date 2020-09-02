@@ -1,22 +1,9 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import EventCardScreen from '../screens/profile/EventCardScreen';
+import ThreadCardScreen from '../screens/profile/ThreadCardScreen';
 
-function EventCardScreen() {
-  return (
-    <View style={{ backgroundColor:'white', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Events</Text>
-    </View>
-  );
-}
-
-function ForumCardScreen() {
-  return (
-    <View style={{ backgroundColor:'white', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Forums</Text>
-    </View>
-  );
-}
 
 const ProfileTab = createMaterialTopTabNavigator();
 
@@ -36,7 +23,7 @@ export function ProfileTabNavigator() {
         }}
         >
         <ProfileTab.Screen name="Events" component={EventCardScreen} />
-        <ProfileTab.Screen name="Forums" component={ForumCardScreen} />
+        <ProfileTab.Screen name="Forums" component={ThreadCardScreen} />
       </ProfileTab.Navigator>
     );
   }

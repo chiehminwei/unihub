@@ -40,7 +40,7 @@ const threads = [
     numComments: 20,
     groupID: 'U234',
     userID: 'Y234',
-    threadID: 'T234',
+    threadID: 'T345',
     publishTime: 'MONDAY JULY 3',
     uri:'https://picsum.photos/700',
   }, {
@@ -52,7 +52,7 @@ const threads = [
     numComments: 20,
     groupID: 'U234',
     userID: 'Y234',
-    threadID: 'T234',
+    threadID: 'T456s',
     publishTime: 'MONDAY JULY 3',
     uri:'https://picsum.photos/700',
   }, 

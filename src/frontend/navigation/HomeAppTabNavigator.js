@@ -8,7 +8,7 @@ import { NotificationScreen } from '~/screens/notification/NotificationScreen';
 // Navigators import
 import { ForumStackScreen } from './ForumStackScreen';
 import { HomeStackScreen } from './HomeStackScreen';
-import { ProfileDrawerNavigator } from './ProfileDrawerNavigator';
+import { ProfileStackNavigator } from './ProfileStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -52,7 +52,7 @@ export default function HomeAppTabNavigator(){
             component={NotificationScreen} 
             options={{ tabBarBadge: 3 }} 
           />
-          <Tab.Screen name='Profile' component={ProfileDrawerNavigator} />
+          <Tab.Screen name='Profile' component={ProfileStackNavigator} />
         </Tab.Navigator>
   )
 }
