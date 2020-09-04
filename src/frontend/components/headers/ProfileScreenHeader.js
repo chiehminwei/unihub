@@ -21,10 +21,10 @@ const user=
   }
 function NumDisplay({number,title, onPress}){
   return(
-  <TouchableOpacity style={{flex:1, alignContent:'space-between', marginHorizontal:10, alignItems:'center'}} onPress={onPress}>
-      <Text style={{fontSize: 20}}>{number}</Text>
-      <Text style={{fontWeight:'bold'}}>{title}</Text>
-  </TouchableOpacity>
+    <TouchableOpacity style={{flex:1, alignContent:'space-between', marginHorizontal:10, alignItems:'center'}} onPress={onPress}>
+        <Text style={{fontSize: 20,fontWeight:'bold'}}>{number}</Text>
+        <Text style={{fontSize: 16}}>{title}</Text>
+    </TouchableOpacity>
   )
 }   
 
@@ -54,7 +54,9 @@ function ProfileScreenHeader() {
       }}
     >
       <View style={{flex:1, alignContent:'flex-start' , alignItems:'flex-start'}}>
-        <Text style={styles.name} >{userName}</Text> 
+        <Text style={styles.name} >
+          {userName}
+        </Text> 
       </View>
       <View style={{flexDirection:'row',flex:1,alignItems:'center',marginLeft:10, marginBottom:10, padding:10, alignContent:'space-between'}}>
         <Image source={{ uri }}
@@ -72,9 +74,10 @@ function ProfileScreenHeader() {
           interested in {interests[0]},{' '}{interests[1]}, and {interests[2]}
         </Text>
       </View>
-      <TouchableOpacity style={styles.button} 
-                        onPress={()=>alert('edite profile')}>
-      <Text style={styles.buttonTitle}>edit profile</Text>
+      <TouchableOpacity 
+        style={styles.button} 
+        onPress={()=>alert('edite profile')}>
+          <Text style={styles.buttonTitle}>edit profile</Text>
       </TouchableOpacity> 
     </View>
   );
@@ -91,14 +94,12 @@ export default ProfileScreenHeader;
     button:{
       alignItems:'center',
       backgroundColor:'white',
-      marginHorizontal: '30%',
+      marginHorizontal: '10%',
       marginVertical:'1%', 
       padding: 5, 
       borderRadius: 5,
-      shadowColor: 'rgba(0,0,0, .4)', 
-      shadowOffset: { height: 1, width: 1 }, 
-      shadowOpacity: 1, 
-      shadowRadius: 1,
+      borderWidth: 1,
+      borderColor:'white'
     },
     buttonTitle:{
       fontSize:16,
