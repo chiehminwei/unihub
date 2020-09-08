@@ -21,7 +21,7 @@ const share = (event) => {
 };
 
 const EventItem = ({ event, navigation }) => (
-  <Card style={{ margin: 10, maxWidth:'95%',flex:1 }} onPress={ () => navigation.navigate('EventDetail') }>
+  <Card style={{ margin: 10, maxWidth:'95%',flex:1 }} onPress={ () => navigation.navigate('EventDetail', { name: event.groupName }) }>
     <Card.Content>
       <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
         <Text style={{ textTransform: 'uppercase' }}>{ event.eventDate }</Text>

@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity,StyleSheet,Button } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, TouchableOpacity,StyleSheet, Button, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { NaviButton } from '~/components/button/NaviButton';
-import { Text, Image } from 'react-native-elements';
-//********* User Name Update*************/
+import { Text } from 'react-native-elements';
+//********* User Name Update*************//
 const user=
   {
     userName: 'Yufan Wang',
@@ -18,12 +16,14 @@ const user=
     numGroups: 5,
     numFriends: 233,
     availability: 'public',
+    major: 'Mechanical Engineering',
+    classYear:'2020',
   }
 function NumDisplay({number,title, onPress}){
   return(
     <TouchableOpacity style={{flex:1, alignContent:'space-between', marginHorizontal:10, alignItems:'center'}} onPress={onPress}>
-        <Text style={{fontSize: 20,fontWeight:'bold'}}>{number}</Text>
-        <Text style={{fontSize: 16}}>{title}</Text>
+        <Text style={{fontSize: 20,fontWeight:'bold',fontFamily: 'Avenir-Light'}}>{number}</Text>
+        <Text style={{fontSize: 16,fontFamily: 'Avenir-Light', color: 'grey'}}>{title}</Text>
     </TouchableOpacity>
   )
 }   
@@ -41,67 +41,65 @@ function ProfileScreenHeader() {
     numGroups,
     numFriends,
     availability, 
+    major,
+    classYear,
   } = user;
   const navigation = useNavigation();
   
-  return (
-    <View 
-      style={{ 
-          flex: 1,
-          backgroundColor: '#F3F3F3', 
-          alignSelf: 'stretch', 
-          alignContent:'flex-start',
-      }}
-    >
-      <View style={{flex:1, alignContent:'flex-start' , alignItems:'flex-start'}}>
-        <Text style={styles.name} >
-          {userName}
-        </Text> 
-      </View>
-      <View style={{flexDirection:'row',flex:1,alignItems:'center',marginLeft:10, marginBottom:10, padding:10, alignContent:'space-between'}}>
+  return(
+    /* top frame */
+    <View
+      style={{flex:2, backgroundColor:'#bad4da', justifyContent:"center", alignItems:"center",}}>
+        
+        {/* profile image */}
         <Image source={{ uri }}
-               style={{flex:1, width: 50, height: 50}}
-               containerStyle={{flex:1,width:50,height:50}} />
+               style={{ flex:1, width: 90, height: 90,minHeight:90,minWidth:90, maxHeight:90, maxWidth: 90 , marginTop: 30, marginBottom: 30, borderRadius:45, borderWidth: 2, borderColor:'grey'}}
+        />
+
+        
+      <View style={{alignItems:'center',alignContent:'center', marginTop: 5, maxWidth: 290 }}>
+        {/* User's full name */}
+        <Text style = {styles.name}>
+          {userName}
+        </Text>
+
+        {/* user's major class year */}
+          <Text style = {{ fontFamily:'Avenir-Medium', color: '#1c7085'}}> 
+            {major} · {classYear}
+          </Text>
+      </View>
+
+        {/* user's bio */}
+      <View style={{alignItems:'center',alignContent:'center', marginTop: 5, marginBottom: 15,  maxWidth: 290 }}>
+          <Text Style = {styles.bio}>
+            {bio}
+          </Text>
+      </View>
+
+        {/* user's number */}
+      <View style={{flexDirection:"row", marginVertical: 10}}>
         <NumDisplay number={numPosts} title='Posts' onPress={()=>navigation.navigate('ThreadCard')}/> 
         <NumDisplay number={numFriends} title='Friends' onPress={()=>alert('Friends list')}/> 
         <NumDisplay number={numGroups} title='Groups' onPress={()=>navigation.navigate('GroupScreen')}/> 
       </View>
-      <View style={{flex:2,marginHorizontal:10, padding:0 }}>
-        <Text>
-          {bio}{'\n'}
-          contact me at{' '}
-          {contact}{'\n'}
-          interested in {interests[0]},{' '}{interests[1]}, and {interests[2]}
-        </Text>
-      </View>
-      <TouchableOpacity 
-        style={styles.button} 
-        onPress={()=>alert('edite profile')}>
-          <Text style={styles.buttonTitle}>edit profile</Text>
-      </TouchableOpacity> 
+     {/* blank space */}
     </View>
   );
 }
-export default ProfileScreenHeader;
-
  const styles=StyleSheet.create({
     name:{
-      color: '#121212',
-      fontSize: 18,
-      marginLeft: 15,
-      textAlign: 'left'
+      color: '#352F2f',
+      fontSize: 24,
+      textAlign: 'center',
+      fontFamily: 'Avenir-Book',
+      fontWeight: '600'
     },
-    button:{
-      alignItems:'center',
-      backgroundColor:'white',
-      marginHorizontal: '10%',
-      marginVertical:'1%', 
-      padding: 5, 
-      borderRadius: 5,
-      borderWidth: 1,
-      borderColor:'white'
-    },
-    buttonTitle:{
-      fontSize:16,
+    bio:{
+      fontSize: 12,
+      textAlign: 'center',
+      fontFamily: 'Avenir-Light'
     },
  })
+
+
+export default ProfileScreenHeader;

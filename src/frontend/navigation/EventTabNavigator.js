@@ -1,12 +1,14 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Animated, TouchableOpacity, StyleSheet, Text } from "react-native"
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import EventCardScreen from '../screens/profile/EventCardScreen';
-import ThreadCardScreen from '../screens/profile/ThreadCardScreen';
+import  CommentScreen  from '~/screens/home/CommentScreen';
+import  ParticipantScreen  from '~/screens/home/ParticipantScreen';
 
-function ProfileTabBar({ state, descriptors, navigation }) {
+
+
+function EventTabBar({ state, descriptors, navigation }) {
   return (
-    <View style={{ paddingTop: 10, flexDirection: 'row',backgroundColor:'#bad4da', height:50, justifyContent:"center", alignItems:"center" }}>
+    <View style={{ paddingBottom: 10, flexDirection: 'row',backgroundColor:"#bad4da", height:40, justifyContent:"center", alignItems:"center" }}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const label =
@@ -38,24 +40,6 @@ function ProfileTabBar({ state, descriptors, navigation }) {
 
         return (
           <View style={isFocused ? styles.tabfocused : styles.tabnotfocused}>
-            <View style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  height: 10,
-                  width: isFocused ? 0 : 207,
-                  marginBottom: -10,
-                  backgroundColor: 'black',
-                  alignSelf: 'center',
-                  shadowColor: 'grey',
-                  shadowOffset: {
-                    width: 0,
-                    height: 1
-                  },
-                  shadowRadius: 5,
-                  shadowOpacity: 1,
-
-                  elevation : isFocused ? 0 : 20
-              }} />
             <TouchableOpacity
               accessibilityRole="button"
               accessibilityStates={isFocused ? ['selected'] : []}
@@ -68,7 +52,7 @@ function ProfileTabBar({ state, descriptors, navigation }) {
               <Text style={{ 
                 color: isFocused ? 'black' : 'grey' ,
                 fontWeight: isFocused? 'bold' : '200',
-                marginTop:10,
+                marginTop:5,
                 fontFamily:'Avenir-Light'}}>
                 {label}
               </Text>
@@ -84,40 +68,44 @@ const styles=StyleSheet.create({
     flex:1, 
     alignContent:'center', 
     alignItems: 'center', 
-    backgroundColor: 'white',
-    borderTopStartRadius: 20,
-    borderTopEndRadius: 20,
-    shadowOffset:{ height: -1, width: 0},
-    shadowColor:'grey',
-    shadowRadius: 4,
-    shadowOpacity: 0.4,
-    elevation: 20
-    
+    backgroundColor: 'transparent',
   },
   tabnotfocused:{
     flex:1, 
     alignContent:'center', 
     alignItems: 'center', 
-    backgroundColor: 'transparent', 
-
+    backgroundColor: 'white', 
+    borderBottomStartRadius: 20,
+    borderBottomEndRadius: 20,
   }
 
 
 })
+const EventTab = createMaterialTopTabNavigator();
 
-const ProfileTab = createMaterialTopTabNavigator();
-
-export function ProfileTabNavigator() {
+export default function EventTabNavigator() {
 
   
     return (
-      <ProfileTab.Navigator 
-        tabBar={ props => <ProfileTabBar {...props}/>}
-        >
-        <ProfileTab.Screen name="Events" component={EventCardScreen} />
-        <ProfileTab.Screen name="Forums" component={ThreadCardScreen} />
-      </ProfileTab.Navigator>
+      <EventTab.Navigator
+        tabBarOptions={{
+          style:{
+            backgroundColor:'white'
+            },
+          labelStyle:{
+            fontFamily:'Avenir-Light'
+            },
+          indicatorStyle: {
+            orderBottomColor: '#00889A',
+            borderBottomWidth: 1
+            },
+          }}
+          tabBar={ props => <EventTabBar {...props}/>}
+          >
+          
+        <EventTab.Screen name="Comments" component={CommentScreen} />
+        <EventTab.Screen name="Participants" component={ParticipantScreen} />
+      </EventTab.Navigator>
     );
   }
 
-  

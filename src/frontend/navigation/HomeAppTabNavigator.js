@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, TouchableOpacity, StyleSheet, Text } from "react-native"
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 // Screens import
@@ -9,6 +10,9 @@ import { NotificationScreen } from '~/screens/notification/NotificationScreen';
 import { ForumStackScreen } from './ForumStackScreen';
 import { HomeStackScreen } from './HomeStackScreen';
 import { ProfileStackNavigator } from './ProfileStackNavigator';
+import Animated from 'react-native-reanimated';
+
+
 
 const Tab = createBottomTabNavigator();
 
@@ -32,15 +36,16 @@ export default function HomeAppTabNavigator(){
               } else if (route.name === 'Chat') {
                 iconName = 'send';
               }
-              return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+              return  <MaterialCommunityIcons name={iconName} size={size} color={color} />
             },
           })}
           tabBarOptions={{
-            activeTintColor: '#00889A',
-            inactiveTintColor: '#818181',
+            activeTintColor: '#1c7085',
+            inactiveTintColor: '#bad4da',
             showLabel: false,
             style: {
-              backgroundColor: '#F3F3F3',
+              backgroundColor: 'white',
+              borderRadius:0
             },
           }}
         >

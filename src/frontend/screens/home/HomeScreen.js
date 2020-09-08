@@ -32,14 +32,15 @@ export default class HomeScreen extends Component {
     
     return (
       <SafeAreaView style={screenStyles.safeArea} edges={['right','top','left']}>
-        <StatusBar barStyle="dark-content" />
-        <View style = {{alignSelf:'stretch',flex:1}}>
+        <StatusBar  backgroundColor='white' />
+        <View style = {{ alignSelf:'stretch', flex:1 }}>
         <View 
           style={{ 
               flex: 1,
-              backgroundColor: '#F3F3F3', 
+              backgroundColor: 'white', 
               alignSelf: 'stretch', 
-              textAlign: 'center', }}>
+              textAlign: 'center', 
+              backgroundColor:'#bad4ba'}}>
           <View style={styles.homeheader}>
             <View style={{flexDirection:'row',flex:1, justifyContent:'space-between',alignItems:'center'}}>
               <Text style={styles.browse}>Browse</Text>
@@ -74,7 +75,7 @@ export default class HomeScreen extends Component {
           </View>
         </View>
 
-        <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6}}>
+        <View style={{backgroundColor :'#bad4da', alignSelf: 'stretch', flex:6}}>
           <View style={{ flex: 1 }}>
             { isMap ? <MapContent/> : <EventList navigation={navigation}/> }
           </View>

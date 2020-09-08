@@ -59,10 +59,11 @@ const threads = [
 ];
 
 
-export default function ThreadList({navigation}) {
+export default function ThreadList({navigation,scrollEnabled}) {
 
   return(
       <FlatList
+        scrollEnabled = {scrollEnabled}
         keyExtractor={ (item) => item.threadID }
         data = { threads }
         renderItem={( {item} )=>( 

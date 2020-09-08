@@ -11,7 +11,9 @@ export const styles = StyleSheet.create({
     //homescreen style
     homeheader: {
         flex: 1,
-        backgroundColor: '#F3F3F3',
+        backgroundColor: 'white',
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20
       },
           // header text styles
           browse: {

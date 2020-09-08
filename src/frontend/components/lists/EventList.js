@@ -7,7 +7,7 @@ import EventItem from './EventItem';
 const events = [
   {
     eventName: 'Thon club fundraising',
-    groupName: 'Group THON 2020',
+    groupName: 'THON 2020',
     tags: [ '#thon', '#FTK', '#fundraising'],
     numMessages: 10,
     numGoing: 10,
@@ -19,23 +19,24 @@ const events = [
   },
   {
     eventName: 'GoGOGO',
-    groupName: 'Group THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
+    groupName: 'ERO',
+    tags: [ '#Billiards', '#Hub' ],
     numMessages: 10,
     numGoing: 10,
     eventLocation: "Tim's House",
     eventID: 'U234',
-    eventDate: 'MONDAY JULY 3',
+    eventDate: 'Friday JULY 3',
     uri: 'https://picsum.photos/700',
     description: 'Cool event no no no',
   },
 ];
 
 
-export default function EventList({ navigation }) {
+export default function EventList({ navigation, scrollEnabled }) {
 
   return(
     <FlatList
+      scrollEnabled={ scrollEnabled }
       keyExtractor={ (item) => item.eventID }
       data = { events }
       renderItem={({ item }) => <EventItem navigation={ navigation } event={ item }/>}
