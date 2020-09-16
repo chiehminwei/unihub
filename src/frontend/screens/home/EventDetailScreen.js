@@ -1,10 +1,61 @@
 import React from 'react';
-import { StyleSheet, ScrollView, View, ActivityIndicator, Dimensions, Image } from 'react-native';
+import { StyleSheet, ScrollView, Share, View, ActivityIndicator, Dimensions, Image, StatusBar } from 'react-native';
 import { withFirebaseHOC } from "~/../firebase/config/Firebase";
 import { Text } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { FAB } from 'react-native-paper';
+import { FAB, Portal, Provider } from 'react-native-paper';
 import  EventTabNavigator  from '../../navigation/EventTabNavigator'
+
+
+const FabGroup = (props) => {
+  const [state, setState] = React.useState({ open: false });
+  const onStateChange = ({ open }) => setState({ open });
+  const { open } = state;
+  const share = (props) => {
+    const { eventName, description, uri } = props;
+    Share.share({
+      // message: `${props.description}`,
+      title: `Check out this event on UniHub - ${props.eventName}`,
+      url: props.uri,
+    });
+  };
+  
+  return (
+    <Provider>
+      <Portal>
+        <FAB.Group
+          // style={{paddingBottom: 50,paddingRight: 30}}
+          fabStyle={{backgroundColor:'white'}}
+          open={open}
+          icon={open ? 'close' : 'plus'}
+          actions={[
+            {
+              icon: 'block-helper',
+              label: 'report',
+              onPress: () => alert('reported!'),
+            },
+            {
+              icon: 'share',
+              label: 'Share',
+              onPress: () => share(event) ,
+            },
+            {
+              icon: props.isAddtoCalendar ? 'calendar-remove' :'calendar',
+              label: props.isAddtoCalendar ? 'Remove from calendar': 'Add to Calendar',
+              onPress: props.setCalendar,
+            },
+          ]}
+          onStateChange={onStateChange}
+          onPress={() => {
+            if (open) {
+              // do something if the speed dial is open
+            }
+          }}
+        />
+      </Portal>
+    </Provider>
+  );
+};
 
 
 
@@ -56,6 +107,7 @@ function LocationLogo({location}){
 
 const EventDetailScreen = ({ eventID, navigation, firebase }) => {
   // const event = firebase(eventID)
+
   const {
   	authorName,
   	eventName,
@@ -68,19 +120,30 @@ const EventDetailScreen = ({ eventID, navigation, firebase }) => {
   	description,
   } = event;
 
+  const [isAddtoCalendar, setCalendar] = React.useState(false)
+  const  onSetCalendar = () => setCalendar(!isAddtoCalendar);
+
+
   return (
-    <View style={{flex:1}}>
-      <ScrollView style={styles.scrollView}>
+    <View style={{flex:1, flexDirection:'column'}}>
+      <StatusBar hidden={true}/>
+      <ScrollView style={styles.scrollView}
+      showsVerticalScrollIndicator={false}>
         <View style={{flex:1}}>
           <ResizeImage          
             uri ={ uri }
           />
-          <View style={{marginLeft:20 }}> 
-            <View>
-              <Text style={styles.eventName}>
-                { eventName }
-              </Text>
-              <MaterialCommunityIcons name='calendar'  size={25}  color='grey'/>
+          <View style={{ marginLeft:20 }}> 
+            <View style = {{ flex:1, flexDirection:'row', alignContent:'space-around', alignItems:'center'}}>
+              <View style={{}}>
+                <Text style={styles.eventName}>
+                  { eventName }
+                </Text>
+              </View>
+
+              
+
+
             </View> 
             <Text style={styles.authorName}>
               by{'  '}{ groupName }{'  '}{ authorName }
@@ -89,8 +152,16 @@ const EventDetailScreen = ({ eventID, navigation, firebase }) => {
 
           <View style={{marginHorizontal:20}}>
             <View style={{margin:5, flexDirection:'row', alignContent:'center', alignItems:'center'}}>
-              <MaterialCommunityIcons name='calendar'  size={25}  color='grey'/>
-              <Text style={styles.eventInfo}>
+              <MaterialCommunityIcons 
+                name={ isAddtoCalendar ? 'calendar-check': 'calendar'}  
+                size={25}  
+                color={ isAddtoCalendar ? '#1c7085' : 'grey' }/>
+              <Text 
+                style={{
+                  color: isAddtoCalendar ? '#1c7085' : '#2c2d2d', 
+                  fontFamily:'Avenir-Light',
+                  fontSize:18,
+                  marginLeft:30}}>
                 { eventDate }
               </Text>
             </View>
@@ -111,12 +182,21 @@ const EventDetailScreen = ({ eventID, navigation, firebase }) => {
         </View>
           
       </ScrollView>
+      
+      
 
       <FAB
         style={styles.fab}
         small
         icon="arrow-left"
         onPress={() => navigation.goBack()}/>
+      
+      <FabGroup 
+      setCalendar = {onSetCalendar} 
+      isAddtoCalendar={isAddtoCalendar}
+      uri={uri}
+      eventName={eventName}
+      description={description}/>
       </View>
   );
 }
@@ -161,7 +241,8 @@ const styles = StyleSheet.create({
   eventInfo: {
     fontFamily:'Avenir-Light',
     fontSize:18,
-    marginLeft:30
+    marginLeft:30,
+    color: '#2c2d2d'
   },
   description: {
     fontFamily:'Avenir-Light',
