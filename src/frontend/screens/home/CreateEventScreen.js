@@ -30,32 +30,32 @@ const uuidv4 = require('random-uuid-v4');
 import Toast from 'react-native-root-toast';
 
 
-// Add a Toast on screen.
-let toast = Toast.show('This is a message', {
-    duration: Toast.durations.LONG,
-    position: Toast.positions.BOTTOM,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0,
-    onShow: () => {
-        // calls on toast\`s appear animation start
-    },
-    onShown: () => {
-        // calls on toast\`s appear animation end.
-    },
-    onHide: () => {
-        // calls on toast\`s hide animation start.
-    },
-    onHidden: () => {
-        // calls on toast\`s hide animation end.
-    }
-});
+// // Add a Toast on screen.
+// let toast = Toast.show('This is a message', {
+//     duration: Toast.durations.LONG,
+//     position: Toast.positions.BOTTOM,
+//     shadow: true,
+//     animation: true,
+//     hideOnPress: true,
+//     delay: 0,
+//     onShow: () => {
+//         // calls on toast\`s appear animation start
+//     },
+//     onShown: () => {
+//         // calls on toast\`s appear animation end.
+//     },
+//     onHide: () => {
+//         // calls on toast\`s hide animation start.
+//     },
+//     onHidden: () => {
+//         // calls on toast\`s hide animation end.
+//     }
+// });
 
-// You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
-setTimeout(function () {
-    Toast.hide(toast);
-}, 500);
+// // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+// setTimeout(function () {
+//     Toast.hide(toast);
+// }, 500);
 
 
 console.disableYellowBox = true;
@@ -258,7 +258,14 @@ const CreateEventScreen = (props) => {
        setURI(uploadUrl);
     } catch (e) {
       console.log(e);
-      alert('Image upload failed, sorry :('); // TODO: change this to notification
+      let toast = Toast.show('Image upload failed, sorry :(', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      })
     } 
     // Push event to firestore
     const event = {
@@ -278,7 +285,14 @@ const CreateEventScreen = (props) => {
       // TODO: navigate to event screen & send success notification
     } catch (e) {
       console.log(e);
-      alert('Post failed, sorry :('); // TODO: change this to notification
+      let toast = Toast.show('Post failed, sorry :(', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      })
     }
 
   }
