@@ -12,8 +12,6 @@ export const styles = StyleSheet.create({
     homeheader: {
         flex: 1,
         backgroundColor: 'white',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20
       },
           // header text styles
           browse: {

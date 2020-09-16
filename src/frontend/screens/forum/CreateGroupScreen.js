@@ -7,18 +7,14 @@ import {
   ScrollView,
   Platform,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
+import { FAB } from 'react-native-paper';
 import { Image, ButtonGroup, Button } from 'react-native-elements';
 import { List, Divider } from 'react-native-paper';
-import { Picker } from '@react-native-community/picker';
-import CalendarTimePicker from '~/components/CalendarTimePicker';
-import MapView, { Marker } from 'react-native-maps';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Fumi } from 'react-native-textinput-effects';
-import FumiPicker from '~/components/input/FumiPicker';
-import Collapsible from 'react-native-collapsible';
 import MultiLine from '~/components/input/MultiLine';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated'
@@ -62,56 +58,19 @@ console.disableYellowBox = true;
 
 const CreateGroupScreen = (props) => {
 
-  // Calendar Time Picker
-  const [startCollapsed, setStartCollapse] = useState(true);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endCollapsed, setEndCollapse] = useState(true);
-  const [endDate, setEndDate] = useState(new Date());
-  const handleToggle = (isCollapsed, position) => {
-    if (position === 'start') {
-      if (isCollapsed) {
-        setStartCollapse(isCollapsed);
-      }
-      else {
-        setStartCollapse(isCollapsed);
-        setEndCollapse(true);
-      }
-    }
-    else {
-      if (isCollapsed) {
-        setEndCollapse(isCollapsed);
-      }
-      else {
-        setEndCollapse(isCollapsed);
-        setStartCollapse(true);
-      }
-    }
-  }
 
-  // Event Type
-  const eventTypes = ['In person', 'Online'];
+  // Group Type
+  const groupTypes = ['Public', 'Private'];
   const [selectedIndex, setIndex] = useState(0);
-  const updateEventType = (index) => {
+  const updateGroupType = (index) => {
     setIndex(index);
   };
 
-  // Group Name
-  const [groupName, setGroupName] = useState('');
-  const [groups, setGroups] = useState([]);
-  const [pickerVisible, setPickerVisible] = useState(false);
-  const togglePicker = () => {
-    setPickerVisible(!pickerVisible);
-  }
-  useEffect(() => {
-    const eligibleGroups = ['', 'Group A', 'Group B']; // TODO: check firebase for groups which current user has access to post
-    setGroups(eligibleGroups);
-  }, []);
 
-  // Text Input
-  const [eventName, setEventName] = useState('');
+  // Group Name Input
+  const [groupName, setGroupName] = useState('');
   const [description, setDescription] = useState('');
-  const [contact, setContact] = useState('');
-  const [location, setLocation] = useState('');
+  
 
   const fumiInput = ({ label, iconName, iconClass, onChangeText }) => (
     <Fumi
@@ -127,45 +86,25 @@ const CreateGroupScreen = (props) => {
   );
   const GroupNameInput = fumiInput({
       label: 'Group Name',
-      iconName: 'event',
+      iconName: 'group',
       iconClass: MaterialIcons,
-      onChangeText: setEventName,
-    }
-  );
-  const ContactInput = fumiInput({
-      label: 'Contact Info',
-      iconName: 'email',
-      iconClass: MaterialCommunityIcons,
-      onChangeText: setContact,
+      onChangeText: setGroupName,
     }
   );
 
-  // Location  
-  const LocationInput = fumiInput({
-      label: 'Add location',
-      iconName: 'map-marker',
-      iconClass: MaterialCommunityIcons,
-      onChangeText: setLocation,
-    }
-  );
-  const OnlineLocationInput = fumiInput({
-      label: 'Meeting URL',
-      iconName: 'web',
-      iconClass: MaterialCommunityIcons,
-      onChangeText: setLocation,
-    }
-  );
+
 
   // Image
+  const screenHeight = Math.round(Dimensions.get('window').height)
   const [uri, setURI] = useState(''); 
-  const [snapPoints, setSnapPoints] = useState([280, 280, 0]);
+  const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
   
   const sheetRef = useRef(null);
   const renderBottomSheet = () => (
     <View
       style={{
         backgroundColor: 'white',
-        height: 200,
+        height: 0.47*screenHeight,
       }}
     >
       <List.Item
@@ -260,87 +199,84 @@ const CreateGroupScreen = (props) => {
       console.log(e);
       alert('Image upload failed, sorry :('); // TODO: change this to notification
     } 
-    // Push event to firestore
-    const event = {
-      eventName,
+    // Push group to firestore
+    const group = {
       groupName,
       description,
-      tags, // TODO
       contact,
-      location,  // TODO
-      startDate,
-      endDate,
-      eventType: eventTypes[selectedIndex],
+      groupType: groupTypes[selectedIndex],
       uri: uploadUrl,
     };
     try {
-      const result = await postEvent(event); // TODO: firebase (remember to check group name rights)      
-      // TODO: navigate to event screen & send success notification
+      const result = await postGroup(group); // TODO: firebase (remember to check group name rights)      
+      // TODO: navigate to group screen & send success notification
     } catch (e) {
       console.log(e);
       alert('Post failed, sorry :('); // TODO: change this to notification
     }
 
   }
-   
+  const screenWidth = Math.round(Dimensions.get('window').width)
   return (
-    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center',}} behavior="padding" enabled   keyboardVerticalOffset={100}>
-      <ScrollView keyboardShouldPersistTaps="never">
+    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center',}} behavior="padding" enabled   keyboardVerticalOffset={0}>
+      <ScrollView keyboardShouldPersistTaps="never" style={{backgroundColor:'white'}}>
         <View
           style={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            padding: 20,
+
           }}
         >
-         <TouchableOpacity onPress={() => sheetRef.current.snapTo(0)}>
+         <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
             <Image              
               source={{ uri }}
-              style={{ width: 200, height: 300 }}
+              style={{ width: screenWidth, height: 300 }}
               PlaceholderContent={<AntIcon name="plus" size={40} />}
             />
           </TouchableOpacity>
         </View>
-        <ButtonGroup
-          onPress={updateEventType}
-          selectedIndex={selectedIndex}
-          buttons={eventTypes}
-          containerStyle={{height: 60}}
-        />
-        <FumiPicker
-          pickerVisible={pickerVisible}
-          togglePicker={togglePicker}
-          value={groupName}
-          editable={false}
-          label="Group"
-          iconClass={MaterialIcons}
-          iconName="group"
-          iconColor={'#f95a25'}
-          iconSize={20}
-          iconWidth={40}
-          inputPadding={16}
-        />
-        <Collapsible
-          collapsed={!pickerVisible}
-          duration={250}
-        >
-        </Collapsible>
-        { GroupNameInput }
+         <View style={{paddingTop:30}}>
+          <ButtonGroup 
+            selectedButtonStyle={{backgroundColor:'#1c7085', borderColor:'transparent'}}
+            onPress={updateGroupType}
+            selectedIndex={selectedIndex}
+            buttons={groupTypes}
+            containerStyle={{height: 40, borderRadius:20 }}
+          />
 
-        <MultiLine
-          value={description}
-          maxLines={4}
-          maxLength={280}
-          onChangeText={setDescription}
-          label="Description (use # for tags)"
-          iconClass={MaterialIcons}
-          iconName="description"
-        />
-        { ContactInput }
-        { eventTypes[selectedIndex] === 'In person' ? LocationInput : OnlineLocationInput }
-        <Button style={{ marginTop: 40 }} title="Post" onPress={handlePost}/>
+          { GroupNameInput }
+
+          <MultiLine
+            value={description}
+            maxLines={4}
+            maxLength={280}
+            onChangeText={setDescription}
+            label="Description (use # for tags)"
+            iconClass={MaterialIcons}
+            iconName="description"
+          />
+          <Button 
+            style={{ marginTop: 40, width:0.7*screenWidth, alignSelf:'center' }} 
+            buttonStyle={{backgroundColor:'#f38b8c',borderRadius:10}}
+            titleStyle={{fontFamily:'Avenir-Light', fontSize: 18, fontWeight:'bold'}} 
+            title="Create" 
+            onPress={handlePost}
+            />
+            </View> 
        </ScrollView>
+       <FAB
+        style={{ 
+          position: 'absolute',
+          margin: 16,
+          left: 0,
+          top: 20,
+          backgroundColor:'white'
+        }}
+        small
+        icon="arrow-left"
+        onPress={() => props.navigation.goBack()}/>
+       
       <BottomSheet
         ref={sheetRef}
         snapPoints={snapPoints}

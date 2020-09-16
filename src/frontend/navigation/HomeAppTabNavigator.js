@@ -40,7 +40,7 @@ export default function HomeAppTabNavigator(){
             },
           })}
           tabBarOptions={{
-            activeTintColor: '#1c7085',
+            activeTintColor: '#1c7085',//#1c7085
             inactiveTintColor: '#bad4da',
             showLabel: false,
             style: {

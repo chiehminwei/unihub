@@ -15,10 +15,10 @@ const deviceWidth = Dimensions.get('window').width;
 function ResizeImage (uri)  {
   return(
     <View style={{flex: 1,
-      marginVertical: 10,
-      backgroundColor: 'blue',
-      flexDirection: 'row',
-      flexWrap: 'wrap'}}>
+                marginVertical: 10,
+                backgroundColor: 'blue',
+                flexDirection: 'row',
+                flexWrap: 'wrap'}}>
         <Image
           source={ uri }
           style={ styles.image }

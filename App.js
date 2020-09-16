@@ -12,6 +12,8 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 //import screens
 import HomeTab from './src/frontend/navigation/HomeAppTabNavigator'
 import EventDetailScreen from '~/screens/home/EventDetailScreen';
+import CreateGroupScreen from '~/screens/forum/CreateGroupScreen';
+import ChatDetailScreen from "./src/frontend/screens/chat/ChatDetailScreen";
 
 
 const fetchFont = () => {
@@ -30,20 +32,29 @@ const RootStack = createStackNavigator();
 function RootStackScreen() {
   return (
     <RootStack.Navigator initialRouteName="Home"
-                         screenOptions={({route})=>{
-                           return{
-                              gestureEnabled: true,
-                              cardOverlayEnabled: true,
-                              ...TransitionPresets.ModalPresentationIOS,
-                           }
-                         }} >
+                        //  screenOptions={({route})=>{
+                        //    return{
+                        //       gestureEnabled: true,
+                        //       cardOverlayEnabled: true,
+                        //       ...TransitionPresets.ModalPresentationIOS,
+                        //    }
+                        //  }} 
+                        
+                         >
       <RootStack.Screen options={{headerShown: false}} name="HomeTab" component={HomeTab} />
-      <RootStack.Screen mode='modal'
-                        options={{
-                          headerShown: false,
-                        }}
-                        name="EventDetail" 
-                        component={EventDetailScreen} />      
+      <RootStack.Screen navigationOptions={{mode:'modal'}} name="ChatExample" component={ChatDetailScreen} />
+      <RootStack.Screen  
+        name="CreateGroup" 
+        component={CreateGroupScreen} 
+        options={{
+          headerShown: false,
+        }}/>  
+      <RootStack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="EventDetail" 
+        component={EventDetailScreen} />    
     </RootStack.Navigator>
   );
 }

@@ -7,10 +7,10 @@ import { useNavigation } from '@react-navigation/native'
 class EventCardScreen extends Component{
   render(){
     const {navigation}=this.props
-      return <View style={{ flex: 1, paddingTop: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white'}}>
-                <EventList navigation={navigation}
-                           scrollEnabled={false}/>
-             </View>       
+      return  <View style={{flex: 1, justifyContent: 'center', alignItems: 'stretch', backgroundColor: 'white', alignSelf: 'stretch', flex:6}}>              
+                    <EventList  navigation={navigation}
+                                scrollEnabled={true}/>
+              </View>   
   }
 };
 export default EventCardScreen;
