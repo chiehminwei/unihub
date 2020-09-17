@@ -8,6 +8,7 @@ import Carousel from 'react-native-snap-carousel';
 
 
 
+
 const events = [
   {
     eventName: 'Thon club fundraising',
@@ -76,6 +77,7 @@ class MyMapCard extends Component {
 
   render() {
     const { navigaiton } = this.props
+    const windowWidth = Dimensions.get('window').width;
       return (
           <View style={{ position:'absolute', top: 0, right: 0, flexDirection:'row', justifyContent: 'center' }}>
               <Carousel
@@ -83,7 +85,7 @@ class MyMapCard extends Component {
                 ref={ref => this.carousel = ref}
                 data={this.state.events}
                 sliderWidth= {300}
-                itemWidth={370}
+                itemWidth={0.9*windowWidth}
                 containerCustomStyle ={{ paddingBottom: 20}}
                 renderItem={({ item }) => <EventItem navigation={ navigaiton } event={ item }/>}
                 onSnapToItem = { index => this.setState({activeIndex:index}) } />
