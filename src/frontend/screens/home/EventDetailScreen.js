@@ -7,7 +7,7 @@ import { FAB, Portal, Provider } from 'react-native-paper';
 import  EventTabNavigator  from '../../navigation/EventTabNavigator'
 
 
-const FabGroup = (props) => {
+  const FabGroup = (props) => {
   const [state, setState] = React.useState({ open: false });
   const onStateChange = ({ open }) => setState({ open });
   const { open } = state;
