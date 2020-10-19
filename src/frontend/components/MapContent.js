@@ -166,7 +166,7 @@ export default class MapContent extends Component {
             sliderWidth= {300}
             itemWidth={0.9*windowWidth}
             containerCustomStyle ={{ paddingBottom: 20}}
-            renderItem={({ item }) => <EventItem navigation={ navigaiton } event={ item }/>}
+            renderItem={({ item }) => <EventItem navigation={ navigation } event={ item }/>}
             onSnapToItem = { index => this.setIndex(index) } />
           </View>
       </View>
