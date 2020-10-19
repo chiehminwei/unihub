@@ -69,14 +69,14 @@ class MyMapCard extends Component {
   constructor(props){
       super();
       this.state = {
-        activeIndex:0,
+        // activeIndex:0,
         events: props.events
     }
   }
 
 
   render() {
-    const { navigaiton } = this.props
+    const { navigaiton, setIndex } = this.props
     const windowWidth = Dimensions.get('window').width;
       return (
           <View style={{ position:'absolute', top: 0, right: 0, flexDirection:'row', justifyContent: 'center' }}>
@@ -88,7 +88,7 @@ class MyMapCard extends Component {
                 itemWidth={0.9*windowWidth}
                 containerCustomStyle ={{ paddingBottom: 20}}
                 renderItem={({ item }) => <EventItem navigation={ navigaiton } event={ item }/>}
-                onSnapToItem = { index => this.setState({activeIndex:index}) } />
+                onSnapToItem = { index => setIndex(index) } />
           </View>
       );
   }
@@ -129,6 +129,16 @@ export default class MapContent extends Component {
   onRegionChange(region) {
     this.setState({ region });
   }
+
+  setIndex = index => {
+    const { events } = this.state;
+    const region = {
+      ...events[index].latlng,
+      latitudeDelta: 0.02,
+      longitudeDelta: 0.02,
+    };
+    this.setState({ region });
+  }
       
   render() {
     const sliderWidth = 1000;
@@ -146,17 +156,17 @@ export default class MapContent extends Component {
             longitudeDelta: 0.0421,
           }}
         >
-          {this.state.events.map(events => (
+          {this.state.events.map(event => (
             <Marker
-              key={events.eventID}
-              coordinate={events.latlng}
-              title={events.eventName}
-              description={events.description}
+              key={event.eventID}
+              coordinate={event.latlng}
+              title={event.eventName}
+              description={event.description}
             />
           ))}
          
         </MapView>
-        <MyMapCard events={events} navigaiton={navigation}/>
+        <MyMapCard setIndex={this.setIndex} events={events} navigaiton={navigation}/>
       </View>
     );
   }
