@@ -1,7 +1,7 @@
 import React,{ useState, Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MapView, { Marker, Overlay } from 'react-native-maps';
+import MapView, { Marker, Overlay, AnimatedRegion, Animated } from 'react-native-maps';
 import EventItem from '~/components/lists/EventItem';
 import Carousel from 'react-native-snap-carousel';
 // import Carousel from 'react-native-snap-carousel';
@@ -117,17 +117,17 @@ export default class MapContent extends Component {
 
   getInitialState() {
     return {
-      region: {
+      region: AnimatedRegion({
         latitude: 37.78825,
         longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-      },
+      }),
     };
   }
 
   onRegionChange(region) {
-    this.setState({ region });
+    this.state.region.setValue(region);
   }
 
   setIndex = index => {
@@ -137,7 +137,7 @@ export default class MapContent extends Component {
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
     };
-    this.setState({ region });
+    this.onRegionChange(region);
   }
       
   render() {
@@ -145,11 +145,12 @@ export default class MapContent extends Component {
     const itemWidth = 200;
     const { navigation } = this.props;
     return (
-      <View style={{flex:1    }}>
+      <View style={{ flex:1 }}>
         
-        <MapView
+        <Animated
           style={styles.mapStyle}
-          regio={this.state.region}
+          region={this.state.region}
+          onRegionChange={this.onRegionChange}
           initialRegion={{
             latitude: 37.78825,
             longitude: -122.4324,
@@ -166,7 +167,7 @@ export default class MapContent extends Component {
             />
           ))}
          
-        </MapView>
+        </Animated>
         <MyMapCard setIndex={this.setIndex} events={events} navigaiton={navigation}/>
       </View>
     );
