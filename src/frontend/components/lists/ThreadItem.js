@@ -3,15 +3,28 @@
 // import { IconButton, Avatar, Button, Card, Title, Subheading, Paragraph, Divider, Text } from 'react-native-paper';
 import AntIcon from "react-native-vector-icons/AntDesign";
 import * as React from 'react';
-import { View, Image } from 'react-native';
-import { IconButton, Avatar, Button, Card, Title, Subheading, Paragraph, Divider, Text } from 'react-native-paper';
+import { View, Image, Dimensions } from 'react-native';
+import { IconButton, Avatar, Button, Card, Title,Subheading, Paragraph, Divider, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 // import useNavigation from '@react-navigation/native';
 
 
 const blue = '#76D0DE';
 const grey = '#6B878B';
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
+const long_text = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
+
+const share = (props) => {
+  const { threadName, description, uri } = props;
+  Share.share({
+    // message: `${props.description}`,
+    title: `Check out this event on UniHub - ${props.threadName}`,
+    url: props.uri,
+  });
+};
 
 
 
@@ -21,32 +34,44 @@ const grey = '#6B878B';
 function ThreadItem ({ thread })  {
   const navigation = useNavigation()
   return(
-  <Card style={{ margin: 5, maxWidth:'95%',flex:1 }} onPress={ () => navigation.navigate('ThreadDetail') }>
-  <Card.Content>
+  <Card style={{ width:screenWidth, marginVertical:5, flex:1 }} onPress={ () => navigation.navigate('ThreadDetail') }>
+  <Card.Content style={{paddingHorizontal:0}}>
     <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
-    <View
-          style={{
-            flex:1,
-            flexDirection: 'row',
-          }}>
-          <AntIcon style={{ marginTop: 1.5 }} color={grey} name="caretright" size={14}/>
-          <Text style={{ color: grey }}>{ thread.groupName }</Text>
+      <Image  source={{uri: thread.uri }}
+                style={{width: 50, height: 50, borderRadius: 25}} />
+      <View style={{flex:1, marginLeft: 12}}>
+        <View style={{ flex: 1, flexDirection: 'row'}}>
+          <TouchableOpacity>
+            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}>{ thread.userName }</Text>
+          </TouchableOpacity>
+            
+          <Text style={{fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
+
+          <TouchableOpacity>
+            <Text style={{fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ thread.groupName }</Text>
+          </TouchableOpacity>
         </View>
-      <Text style={{ textTransform: 'uppercase', fontSize: 10 }}>{ thread.publishTime }</Text>
-    </View>
-    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-      <View>
-        <Title style={{margin:10}}>{ thread.threadTitle }</Title>
-        <Text style={{margin:10}}>{ thread.content }</Text>
+        <View>
+          <Text> 19h </Text>
+        </View>
       </View>
-      <Image source={{uri: thread.uri }}
-      style={{width: 100, height: 100}} />
+      <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>{ thread.publishTime }</Text>
     </View>
+      <View style={{ flex: 1, marginTop:10, flexDirection: 'column', justifyContent: 'space-between'}}>
+        <View>
+          <Title style={{margin:10, fontFamily:'Avenir-Book'}}>{ thread.threadTitle }</Title>
+          <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ long_text }</Text>
+        </View>
+      </View>
+      <Image  source={{uri: thread.uri }}
+              style={{ width: screenWidth, height: 200}} />
+      
   </Card.Content>
-  <Divider style={{ marginTop: 15 }}/>
+  <Divider/>
   <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up">{ thread.numThumbsups}</Button>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing">{ thread.numComments}</Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ thread.numThumbsups}</Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ thread.numComments}</Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="share" color='grey'></Button>
   </Card.Actions>
 </Card>
 )
