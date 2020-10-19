@@ -20,7 +20,6 @@ export default function CommentScreen() {
      </View>
      <View style={{height:50}}>
        <Text>comment</Text>
-      <UselessTextInput/>
      </View><View style={{height:50}}>
        <Text>comment</Text>
      </View><View style={{height:50}}>
@@ -29,7 +28,6 @@ export default function CommentScreen() {
        <Text>comment</Text>
      </View><View style={{height:50}}>
        <Text>comment</Text>
-       <UselessTextInput/>
      </View>
 
 
