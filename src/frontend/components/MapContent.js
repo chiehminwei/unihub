@@ -149,6 +149,7 @@ export default class MapContent extends Component {
         
         <MapView
           style={styles.mapStyle}
+          regio={this.state.region}
           initialRegion={{
             latitude: 37.78825,
             longitude: -122.4324,
