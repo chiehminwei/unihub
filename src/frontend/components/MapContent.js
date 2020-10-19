@@ -62,14 +62,12 @@ const events = [
 ];
 
 export default class MapContent extends Component {
-      state = {
-        events: [ ...events ],
-        this.getInitialState(),
-      }
   
-
+  state = this.getInitialState()
+  
   getInitialState() {
     return {
+      events: [ ...events ],
       region: new AnimatedRegion({
         latitude: 37.78825,
         longitude: -122.4324,
