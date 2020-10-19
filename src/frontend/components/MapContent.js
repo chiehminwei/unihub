@@ -75,7 +75,7 @@ export default class MapContent extends Component {
 
   onRegionChange(region) {
     this._map.animateToRegion(region);
-    this.setState({ region });
+    // this.setState({ region });
   }
 
   handleMarkerPress = index => {
@@ -89,7 +89,7 @@ export default class MapContent extends Component {
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
     };
-    this.setState({ region });
+    // this.setState({ region });
     this._map.animateToRegion(region);
   }
       
