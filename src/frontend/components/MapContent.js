@@ -1,12 +1,9 @@
 import React,{ useState, Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MapView, { Marker, Overlay } from 'react-native-maps';
+import MapView, { Marker, Overlay, AnimatedRegion, Animated } from 'react-native-maps';
 import EventItem from '~/components/lists/EventItem';
 import Carousel from 'react-native-snap-carousel';
-// import Carousel from 'react-native-snap-carousel';
-
-
 
 
 const events = [
@@ -63,57 +60,27 @@ const events = [
     uri: 'https://picsum.photos/700',
   },
 ];
-class MyMapCard extends Component {
-
- 
-  constructor(props){
-      super();
-      this.state = {
-        // activeIndex:0,
-        events: props.events
-    }
-  }
-
-
-  render() {
-    const { navigaiton, setIndex } = this.props
-    const windowWidth = Dimensions.get('window').width;
-      return (
-          <View style={{ position:'absolute', top: 0, right: 0, flexDirection:'row', justifyContent: 'center' }}>
-              <Carousel
-                layout={"default"}
-                ref={ref => this.carousel = ref}
-                data={this.state.events}
-                sliderWidth= {300}
-                itemWidth={0.9*windowWidth}
-                containerCustomStyle ={{ paddingBottom: 20}}
-                renderItem={({ item }) => <EventItem navigation={ navigaiton } event={ item }/>}
-                onSnapToItem = { index => setIndex(index) } />
-          </View>
-      );
-  }
-}
 
 export default class MapContent extends Component {
       state = {
         events: [ ...events ],
-        region: this.getInitialState(),
+        this.getInitialState(),
       }
   
 
   getInitialState() {
     return {
-      region: {
+      region: new AnimatedRegion({
         latitude: 37.78825,
         longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-      },
+      }),
     };
   }
 
   onRegionChange(region) {
-    this.setState({ region });
+    this.state.region.setValue(region);
   }
 
   handleMarkerPress = index => {
@@ -122,12 +89,12 @@ export default class MapContent extends Component {
 
   setIndex = index => {
     const { events } = this.state;
-    const region = {
+    const region = new AnimatedRegion({
       ...events[index].latlng,
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
-    };
-    this.setState({ region });
+    });
+    this.onRegionChange(region);
   }
       
   render() {
@@ -137,9 +104,10 @@ export default class MapContent extends Component {
     const windowWidth = Dimensions.get('window').width;
     return (
       <View style={{flex:1    }}>
-        <MapView
+        <Animated
           style={styles.mapStyle}
           region={this.state.region}
+          onRegionChange={this.onRegionChange}
           initialRegion={{
             latitude: 37.78825,
             longitude: -122.4324,
@@ -157,7 +125,7 @@ export default class MapContent extends Component {
             />
           ))}
          
-        </MapView>
+        </Animated>
         <View style={{ position:'absolute', top: 0, right: 0, flexDirection:'row', justifyContent: 'center' }}>
           <Carousel
             layout={"default"}
