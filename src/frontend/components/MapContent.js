@@ -97,7 +97,7 @@ class MyMapCard extends Component {
 export default class MapContent extends Component {
       state = {
         events: [ ...events ],
-        region: this.getInitialState(),
+        region: ...this.getInitialState(),
         // markers: [
         //   {
         //     latlng: { latitude: 37.78825, longitude: -122.4324 },
