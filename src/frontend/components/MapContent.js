@@ -98,20 +98,6 @@ export default class MapContent extends Component {
       state = {
         events: [ ...events ],
         region: this.getInitialState(),
-        // markers: [
-        //   {
-        //     latlng: { latitude: 37.78825, longitude: -122.4324 },
-        //     title: 'Cool',
-        //     id: 'u123',
-        //     description: 'WTF!',
-        //   },
-        //   {
-        //     latlng: { latitude: 37.78925, longitude: -122.4364 },
-        //     title: 'Cool',
-        //     id: 'u234',
-        //     description: 'WTF!',
-        //   }
-        // ]
       }
   
 
@@ -130,6 +116,10 @@ export default class MapContent extends Component {
     this.setState({ region });
   }
 
+  handleMarkerPress = index => {
+    this._carousel.snapToItem(index);
+  }
+
   setIndex = index => {
     const { events } = this.state;
     const region = {
@@ -144,9 +134,9 @@ export default class MapContent extends Component {
     const sliderWidth = 1000;
     const itemWidth = 200;
     const { navigation } = this.props;
+    const windowWidth = Dimensions.get('window').width;
     return (
       <View style={{flex:1    }}>
-        
         <MapView
           style={styles.mapStyle}
           region={this.state.region}
@@ -157,17 +147,28 @@ export default class MapContent extends Component {
             longitudeDelta: 0.0421,
           }}
         >
-          {this.state.events.map(event => (
+          {this.state.events.map((event, index) => (
             <Marker
               key={event.eventID}
               coordinate={event.latlng}
               title={event.eventName}
               description={event.description}
+              onPress={() => this.handleMarkerPress(index)}
             />
           ))}
          
         </MapView>
-        <MyMapCard setIndex={this.setIndex} events={events} navigaiton={navigation}/>
+        <View style={{ position:'absolute', top: 0, right: 0, flexDirection:'row', justifyContent: 'center' }}>
+          <Carousel
+            layout={"default"}
+            ref={ref => this._carousel = ref}
+            data={this.state.events}
+            sliderWidth= {300}
+            itemWidth={0.9*windowWidth}
+            containerCustomStyle ={{ paddingBottom: 20}}
+            renderItem={({ item }) => <EventItem navigation={ navigaiton } event={ item }/>}
+            onSnapToItem = { index => this.setIndex(index) } />
+          </View>
       </View>
     );
   }
