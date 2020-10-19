@@ -117,7 +117,7 @@ export default class MapContent extends Component {
 
   getInitialState() {
     return {
-      region: AnimatedRegion({
+      region: new AnimatedRegion({
         latitude: 37.78825,
         longitude: -122.4324,
         latitudeDelta: 0.0922,
