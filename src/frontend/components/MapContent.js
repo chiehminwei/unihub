@@ -1,7 +1,7 @@
 import React,{ useState, Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MapView, { Marker, Overlay, AnimatedRegion, Animated } from 'react-native-maps';
+import MapView, { Marker, Overlay } from 'react-native-maps';
 import EventItem from '~/components/lists/EventItem';
 import Carousel from 'react-native-snap-carousel';
 
@@ -63,22 +63,19 @@ const events = [
 
 export default class MapContent extends Component {
   
-  state = this.getInitialState()
-  
-  getInitialState() {
-    return {
-      events: [ ...events ],
-      region: new AnimatedRegion({
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      }),
-    };
+  state = {
+    events: [ ...events ],
+    region: {
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    },
   }
 
   onRegionChange(region) {
-    this.state.region.setValue(region);
+    this._map.animateToRegion(region);
+    this.setState({ region });
   }
 
   handleMarkerPress = index => {
@@ -87,12 +84,13 @@ export default class MapContent extends Component {
 
   setIndex = index => {
     const { events } = this.state;
-    const region = new AnimatedRegion({
+    const region = {
       ...events[index].latlng,
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
-    });
-    this.onRegionChange(region);
+    };
+    this.setState({ region });
+    this._map.animateToRegion(region);
   }
       
   render() {
@@ -102,10 +100,10 @@ export default class MapContent extends Component {
     const windowWidth = Dimensions.get('window').width;
     return (
       <View style={{flex:1    }}>
-        <Animated
+        <MapView
+          ref={ref => this._map = ref}
           style={styles.mapStyle}
           region={this.state.region}
-          onRegionChange={this.onRegionChange}
           initialRegion={{
             latitude: 37.78825,
             longitude: -122.4324,
@@ -123,7 +121,7 @@ export default class MapContent extends Component {
             />
           ))}
          
-        </Animated>
+        </MapView>
         <View style={{ position:'absolute', top: 0, right: 0, flexDirection:'row', justifyContent: 'center' }}>
           <Carousel
             layout={"default"}
