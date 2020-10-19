@@ -1,7 +1,7 @@
 import React,{ useState, Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MapView, { Marker, Overlay, AnimatedRegion, Animated } from 'react-native-maps';
+import MapView, { Marker, Overlay } from 'react-native-maps';
 import EventItem from '~/components/lists/EventItem';
 import Carousel from 'react-native-snap-carousel';
 // import Carousel from 'react-native-snap-carousel';
@@ -97,7 +97,7 @@ class MyMapCard extends Component {
 export default class MapContent extends Component {
       state = {
         events: [ ...events ],
-        region: this.getInitialState().region,
+        region: this.getInitialState(),
         // markers: [
         //   {
         //     latlng: { latitude: 37.78825, longitude: -122.4324 },
@@ -117,17 +117,17 @@ export default class MapContent extends Component {
 
   getInitialState() {
     return {
-      region: new AnimatedRegion({
+      region: {
         latitude: 37.78825,
         longitude: -122.4324,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
-      }),
+      },
     };
   }
 
   onRegionChange(region) {
-    this.state.region.setValue(region);
+    this.setState({ region });
   }
 
   setIndex = index => {
@@ -137,7 +137,7 @@ export default class MapContent extends Component {
       latitudeDelta: 0.02,
       longitudeDelta: 0.02,
     };
-    this.onRegionChange(region);
+    this.setState({ region });
   }
       
   render() {
@@ -145,12 +145,11 @@ export default class MapContent extends Component {
     const itemWidth = 200;
     const { navigation } = this.props;
     return (
-      <View style={{ flex:1 }}>
+      <View style={{flex:1    }}>
         
-        <Animated
+        <MapView
           style={styles.mapStyle}
           region={this.state.region}
-          onRegionChange={this.onRegionChange}
           initialRegion={{
             latitude: 37.78825,
             longitude: -122.4324,
@@ -167,7 +166,7 @@ export default class MapContent extends Component {
             />
           ))}
          
-        </Animated>
+        </MapView>
         <MyMapCard setIndex={this.setIndex} events={events} navigaiton={navigation}/>
       </View>
     );
