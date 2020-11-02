@@ -17,11 +17,11 @@ export function ForumTabNavigator() {
       <ForumTab.Navigator
         tabBarOptions={{
           style:{
-                  backgroundColor:'#F3F3F3'
+                  backgroundColor:'white'
             },
           indicatorStyle: {
             borderBottomColor: '#00889A',
-            borderBottomWidth: 1
+            borderBottomWidth: 3
             },
           }}>
         <ForumTab.Screen name="All" component={AllScreen} />

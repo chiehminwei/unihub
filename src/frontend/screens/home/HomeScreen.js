@@ -37,23 +37,17 @@ export default class HomeScreen extends Component {
         <View 
           style={{ 
               minHeight:50,
-              flex: 1, 
+              height:55,
+              maxHeight:60,
               alignSelf: 'stretch', 
               textAlign: 'center', 
               // backgroundColor: 'white'
               }}>
           <View style={styles.homeheader}>
-            <View style={{flexDirection:'row',flex:1, justifyContent:'space-between',alignItems:'center'}}>
-              <Text style={styles.browse}>Browse</Text>
-              <NaviButton onPress={() => navigation.navigate('Create')} 
-                          iconName='plus-box' 
-                          style={styles.plus} 
-                          size={30}
-                          iconFamily={'materialCommunity'}/>
-            </View>
             <View style={{flexDirection:'row',flex:1, 
                           justifyContent:'space-between',
                           alignItems:'center'}}>
+              
               <NaviButton onPress={() => navigation.navigate('Planner')} 
                           iconName='calendar' 
                           style={styles.calendar} 
@@ -72,11 +66,16 @@ export default class HomeScreen extends Component {
                           style={styles.filter} 
                           size={25}
                           iconFamily={'materialCommunity'}/>
+              <NaviButton onPress={() => navigation.navigate('Create')} 
+                          iconName='plus-box' 
+                          style={styles.plus} 
+                          size={30}
+                          iconFamily={'materialCommunity'}/>
             </View>
           </View>
         </View>
 
-        <View style={{backgroundColor :'#bad4da', alignSelf: 'stretch', flex:6, borderTopLeftRadius: 20, borderTopRightRadius:20 }}>
+        <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6 }}>
             { isMap ? <MapContent navigation={navigation}/> : <EventList navigation={navigation}/> }
         </View>
           

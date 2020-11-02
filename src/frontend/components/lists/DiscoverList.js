@@ -108,8 +108,8 @@ export default function DiscoverList({navigation}) {
     <SectionList 
       renderSectionHeader={({ section: { title } }) => <Text style={{ fontWeight: 'bold' }}>{title}</Text>} 
       sections={[ 
-        { title: 'Groups', data: groups, renderItem: ({ item }) =>  <GroupItem group={ item } navigation={ navigation }/> }, 
-        { title: 'Threads', data: threads, renderItem: ({ item }) =>  <ThreadItem thread={ item } navigation={ navigation }/>}, 
+        { data: groups, renderItem: ({ item }) =>  <GroupItem group={ item } navigation={ navigation }/> }, 
+        { data: threads, renderItem: ({ item }) =>  <ThreadItem thread={ item } navigation={ navigation }/>}, 
       ]} 
       keyExtractor={(item, index) => item + index} 
     />

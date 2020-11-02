@@ -4,6 +4,7 @@ import { styles } from '~/stylesheets/styles';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NaviButton } from '~/components/button/NaviButton';
+import Search from '~/components/Search';
 
 
 
@@ -12,19 +13,25 @@ export function ForumScreenHeader() {
   return (
     <View 
       style={{ 
+          maxHeight:50,
           flex: 1,
-          backgroundColor: '#F3F3F3', 
+          backgroundColor: 'white', 
           alignSelf: 'stretch', 
           textAlign: 'center', 
+          flexDirection:'row',
+          justifyContent:'space-between',
+          paddingHorizontal:16,
+          alignItems:"center"
       }}
     >
-      <View style={{flexDirection:'row', flex:1,justifyContent:'space-between',alignItems:'center'}}>
-        <Text style={styles.forum}> Forum </Text>
-        <NaviButton onPress={() => navigation.navigate('Search')}
+        <View style={styles.forumsearch}>
+           <Search onPress={() => navigation.navigate('Search')}/>
+        </View>
+        {/* <NaviButton onPress={() => navigation.navigate('Search')}
                     iconName='search'
                     size={30}
                     style={styles.search}
-                    iconFamily={'material'}/>
+                    iconFamily={'material'}/> */}
         
         <NaviButton onPress={() => navigation.navigate('CreateGroup')}
                     iconName='plus-circle'
@@ -32,7 +39,6 @@ export function ForumScreenHeader() {
                     style={styles.search}
                     iconFamily={'materialCommunity'}/>
       </View>
-    </View>
   );
 }
 

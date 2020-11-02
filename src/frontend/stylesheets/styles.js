@@ -46,8 +46,9 @@ export const styles = StyleSheet.create({
         flex: 7
     },
 
-    search: {
-        flex:1
+    forumsearch: {
+        flex:2,
+        marginRight: 20
       },
 
     creategroup:{

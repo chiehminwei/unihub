@@ -26,7 +26,7 @@ export function ForumScreen (){
       <StatusBar barStyle="dark-content" />
       <ForumScreenHeader/>
 
-      <View style={{ alignSelf: 'stretch', flex:8 }}>
+      <View style={{ alignSelf: 'stretch', flex:9 }}>
           <ForumTabNavigator />
       </View>
     </SafeAreaView>

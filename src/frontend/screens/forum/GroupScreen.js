@@ -7,7 +7,7 @@ class GroupScreen extends Component{
   render(){
    const {navigation}=this.props
       return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' ,backgroundColor:'white'}}>
           <GroupList navigation={navigation}/>
         </View>
       )       

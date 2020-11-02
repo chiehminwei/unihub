@@ -238,11 +238,11 @@ const CreateGroupScreen = (props) => {
         </View>
          <View style={{paddingTop:30}}>
           <ButtonGroup 
-            selectedButtonStyle={{backgroundColor:'#1c7085', borderColor:'transparent'}}
+            selectedButtonStyle={{backgroundColor:'#c4c4c4', borderColor:'transparent'}}
             onPress={updateGroupType}
             selectedIndex={selectedIndex}
             buttons={groupTypes}
-            containerStyle={{height: 40, borderRadius:20 }}
+            containerStyle={{height: 40, borderRadius:5}}
           />
 
           { GroupNameInput }
