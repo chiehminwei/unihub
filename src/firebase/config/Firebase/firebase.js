@@ -2,11 +2,13 @@ import * as firebase from "firebase";
 import "firebase/auth";
 import "firebase/firestore";
 import firebaseConfig from "./firebaseConfig";
-import Item from "./data/item";
-import Favorite from "./data/favorite";
-import History from "./data/history";
-import User from "./data/users";
-import UserPublic from "./data/user_public";
+// import Comment from "./data/comment";
+// import Group from "./data/group";
+// import Notification from "./data/notification";
+// import Post from "./data/post";
+import User from "./data/user";
+import Event from "./data/event";
+import Calendar from "./data/calendar";
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -29,19 +31,9 @@ const Firebase = {
     return firebase.auth().sendPasswordResetEmail(email);
   },
   // firestore
-  createNewUser: userData => {
-    return firebase
-      .firestore()
-      .collection("users")
-      .doc(`${userData.uid}`)
-      .set(userData);
-  },
-  ...Item, 
-  ...Favorite,
-  ...History,
+  ...Calendar,
+  ...Event,
   ...User,
-  ...UserPublic
-
 };
 
 export default Firebase;

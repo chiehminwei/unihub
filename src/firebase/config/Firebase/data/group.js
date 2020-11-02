@@ -1,0 +1,11 @@
+createGroup
+disbandGroup
+joinGroup
+quitGroup
+acceptMember
+rejectMember
+transferAdmin
+kickoutMember
+reportGroup
+blockGroup
+unblockGroup

@@ -60,7 +60,7 @@ import Toast from 'react-native-root-toast';
 
 console.disableYellowBox = true;
 
-const CreateEventScreen = (props) => {
+const CreateEventScreen = ({ navigation, firebase }) => {
 
   // Calendar Time Picker
   const [startCollapsed, setStartCollapse] = useState(true);
@@ -253,36 +253,55 @@ const CreateEventScreen = (props) => {
 
   const handlePost = async () => {
     // Upload image to Firebase Storage
-    try {
-       const uploadUrl = await uploadImageAsync(uri);
-       setURI(uploadUrl);
-    } catch (e) {
-      console.log(e);
-      let toast = Toast.show('Image upload failed, sorry :(', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-      })
-    } 
+    // try {
+    //    const uploadUrl = await uploadImageAsync(uri);
+    //    setURI(uploadUrl);
+    // } catch (e) {
+    //   console.log(e);
+    //   let toast = Toast.show('Image upload failed, sorry :(', {
+    //     duration: Toast.durations.LONG,
+    //     position: Toast.positions.BOTTOM,
+    //     shadow: true,
+    //     animation: true,
+    //     hideOnPress: true,
+    //     delay: 0,
+    //   })
+    // } 
+    const uploadUrl = 'dummy_url'
     // Push event to firestore
     const event = {
-      eventName,
-      groupName,
-      description,
-      tags, // TODO
-      contact,
-      location,  // TODO
-      startDate,
-      endDate,
-      eventType: eventTypes[selectedIndex],
-      uri: uploadUrl,
+      content: {
+        name: eventName,
+        description,
+        tags: ['TAG1', 'TAG2'], // TODO
+        location: 'LOCATION',  // TODO
+        time: {
+          startDate,
+          endDate,
+        },
+        contact,
+        eventType: eventTypes[selectedIndex],
+        uri: uploadUrl,
+        participants: [1, 2, 3],
+        filters: [1, 2, 3],
+      },
+      creator: {
+        uid: 'abc',
+        name: 'Jimmy Wei',
+        avatar_uri: 'ASDASD',
+      },
+      group: {
+        uid: 'group_uid',
+        name: groupName,
+        avatar_uri: 'ASDASD',
+      },
     };
     try {
-      const result = await postEvent(event); // TODO: firebase (remember to check group name rights)      
+      // TODO: firebase (remember to check group name rights)            
+      const result = await firebase.createEvent(event);
+      
       // TODO: navigate to event screen & send success notification
+      
     } catch (e) {
       console.log(e);
       let toast = Toast.show('Post failed, sorry :(', {

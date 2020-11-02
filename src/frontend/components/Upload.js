@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 var uuidv4 = require('random-uuid-v4');
 
-// Firebase sets some timeers for a long period, which will trigger some warnings. Let's turn that off for this example
+// Firebase sets some timers for a long period, which will trigger some warnings. Let's turn that off for this example
 console.disableYellowBox = true;
 
 class Upload extends React.Component {
