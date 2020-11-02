@@ -1,0 +1,7 @@
+addComment
+removeComment
+editComment
+replyComment
+reportComment
+addLike
+removeLike
