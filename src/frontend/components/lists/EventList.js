@@ -139,8 +139,8 @@ export default function EventList({ navigation, scrollEnabled }) {
                 {section.title}
           </Text>
         </View>}
-    />
-    </View>
+      />
+      </View>
   )
 }
 

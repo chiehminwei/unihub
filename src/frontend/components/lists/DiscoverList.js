@@ -9,6 +9,7 @@ import {
 import Constants from "expo-constants";
 import ThreadItem from './ThreadItem';
 import GroupItem from './GroupItem';
+import { Divider } from 'react-native-paper'
 
 const groups = [
   {
@@ -108,10 +109,23 @@ export default function DiscoverList({navigation}) {
     <SectionList 
       renderSectionHeader={({ section: { title } }) => <Text style={{ fontWeight: 'bold' }}>{title}</Text>} 
       sections={[ 
-        { data: groups, renderItem: ({ item }) =>  <GroupItem group={ item } navigation={ navigation }/> }, 
-        { data: threads, renderItem: ({ item }) =>  <ThreadItem thread={ item } navigation={ navigation }/>}, 
+        { title: 'Your groups', data: groups, renderItem: ({ item }) =>  <GroupItem group={ item } navigation={ navigation }/> }, 
+        { title:'Group threads',data: threads, renderItem: ({ item }) =>  <ThreadItem thread={ item } navigation={ navigation }/>}, 
       ]} 
       keyExtractor={(item, index) => item + index} 
+      renderSectionHeader={({section}) => 
+        <View style={{backgroundColor:'white'}}>
+          <Divider style={{height:1}}/>
+          <Text 
+            style={{
+              marginLeft:16,
+              marginVertical:5,
+              fontFamily:'Avenir-Light', 
+              fontWeight:'bold', 
+              fontSize: 24}}>
+                {section.title}
+          </Text>
+        </View>}
     />
   )
 }
