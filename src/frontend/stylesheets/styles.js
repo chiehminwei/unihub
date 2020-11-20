@@ -1,5 +1,17 @@
 import { StyleSheet } from 'react-native';
 
+const categoryBase = {
+  flex: 1,
+  borderRadius: 5,
+  justifyContent: 'center',
+  alignItems: 'center',
+  margin: 10,
+  height: 60,
+  padding: 10,
+  minWidth: 90,
+  maxWidth: 90,
+};
+
 export const styles = StyleSheet.create({
     headerTitle: {
         color: '#121212',
@@ -87,4 +99,19 @@ export const styles = StyleSheet.create({
         fontSize: 24,
       },
     
+
+    // categories
+
+    selectedCategory: {
+      ...categoryBase,
+      backgroundColor: "#004a99",
+    },
+
+    notSelectedCategory: {
+      ...categoryBase,
+      backgroundColor: "#121212",
+    },
+
 });
+
+
