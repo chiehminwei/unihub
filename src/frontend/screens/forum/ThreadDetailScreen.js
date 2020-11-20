@@ -1,17 +1,19 @@
 import React from 'react';
-import { StyleSheet, ScrollView, View, ActivityIndicator } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Constants from 'expo-constants';
+import { StyleSheet, Image, ScrollView, View, Share, TouchableOpacity, Dimensions } from 'react-native';
+import { Button, Card, Title, Divider, Text } from 'react-native-paper';
 import { withFirebaseHOC } from "~/../firebase/config/Firebase";
-import { Text, Image } from 'react-native-elements';
 
-const longText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.`
+const share = (props) => {
+  const { threadTitle, description, uri } = props;
+  Share.share({
+    // message: `${props.description}`,
+    title: `Check out this event on UniHub - ${props.threadTitle}`,
+    url: props.uri,
+  });
+};
+const long_text = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 const thread = 
   {
     groupName: 'Thon 2020',
@@ -44,28 +46,58 @@ const ThreadDetailScreen = ({ threadID, navigation, firebase }) => {
   } = thread
 
   return (
-    <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <Text style={styles.groupName}>
-        	{ thread.groupName }
-        </Text>
-        <Text>
-          { thread.threadTitle }
-        </Text>
-        <Text style={styles.userName}>
-        	{ thread.userName }
-        </Text>
-        <Image          
-        	source={{ uri }}
-        	style={ styles.image }
-        	PlaceholderContent={<ActivityIndicator />}
-        />
+        <Card style={{ width:screenWidth, marginVertical:5, flex:1 }}>
+          <Card.Content style={{paddingHorizontal:0}}>
+            <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
+              <Image  source={{uri: thread.uri }}
+                        style={{width: 50, height: 50, borderRadius: 25}} />
+              <View style={{flex:1, marginLeft: 12}}>
+                <View style={{ flex: 1, flexDirection: 'row'}}>
+                  <TouchableOpacity>
+                    <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}>{ thread.userName }</Text>
+                  </TouchableOpacity>
+                    
+                  <Text style={{fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
 
-        <Text style={styles.description}>
-          { thread.content }
-        </Text>
+                  <TouchableOpacity>
+                    <Text style={{fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ thread.groupName }</Text>
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <Text> 19h </Text>
+                </View>
+              </View>
+              <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>{ thread.publishTime }</Text>
+            </View>
+              <View style={{ flex: 1, marginTop:10, flexDirection: 'column', justifyContent: 'space-between'}}>
+                <View>
+                  <Title style={{margin:10, fontFamily:'Avenir-Book'}}>{ thread.threadTitle }</Title>
+                  <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ long_text }</Text>
+                </View>
+              </View>
+              <Image  source={{uri: thread.uri }}
+                      style={{ width: screenWidth, height: 200}} />
+          </Card.Content>
+          <Divider/>
+          <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+            <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ thread.numThumbsups}</Button>
+            <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ thread.numComments}</Button>
+            <Button onPress={ () => () => share(thread) } icon="share" color='grey'></Button>
+          </Card.Actions>
+        </Card>
+
+        <View style={{paddingHorizontal:16}}>
+          <Text style={{fontFamily:"Avenir-Light",
+                        fontSize: 20,
+                        fontWeight:'bold'}}>
+            Comments
+          </Text>
+          <Text>
+            sss
+          </Text>
+        </View>
       </ScrollView>
-    </SafeAreaView>
   );
 }
 
@@ -77,8 +109,7 @@ const styles = StyleSheet.create({
     // marginTop: Constants.statusBarHeight,
   },
   scrollView: {
-    backgroundColor: 'pink',
-    marginHorizontal: 5,
+    backgroundColor: 'white',
   },
   text: {
     fontSize: 42,

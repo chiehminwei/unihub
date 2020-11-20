@@ -1,7 +1,6 @@
 import React from 'react';
 import { View,TouchableOpacity,Text } from 'react-native';
 import { styles } from '~/stylesheets/styles';
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { NaviButton } from '~/components/button/NaviButton';
 import Search from '~/components/Search';

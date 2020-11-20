@@ -8,7 +8,7 @@ import Carousel from 'react-native-snap-carousel';
 // import { styles } from '../stylesheets/styles';
 const keyevents = [
   {
-    eventName: 's'
+    eventName: 'ad'
   },
 ]
 const events = [

@@ -6,7 +6,7 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { FAB, Portal, Provider } from 'react-native-paper';
 import  EventTabNavigator  from '../../navigation/EventTabNavigator'
 
-
+  const deviceWidth = Dimensions.get('window').width;
   const FabGroup = (props) => {
   const [state, setState] = React.useState({ open: false });
   const onStateChange = ({ open }) => setState({ open });
@@ -60,7 +60,7 @@ import  EventTabNavigator  from '../../navigation/EventTabNavigator'
 
 
 
-const deviceWidth = Dimensions.get('window').width;
+
 
 
 function ResizeImage (uri)  {

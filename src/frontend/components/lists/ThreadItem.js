@@ -1,27 +1,20 @@
-// import * as React from 'react';
-// import { View, Image, Share } from 'react-native';
-// import { IconButton, Avatar, Button, Card, Title, Subheading, Paragraph, Divider, Text } from 'react-native-paper';
-import AntIcon from "react-native-vector-icons/AntDesign";
 import * as React from 'react';
-import { View, Image, Dimensions } from 'react-native';
-import { IconButton, Avatar, Button, Card, Title,Subheading, Paragraph, Divider, Text } from 'react-native-paper';
+import { View, Image, Dimensions, Share } from 'react-native';
+import { Button, Card, Title, Divider, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 // import useNavigation from '@react-navigation/native';
 
-
-const blue = '#76D0DE';
-const grey = '#6B878B';
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 const long_text = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
 
 const share = (props) => {
-  const { threadName, description, uri } = props;
+  const { threadTitle, description, uri } = props;
   Share.share({
     // message: `${props.description}`,
-    title: `Check out this event on UniHub - ${props.threadName}`,
+    title: `Check out this event on UniHub - ${props.threadTitle}`,
     url: props.uri,
   });
 };
@@ -45,10 +38,10 @@ function ThreadItem ({ thread })  {
             <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}>{ thread.userName }</Text>
           </TouchableOpacity>
             
-          <Text style={{fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
+          <Text style={{ fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
 
           <TouchableOpacity>
-            <Text style={{fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ thread.groupName }</Text>
+            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ thread.groupName }</Text>
           </TouchableOpacity>
         </View>
         <View>
@@ -71,7 +64,7 @@ function ThreadItem ({ thread })  {
   <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
     <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ thread.numThumbsups}</Button>
     <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ thread.numComments}</Button>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="share" color='grey'></Button>
+    <Button onPress={ () => share(thread) } icon="share" color='grey'></Button>
   </Card.Actions>
 </Card>
 )
