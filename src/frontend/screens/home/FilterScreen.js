@@ -3,6 +3,8 @@ import { Text, View, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Dim
 import Category from '../../components/Category.js';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { cond } from 'react-native-reanimated';
+import Time from '../../components/Time'
 
 
 
@@ -28,11 +30,14 @@ export default function FilterScreen() {
     });
   }, [navigation, setSelected]);
 
+
   const [selected, setSelected] = useState([]);
+  const [currentTime, setCurrentTime] = useState('')
+
   const toggle = category => setSelected(selected => (
       selected.includes(category) ? selected.filter(x => x !== category) : [...selected, category]
   ));
-  const reset = () => setSelected(selected => (selected.filter(x => x === 'none')));
+  const reset = () => {setSelected(selected => (selected.filter(x => x === 'none'))); setCurrentTime('');}
 
   return (
     // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', paddingvertical: 40 }}>
@@ -59,11 +64,13 @@ export default function FilterScreen() {
             <View style={{flexDirection:'row', flexWrap:'wrap', alignContent:'center',alignItems:'center', padding: screenWidth*0.05}}>
               {
                 times.map(time => (
-                  <Category
+                  <Time
                     key = {time}
                     category = {time}
                     toggle = {toggle}
                     isSelected = {selected.includes(time)}
+                    currentTime = {currentTime}
+                    setCurrentTime = {setCurrentTime}
                   />
                 ))
               }
