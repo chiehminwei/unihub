@@ -1,13 +1,10 @@
-import { createSwitchNavigator, createAppContainer } from "@react-navigation/native";
-import AuthNavigation from "./AuthNavigation";
-import AppNavigation from "./HomeAppTabNavigator";
-
 import React, { useState, useEffect } from "react";
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
 import * as Icon from "@expo/vector-icons";
 import { withFirebaseHOC } from "~/../firebase/config/Firebase";
+
 
 function Initial({ navigation, firebase }) {
   const [isAssetsLoadingComplete, setIsAssetsLoadingComplete] = useState(false);
@@ -18,12 +15,10 @@ function Initial({ navigation, firebase }) {
 
       firebase.checkUserAuth(user => {
         if (user) {
-          console.log('user', user)
           // if the user has previously logged in
           navigation.navigate("App");
         } else {
           // if the user has previously logged out from the app
-          console.log('user', 123)
           navigation.navigate("Auth");
         }
       });
@@ -34,10 +29,10 @@ function Initial({ navigation, firebase }) {
 
   async function loadLocalAsync() {
     return await Promise.all([
-      // Asset.loadAsync([
-      //   require("../assets/flame.png"),
-      //   require("../assets/icon.png")
-      // ]),
+      Asset.loadAsync([
+        require("../assets/flame.png"),
+        require("../assets/icon.png")
+      ]),
       Font.loadAsync({
         ...Icon.Ionicons.font
       })
@@ -63,20 +58,4 @@ function Initial({ navigation, firebase }) {
   );
 }
 
-const fbInitial = withFirebaseHOC(Initial);
-
-
-function AppContainer({ navigation, firebase }) {
-  return (
-    <NavigationContainer>
-      {isLoggedIn ? (
-      	<AppNavigation/>
-      ) : (
-        <AuthNavigation/>
-      )}
-    </NavigationContainer>
-  );
-}
-
-
-export default AppContainer;
+export default withFirebaseHOC(Initial);

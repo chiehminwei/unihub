@@ -253,21 +253,22 @@ const CreateEventScreen = ({ navigation, firebase }) => {
 
   const handlePost = async () => {
     // Upload image to Firebase Storage
-    // try {
-    //    const uploadUrl = await uploadImageAsync(uri);
-    //    setURI(uploadUrl);
-    // } catch (e) {
-    //   console.log(e);
-    //   let toast = Toast.show('Image upload failed, sorry :(', {
-    //     duration: Toast.durations.LONG,
-    //     position: Toast.positions.BOTTOM,
-    //     shadow: true,
-    //     animation: true,
-    //     hideOnPress: true,
-    //     delay: 0,
-    //   })
-    // } 
-    const uploadUrl = 'dummy_url'
+    try {
+       const uploadUrl = await uploadImageAsync(uri);
+       setURI(uploadUrl);
+    } catch (e) {
+      console.log(e);
+      let toast = Toast.show('Please make sure you have access to the internet :(', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+      })
+      return;
+    } 
+    
     // Push event to firestore
     const event = {
       content: {
@@ -281,7 +282,7 @@ const CreateEventScreen = ({ navigation, firebase }) => {
         },
         contact,
         eventType: eventTypes[selectedIndex],
-        uri: uploadUrl,
+        uri: uri,
         participants: [1, 2, 3],
         filters: [1, 2, 3],
       },
@@ -304,7 +305,7 @@ const CreateEventScreen = ({ navigation, firebase }) => {
       
     } catch (e) {
       console.log(e);
-      let toast = Toast.show('Post failed, sorry :(', {
+      let toast = Toast.show('Please make sure you have access to the internet :(', {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
         shadow: true,
@@ -312,6 +313,7 @@ const CreateEventScreen = ({ navigation, firebase }) => {
         hideOnPress: true,
         delay: 0,
       })
+      return;
     }
 
   }

@@ -79,7 +79,7 @@ if (!fontLoaded) {
       <SafeAreaProvider>
         <PaperProvider> 
           <NavigationContainer>
-            <RootStackScreen />
+            <AppContainer />
           </NavigationContainer>
         </PaperProvider>
       </SafeAreaProvider>
