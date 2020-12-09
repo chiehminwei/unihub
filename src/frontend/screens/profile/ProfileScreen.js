@@ -13,10 +13,10 @@ export function ProfileScreen() {
                  style={{backgroundColor:'transparent'}} />
       <View>
       <ScrollView style={{backgroundColor:'white'}}>
-      <ProfileScreenHeader/>
-      <View style={{alignSelf: 'stretch', flex: 2}}>
-        <ProfileTabNavigator/>
-      </View>
+        <ProfileScreenHeader/>
+        <View style={{alignSelf: 'stretch', flex: 2}}>
+          <ProfileTabNavigator/>
+        </View>
       </ScrollView>
       </View>
     </SafeAreaView>

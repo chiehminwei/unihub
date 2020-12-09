@@ -23,7 +23,7 @@ export function ProfileStackNavigator() {
       <ProfileStack.Screen  name='Groups' component={GroupDetailScreen} />
       <ProfileStack.Screen  name='GroupDetail' component={GroupDetailScreen} />
       <ProfileStack.Screen  name='ThreadDetail' component={ThreadDetailScreen} />
-      <ProfileStack.Screen  name='EventDetail' component={EventDetailScreen} />
+      <ProfileStack.Screen  options={{headerShown: false}} name='EventDetail' component={EventDetailScreen} />
       <ProfileStack.Screen  options={{title:'My Posts'}}name='ThreadCard' component={ThreadCardScreen} />
       <ProfileStack.Screen  options={{title:'My Groups'}}name='GroupScreen' component={GroupScreen} />
     </ProfileStack.Navigator>
