@@ -34,6 +34,8 @@ export default class HomeScreen extends Component {
       <SafeAreaView style={screenStyles.safeArea} edges={['right','top','left']}>
         <StatusBar  barStyle='dark-content' />
         <View style = {{ alignSelf:'stretch', flex:1, backgroundColor:'white'}}>
+
+          {/* HEADER */}
         <View 
           style={{ 
               minHeight:50,
@@ -74,7 +76,7 @@ export default class HomeScreen extends Component {
             </View>
           </View>
         </View>
-
+              {/* CONTENT */}
         <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6 }}>
             { isMap ? <MapContent navigation={navigation}/> : <EventList navigation={navigation}/> }
         </View>

@@ -1,41 +1,39 @@
 import React,{useState, Component} from 'react';
-import { View, StyleSheet, Text, Dimensions, TouchableOpacity, FlatList, SectionList}  from 'react-native';
+import { View, StyleSheet, Text, Dimensions, TouchableOpacity, ScrollView, FlatList, SectionList}  from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import EventItem from './EventItem';
 import KeyEventItem from './KeyEventItem'
 import { Divider } from 'react-native-paper';
-import Carousel from 'react-native-snap-carousel';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
+import MyCarousel from './MyCarousel'
 // import { styles } from '../stylesheets/styles';
 const keyevents = [
   {
-    eventName: 'ad'
-  },
-]
-const events = [
-  {
-    eventName: 'Thon club fundraising',
-    groupName: 'THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: 'Online',
-    eventID: 'U123',
-    eventDate: 'Monday July 3',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool event',
-  },
-  {
-    eventName: 'lets go GO',
-    groupName: 'ERO',
-    tags: [ '#Billiards', '#Hub' ],
+    eventName: 'NO GOOD',
+    groupName: 'ACE',
+    tags: [ '#Sports', '#Hub' ],
     numMessages: 10,
     numGoing: 10,
     eventLocation: "Tim's House",
-    eventID: 'U234',
+    eventID: 'U456',
     eventDate: 'Friday JULY 3',
     uri: 'https://picsum.photos/700',
     description: 'Cool event no no no',
   },
+  {
+    eventName: 'Have Fun',
+    groupName: 'CSSA',
+    tags: [ '#Billiards', '#Hub' ],
+    numMessages: 10,
+    numGoing: 10,
+    eventLocation: "Hub",
+    eventID: 'U567',
+    eventDate: 'Friday JULY 3',
+    uri: 'https://picsum.photos/700',
+    description: 'Cool event no no no',
+  },
+]
+const events = [
   {
     eventName: 'Hi',
     groupName: 'EROooo',
@@ -78,25 +76,27 @@ const windowWidth = Dimensions.get('window').width;
 export default function EventList({ navigation, scrollEnabled }) {
 
   return(
-    <View>
-      {/* <View style={{flex:3, minHeight:300}}>
-        <Carousel
-              layout={"default"}
-              data={events}
-              sliderWidth= {windowWidth}
-              itemWidth={windowWidth}
-              containerCustomStyle ={{ paddingBottom: 20}}
-              renderItem={({ item }) => <KeyEventItem navigation={ navigation } event={ item }/>}
-            />
-            </View> */}
-    {/* <FlatList
-      style={{borderTopLeftRadius:20, borderTopRightRadius:20}}
-      scrollEnabled={ scrollEnabled }
-      keyExtractor={ (item) => item.eventID }
-      data = { events }
-      renderItem={({ item }) => <EventItem navigation={ navigation } event={ item }/>}
-    /> */}
-      <SectionList 
+    <View style={{flex : 1 , alignContent:'center', alignItems:'stretch', width: windowWidth }}>
+      <ScrollView style={{flex: 8, alignContent:'center',width: windowWidth} }>
+        <View style = {{flex:1, width:windowWidth}}>
+          <MyCarousel
+                    // layout={"default"}
+                    // data={entries}
+                    // // item={item}
+                    // sliderWidth= {windowWidth}
+                    // itemWidth={windowWidth}
+                    // containerCustomStyle ={{ paddingBottom: 20}} 
+                    // renderItem={({item}) => 
+                    //   <KeyEventItem navigation={ navigation } event={item}/>}
+                    // onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+
+                  /> 
+        </View>
+          {  
+            events.map(item =>  <EventItem  navigation={ navigation } event={ item }/>)
+          }
+      </ScrollView>
+      {/* <SectionList 
         renderSectionHeader={({ section: { title } }) => <Text style={{ fontWeight: 'bold' }}>{title}</Text>} 
         sections={[ 
           { title: 'Trending',
@@ -139,7 +139,7 @@ export default function EventList({ navigation, scrollEnabled }) {
                 {section.title}
           </Text>
         </View>}
-      />
+      /> */}
       </View>
   )
 }
