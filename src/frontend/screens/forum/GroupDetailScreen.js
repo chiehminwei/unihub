@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, StyleSheet, ScrollView, TouchableOpacity, View, ActivityIndicator, Dimensions } from 'react-native';
-import { withFirebaseHOC } from "~/../firebase/config/Firebase";
+import { withFirebaseHOC } from "~/../firebase";
 import { Text, Image } from 'react-native-elements';
 import  PrivateScreen  from '~/screens/forum/PrivateScreen';
 import  PublicScreen from './PublicScreen';

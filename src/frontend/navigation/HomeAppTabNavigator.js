@@ -13,9 +13,7 @@ import { ProfileStackNavigator } from './ProfileStackNavigator';
 import Animated from 'react-native-reanimated';
 
 
-
 const Tab = createBottomTabNavigator();
-
 
 export default function HomeAppTabNavigator(){
   return(

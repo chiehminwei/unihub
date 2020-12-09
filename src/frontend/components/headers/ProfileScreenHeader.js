@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, TouchableOpacity,StyleSheet, Button, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Text } from 'react-native-elements';
+import { withFirebaseHOC } from '~/../firebase';
+import { AuthUserContext } from '~/navigation/AuthUserProvider';
+
 //********* User Name Update*************//
 const user=
   {
@@ -28,7 +31,7 @@ function NumDisplay({number,title, onPress}){
   )
 }   
 
-function ProfileScreenHeader() {
+function ProfileScreenHeader({ firebase }) {
   const {
     userName,
     userID,
@@ -45,6 +48,23 @@ function ProfileScreenHeader() {
     classYear,
   } = user;
   const navigation = useNavigation();
+  const { setUser } = useContext(AuthUserContext);
+
+  async function handleSignOut() {
+    try {
+      await firebase.logout();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function handleLogin() {
+    try {
+      await setUser(null)
+    } catch (error) {
+      console.log(error);
+    }
+  }
   
   return(
     /* top frame */
@@ -76,6 +96,8 @@ function ProfileScreenHeader() {
           </Text>
       </View>
 
+      <Button title="Sign Out" onPress={handleLogin} />
+
         {/* user's number */}
       <View style={{flexDirection:"row", marginVertical: 10}}>
         <NumDisplay number={numPosts} title='Posts' onPress={()=>navigation.navigate('ThreadCard')}/> 
@@ -102,4 +124,4 @@ function ProfileScreenHeader() {
  })
 
 
-export default ProfileScreenHeader;
+export default withFirebaseHOC(ProfileScreenHeader);

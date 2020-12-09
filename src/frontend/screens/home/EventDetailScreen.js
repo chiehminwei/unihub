@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, ScrollView, Share, View, ActivityIndicator, Dimensions, Image, StatusBar } from 'react-native';
-import { withFirebaseHOC } from "~/../firebase/config/Firebase";
+import { withFirebaseHOC } from "~/../firebase";
 import { Text } from 'react-native-elements';
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { FAB, Portal, Provider } from 'react-native-paper';

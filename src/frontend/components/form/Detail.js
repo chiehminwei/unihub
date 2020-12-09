@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Platform, View, ActivityIndicator } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Constants from 'expo-constants';
-import { withFirebaseHOC } from "~/../firebase/config/Firebase";
+import { withFirebaseHOC } from "~/../firebase";
 import { Text, Button, ButtonGroup, Input, Image, Icon } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import MapView from '~/components/MapView';

@@ -11,24 +11,31 @@ import Event from "./data/event";
 import Calendar from "./data/calendar";
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+export const auth = firebase.auth();
 
 const Firebase = {
   // auth
   loginWithEmail: (email, password) => {
-    return firebase.auth().signInWithEmailAndPassword(email, password);
+    return auth.signInWithEmailAndPassword(email, password);
   },
-  signupWithEmail: (email, password) => {
-    return firebase.auth().createUserWithEmailAndPassword(email, password);
+  signInAnonymously: () => {
+    return auth.signInAnonymously();
   },
-  signOut: () => {
-    return firebase.auth().signOut();
+  registerWithEmail: (email, password) => {
+    return auth.createUserWithEmailAndPassword(email, password);
+  },
+  logout: () => {
+    return auth.signOut();
   },
   checkUserAuth: user => {
-    return firebase.auth().onAuthStateChanged(user);
+    return auth.onAuthStateChanged(user);
   },
   passwordReset: email => {
-    return firebase.auth().sendPasswordResetEmail(email);
+    return auth.sendPasswordResetEmail(email);
   },
   // firestore
   ...Calendar,
