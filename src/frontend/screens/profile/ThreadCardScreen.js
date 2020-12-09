@@ -7,7 +7,7 @@ class ThreadCardScreen extends Component{
 
   render(){
       return <View style={{ flex: 1, paddingTop: 20, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>
-                <ThreadList scrollEnabled={false}/>
+                <ThreadList scrollEnabled={true}/>
              </View>       
   }
 };
