@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Image, ScrollView, View, Share, TouchableOpacity, Dimensions } from 'react-native';
 import { Button, Card, Title, Divider, Text } from 'react-native-paper';
-import { withFirebaseHOC } from "~/../firebase/config/Firebase";
+import { withFirebaseHOC } from "~/../firebase";
 
 const share = (props) => {
   const { threadTitle, description, uri } = props;

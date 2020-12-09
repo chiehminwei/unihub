@@ -21,7 +21,7 @@ import Animated from 'react-native-reanimated'
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
-import { withFirebaseHOC } from "~/../firebase/config/Firebase";
+import { withFirebaseHOC } from "~/../firebase";
 const uuidv4 = require('random-uuid-v4');
 import Toast from 'react-native-root-toast';
 

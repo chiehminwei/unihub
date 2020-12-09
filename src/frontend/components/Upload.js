@@ -2,7 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import * as firebase from 'firebase';
 import React from 'react';
-import { withFirebaseHOC } from "~/../firebase/config/Firebase";
+import { withFirebaseHOC } from "~/../firebase";
 import {
   ActivityIndicator,
   Button,
