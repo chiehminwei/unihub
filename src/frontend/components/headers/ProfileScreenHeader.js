@@ -96,7 +96,7 @@ function ProfileScreenHeader({ firebase }) {
           </Text>
       </View>
 
-      <Button title="Sign Out" onPress={handleLogin} />
+      <Button title="Sign Out" onPress={handleSignOut} />
 
         {/* user's number */}
       <View style={{flexDirection:"row", marginVertical: 10}}>
