@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Image, Share, Dimensions, TouchableOpacity, Text } from 'react-native';
 import { IconButton, Avatar, Button, Card, Title, Subheading, Paragraph, Divider } from 'react-native-paper';
 import AntIcon from "react-native-vector-icons/AntDesign";
+import { useNavigation } from '@react-navigation/native';
 
 
 const blue = '#76D0DE';
@@ -14,7 +15,7 @@ const Tag = ({ text }) => (
 )
 
 const share = (event) => {
-  const { eventName, description, url } = event;
+  const { eventName, description, uri } = event;
   Share.share({
     // message: description,
     title: `Check out this event on UniHub - ${eventName}`,
@@ -23,53 +24,12 @@ const share = (event) => {
 };
 
 
-
-const EventItem = ({ event, navigation }) => (
-  // <Card style={{borderRadius: 20, margin:10, maxWidth:'95%',flex:1 }} onPress={ () => navigation.navigate('EventDetail', { name: event.groupName }) }>
-  //   <Card.Content style={{paddingVertical:0, paddingHorizontal:0}}>
-  //     <View style={{flexDirection:'row', flex:1}}>
-  //         <Image source={{uri: event.uri }}
-  //           style={{
-  //                   flex:1, 
-  //                   maxWidth: 120,
-  //                   height: 120,
-  //                   borderTopLeftRadius:20, 
-  //                   borderBottomLeftRadius:20,}}/>
-  //       <View style={{marginLeft:10, marginTop: 5 , alignContent:'flex-start'}}> 
-  //         <View style={{ flex: 1, flexDirection: 'row' }}>
-  //           <Text style={{ textTransform: 'uppercase', fontFamily:'Avenir-Light', fontSize: 12 }}>{ event.eventDate }</Text>
-  //           <Text style={{ marginLeft: 10, color:'#1c7085', fontFamily:'Avenir-Light', fontSize: 12, fontWeight:'800' }}>{ event.eventLocation }</Text>
-  //         </View>
-  //         <View style={{ flex: 1 }}>
-  //             <Text >{ event.eventName }</Text>
-  //             <View
-  //               style={{
-  //                 flex:1,
-  //                 flexDirection: 'row',
-  //               }}>
-  //               <AntIcon style={{ marginTop: 1.5 }} color={grey} name="caretright" size={14}/>
-  //               <Text style={{ color: grey }}>{ event.groupName }</Text>
-  //             </View>
-  //             <View style={{ flex: 1, flexDirection: 'row'}}>
-  //               { event.tags.map(tag => <Tag key={tag} text={tag}/>)}
-  //             </View>
-  //           </View>
-  //       </View>
-  //     </View>
-  //   </Card.Content>
-  //   {/* <Divider style={{ marginTop: 15 }}/> */}
-  //   {/* <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-  //     <Button onPress={ () => navigation.navigate('EventDetail') } icon="message-processing">{ event.numMessages}</Button>
-  //     <Button onPress={ () => navigation.navigate('EventDetail') } icon="run">{ event.numGoing}</Button>
-  //     <Button onPress={ () => share(event) } icon="share"/>
-  //   </Card.Actions> */}
-  // </Card>
-
-
-
+function EventItem ({ event }) {
+  const navigation = useNavigation()
+  return (
 
   
-  <View style={{ width: screenWidth, flex:1 , backgroundColor:'white', shadowOffset:{height:10, width:1}, shadowColor:'grey', shadowOpacity: 0.1,shadowRadius:10, elevation: 3}}> 
+  <View style={{ width: screenWidth, flex:1 , backgroundColor:'white', }}> 
     <TouchableOpacity style={{flex:1}} onPress={ () => navigation.navigate('EventDetail', { event: event }) }>
     <Image source={{uri: event.uri }}
                 style={{
@@ -101,6 +61,7 @@ const EventItem = ({ event, navigation }) => (
 </View>
           
 
-);
+  );
+}
 
 export default EventItem;

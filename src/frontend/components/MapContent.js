@@ -132,7 +132,7 @@ export default class MapContent extends Component {
             containerCustomStyle ={{ paddingBottom: 20}}
             renderItem={({ item }) => <EventItem navigation={ navigation } event={ item }/>}
             onSnapToItem = { index => this.setIndex(index) } />
-          </View>
+        </View>
       </View>
     );
   }

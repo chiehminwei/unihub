@@ -114,8 +114,8 @@ export function ProfileTabNavigator() {
       <ProfileTab.Navigator 
         tabBar={ props => <ProfileTabBar {...props}/>}
         >
-        <ProfileTab.Screen name="Events" component={EventCardScreen} />
-        <ProfileTab.Screen name="Forums" component={ThreadCardScreen} />
+        <ProfileTab.Screen options={{ headerShown: false }} name="Events" component={EventCardScreen} />
+        <ProfileTab.Screen options={{ headerShown: false }} name="Forums" component={ThreadCardScreen} />
       </ProfileTab.Navigator>
     );
   }
