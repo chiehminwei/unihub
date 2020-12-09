@@ -35,13 +35,7 @@ if (!fontLoaded) {
     <FirebaseProvider value={Firebase}>
       <SafeAreaProvider>
         <PaperProvider> 
-<<<<<<< HEAD
-          <NavigationContainer>
-            <RootStackScreen/>
-          </NavigationContainer>
-=======
           <AppContainer />
->>>>>>> 51416c55b0c4bc5063ca3e4619fe335b90eaf02e
         </PaperProvider>
       </SafeAreaProvider>
     </FirebaseProvider>
