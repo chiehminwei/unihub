@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import * as Yup from 'yup';
 
-import Colors from '~/utils/colors';
+import colors from '~/utils/colors';
 import SafeView from '~/components/copy/SafeView';
 import Form from '~/components/form/Form';
 import FormField from '~/components/form/FormField';
@@ -88,7 +88,7 @@ function LoginScreen({ navigation, firebase }) {
       <IconButton
         style={styles.backButton}
         iconName="keyboard-backspace"
-        color="#fff"
+        color={colors.primary}
         size={30}
         onPress={() => navigation.goBack()}
       />
@@ -101,7 +101,7 @@ export default withFirebaseHOC(LoginScreen);
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    backgroundColor: Colors.mediumGrey
+    backgroundColor: 'white'
   },
   footerButtonContainer: {
     marginVertical: 15,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   forgotPasswordButtonText: {
-    color: Colors.white,
+    color: colors.primary,
     fontSize: 18,
     fontWeight: '600'
   },

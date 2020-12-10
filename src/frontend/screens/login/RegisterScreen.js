@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import * as Yup from 'yup';
 
-import Colors from '~/utils/colors';
+import colors from '~/utils/colors';
 import SafeView from '~/components/copy/SafeView';
 import Form from '~/components/form/Form';
 import FormField from '~/components/form/FormField';
@@ -123,7 +123,7 @@ function RegisterScreen({ navigation, firebase }) {
       <IconButton
         style={styles.backButton}
         iconName="keyboard-backspace"
-        color={Colors.white}
+        color={colors.primary}
         size={30}
         onPress={() => navigation.goBack()}
       />
@@ -136,7 +136,7 @@ export default withFirebaseHOC(RegisterScreen);
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    backgroundColor: Colors.mediumGrey
+    backgroundColor: 'white',
   },
   backButton: {
     justifyContent: 'center',

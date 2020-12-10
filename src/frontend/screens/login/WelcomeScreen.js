@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
-
+import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AppButton from '~/components/copy/AppButton';
 import Colors from '~/utils/colors';
 import useStatusBar from '~/hooks/useStatusBar';
@@ -9,49 +9,93 @@ export default function WelcomeScreen({ navigation }) {
   useStatusBar('light-content');
 
   return (
-    <View style={styles.container}>
-      <View style={styles.logoContainer}>
-        <Image source={require('~/../../assets/flame.png')} style={styles.logo} />
-        <Text style={styles.subtitle}>UniHub</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Image source={require('~/../../assets/U.png')} style={styles.logo} />
+          <Text style={styles.subtitle} >UniHub</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          {/* <TouchableOpacity style={{marginVertical: 10, 
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                  borderRadius: 10,
+                                  borderWidth:2,
+                                  borderColor:'#1c7085',
+                                  backgroundColor:'#1c7085',
+                                  padding: 15,
+                                  width: '100%'} }
+                            onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity> */}
+          <AppButton title="Login" onPress={() => navigation.navigate('Login')} />
+          <TouchableOpacity style={{marginVertical: 10, 
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                  borderRadius: 10,
+                                  borderWidth:2,
+                                  borderColor:'#1c7085',
+                                  backgroundColor:'white',
+                                  padding: 15,
+                                  width: '100%'} 
+                                  }
+                            onPress={() => navigation.navigate('Register')}>
+            <Text style={[styles.buttonText,{color:'#1c7085'}]}>Register</Text>
+          </TouchableOpacity>
+          
+          {/* <AppButton
+            title="Register"
+            color="secondary"
+            onPress={() => navigation.navigate('Register')}
+          /> */}
+          <Text>View as Guest</Text>
+        </View>
       </View>
-      <View style={styles.buttonContainer}>
-        <AppButton title="Login" onPress={() => navigation.navigate('Login')} />
-        <AppButton
-          title="Register"
-          color="secondary"
-          onPress={() => navigation.navigate('Register')}
-        />
-        <Text>View as Guest</Text>
-      </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonText:{
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: '600',
+    textTransform: 'uppercase'
+  },
+  safeArea:{
+    flex: 1, 
+    alignItems: 'stretch', 
+    backgroundColor: '#F3F3F3',
+  },
   container: {
     flex: 1,
-    justifyContent: 'flex-end',
+    alignContent:'space-between',
     alignItems: 'center',
-    backgroundColor: Colors.mediumGrey
+    backgroundColor: 'white'  //Colors.mediumGrey
   },
   logoContainer: {
-    position: 'absolute',
-    top: 60,
-    alignItems: 'center'
+    flex: 1,
+    alignItems: 'center',
+    alignContent:'center',
+    marginTop: 120
   },
   logo: {
     width: 125,
-    height: 125
+    height: 125,
   },
   subtitle: {
-    fontSize: 24,
-    fontWeight: '600',
+    fontSize: 30,
+    fontWeight: 'bold',
+    fontFamily:'Avenir-Heavy',
     paddingVertical: 20,
-    color: Colors.primary
+    color: '#1c7085',
+    textTransform: 'uppercase'
   },
   buttonContainer: {
     padding: 20,
     paddingBottom: 60,
+    alignContent:'center',
+    alignItems:'center',
     width: '100%'
   }
 });
