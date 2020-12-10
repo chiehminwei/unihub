@@ -52,46 +52,49 @@ function LoginScreen({ navigation, firebase }) {
 
   return (
     <SafeView style={styles.container}>
-      <Form
-        initialValues={{ email: '', password: '' }}
-        validationSchema={validationSchema}
-        onSubmit={values => handleOnLogin(values)}
-      >
-        <FormField
-          name="email"
-          leftIcon="email"
-          placeholder="Enter email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoFocus={true}
-        />
-        <FormField
-          name="password"
-          leftIcon="lock"
-          placeholder="Enter password"
-          autoCapitalize="none"
-          autoCorrect={false}
-          secureTextEntry={passwordVisibility}
-          textContentType="password"
-          rightIcon={rightIcon}
-          handlePasswordVisibility={handlePasswordVisibility}
-        />
-        <FormButton title={'Login'} />
-        {<FormErrorMessage error={loginError} visible={true} />}
-      </Form>
-      <View style={styles.footerButtonContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-          <Text style={styles.forgotPasswordButtonText}>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
       <IconButton
-        style={styles.backButton}
-        iconName="keyboard-backspace"
-        color={colors.primary}
-        size={30}
-        onPress={() => navigation.goBack()}
-      />
+            style={styles.backButton}
+            iconName="keyboard-backspace"
+            color={colors.primary}
+            size={30}
+            onPress={() => navigation.goBack()}
+          />
+      <View style={{flex:1, alignItems:'center', alignContent:'center'}}>
+        
+        <Form
+          initialValues={{ email: '', password: '' }}
+          validationSchema={validationSchema}
+          onSubmit={values => handleOnLogin(values)}
+        >
+          <FormField
+            name="email"
+            leftIcon="email"
+            placeholder="Enter email"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            autoFocus={true}
+          />
+          <FormField
+            name="password"
+            leftIcon="lock"
+            placeholder="Enter password"
+            autoCapitalize="none"
+            autoCorrect={false}
+            secureTextEntry={passwordVisibility}
+            textContentType="password"
+            rightIcon={rightIcon}
+            handlePasswordVisibility={handlePasswordVisibility}
+          />
+          <FormButton title={'Login'} />
+          {<FormErrorMessage error={loginError} visible={true} />}
+        </Form>
+        <View style={styles.footerButtonContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+            <Text style={styles.forgotPasswordButtonText}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeView>
   );
 }
@@ -114,7 +117,6 @@ const styles = StyleSheet.create({
     fontWeight: '600'
   },
   backButton: {
-    justifyContent: 'center',
-    alignItems: 'center'
+    flex:0.1
   }
 });

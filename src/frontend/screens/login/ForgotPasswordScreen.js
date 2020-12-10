@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import * as Yup from 'yup';
 
 import Colors from '~/utils/colors';
@@ -37,30 +37,32 @@ function ForgotPasswordScreen({ navigation, firebase }) {
 
   return (
     <SafeView style={styles.container}>
-      <Form
-        initialValues={{ email: '' }}
-        validationSchema={validationSchema}
-        onSubmit={values => handlePasswordReset(values)}
-      >
-        <FormField
-          name="email"
-          leftIcon="email"
-          placeholder="Enter email"
-          autoCapitalize="none"
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          autoFocus={true}
-        />
-        <FormButton title="Forgot Password" />
-        {<FormErrorMessage error={customError} visible={true} />}
-      </Form>
       <IconButton
         style={styles.backButton}
         iconName="keyboard-backspace"
-        color={Colors.white}
+        color={Colors.primary}
         size={30}
         onPress={() => navigation.goBack()}
       />
+      <View style={{flex:1}}>
+        <Form
+          initialValues={{ email: '' }}
+          validationSchema={validationSchema}
+          onSubmit={values => handlePasswordReset(values)}
+        >
+          <FormField
+            name="email"
+            leftIcon="email"
+            placeholder="Enter email"
+            autoCapitalize="none"
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            autoFocus={true}
+          />
+          <FormButton title="Forgot Password" />
+          {<FormErrorMessage error={customError} visible={true} />}
+        </Form>
+      </View>
     </SafeView>
   );
 }
@@ -70,11 +72,9 @@ export default withFirebaseHOC(ForgotPasswordScreen);
 const styles = StyleSheet.create({
   container: {
     padding: 15,
-    backgroundColor: Colors.mediumGrey
+    backgroundColor: Colors.white
   },
   backButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 10
+    flex: 0.1
   }
 });

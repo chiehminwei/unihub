@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AppButton from '~/components/copy/AppButton';
 import Colors from '~/utils/colors';
 import useStatusBar from '~/hooks/useStatusBar';
+import colors from '../../utils/colors';
 
 export default function WelcomeScreen({ navigation }) {
   useStatusBar('light-content');
@@ -48,7 +49,10 @@ export default function WelcomeScreen({ navigation }) {
             color="secondary"
             onPress={() => navigation.navigate('Register')}
           /> */}
-          <Text>View as Guest</Text>
+          
+        </View>
+        <View style = {{ marginBottom: 20 }}>
+            <Text style = {{ color: colors.primary }}>View as Guest</Text>
         </View>
       </View>
     </SafeAreaView>
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     padding: 20,
-    paddingBottom: 60,
+    paddingBottom: 120,
     alignContent:'center',
     alignItems:'center',
     width: '100%'
