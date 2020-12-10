@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { View, TouchableOpacity,StyleSheet, Button, Image } from 'react-native';
+import { Alert, View, TouchableOpacity,StyleSheet, Button, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Text } from 'react-native-elements';
-import { withFirebaseHOC } from '~/../firebase';
+import { withFirebaseHOC, auth } from '~/../firebase';
 import { AuthUserContext } from '~/navigation/AuthUserProvider';
 
 //********* User Name Update*************//
@@ -58,6 +58,48 @@ function ProfileScreenHeader({ firebase }) {
     }
   }
 
+  async function createGroup() {
+    const userInfo = firebase.getCurrentUserInfo()
+    const group = {
+      groupName: 'Cool Kids Club',
+      admin: userInfo,
+    }
+    try {
+      await firebase.createGroup(group);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function disbandGroup() {
+    const groupID = '3U4ig2DGAUVqAC3OFKHe';
+    await firebase.disbandGroup(groupID);
+  }
+
+  async function joinGroup() {
+    const userInfo = firebase.getCurrentUserInfo() 
+    const groupID = '3U4ig2DGAUVqAC3OFKHe';
+    await firebase.joinGroup(userInfo, groupID);
+  }
+
+  async function quitGroup() {
+    const { uid } = auth.currentUser;
+    const groupID = '3U4ig2DGAUVqAC3OFKHe';
+    await firebase.quitGroup(uid, groupID);
+  }
+
+  async function acceptMember() {
+    const { uid } = auth.currentUser;
+    const groupID = '3U4ig2DGAUVqAC3OFKHe';
+    await firebase.acceptMember(uid, groupID);
+  }
+
+  async function rejectMember() {
+    const { uid } = auth.currentUser;
+    const groupID = '3U4ig2DGAUVqAC3OFKHe';
+    await firebase.rejectMember(uid, groupID);
+  }
+
   async function handleLogin() {
     try {
       await setUser(null)
@@ -96,7 +138,12 @@ function ProfileScreenHeader({ firebase }) {
           </Text>
       </View>
 
-      <Button title="Sign Out" onPress={handleSignOut} />
+      <Button title="Create Group" onPress={createGroup} />
+      <Button title="Disband Group" onPress={disbandGroup} />
+      <Button title="Join Group" onPress={joinGroup} />
+      <Button title="Quit Group" onPress={quitGroup} />
+      <Button title="Accept Member" onPress={acceptMember} />
+      <Button title="Reject Member" onPress={rejectMember} />
 
         {/* user's number */}
       <View style={{flexDirection:"row", marginVertical: 10}}>
