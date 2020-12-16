@@ -4,6 +4,8 @@ import { styles } from '~/stylesheets/styles';
 import { useNavigation } from '@react-navigation/native';
 import { NaviButton } from '~/components/button/NaviButton';
 import Search from '~/components/Search';
+import ModalDropdown from 'react-native-modal-dropdown';
+
 
 
 
@@ -26,17 +28,19 @@ export function ForumScreenHeader() {
         <View style={styles.forumsearch}>
            <Search onPress={() => navigation.navigate('Search')}/>
         </View>
+        <ModalDropdown options={['option 1', 'option 2']}/>
         {/* <NaviButton onPress={() => navigation.navigate('Search')}
                     iconName='search'
                     size={30}
                     style={styles.search}
                     iconFamily={'material'}/> */}
         
-        <NaviButton onPress={() => navigation.navigate('CreateGroup')}
+        {/* <NaviButton onPress={() => navigation.navigate('CreateGroup')}
                     iconName='plus-circle'
                     size={30}
                     style={styles.search}
-                    iconFamily={'materialCommunity'}/>
+                    iconFamily={'materialCommunity'}/> */}
+
       </View>
   );
 }

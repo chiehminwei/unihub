@@ -42,11 +42,13 @@ const events = [
     description: 'Cool event no no no',
   },
 ];
+const initialSlide = 0
 export default class MyCarousel extends Component {
 
 
     state = {
-      entries: events
+      entries: events,
+      activeSlide: initialSlide
     }
     get pagination () {
         const { entries , activeSlide } = this.state;
@@ -54,7 +56,7 @@ export default class MyCarousel extends Component {
             <Pagination
               dotsLength={entries.length}
               activeDotIndex={activeSlide}
-              containerStyle={{ backgroundColor: 'white' }}
+              containerStyle={{marginTop:-40, backgroundColor: 'transparent' }}
               dotStyle={{
                   width: 10,
                   height: 10,

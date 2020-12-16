@@ -8,17 +8,17 @@ import  EventTabNavigator  from '../../navigation/EventTabNavigator'
 
   const deviceWidth = Dimensions.get('window').width;
   const FabGroup = (props) => {
-  const [state, setState] = React.useState({ open: false });
-  const onStateChange = ({ open }) => setState({ open });
-  const { open } = state;
-  const share = (props) => {
-    const { eventName, description, uri } = props;
-    Share.share({
-      // message: `${props.description}`,
-      title: `Check out this event on UniHub - ${props.eventName}`,
-      url: props.uri,
-    });
-  };
+    const [state, setState] = React.useState({ open: false });
+    const onStateChange = ({ open }) => setState({ open });
+    const { open } = state;
+    const share = (props) => {
+      const { eventName, description, uri } = props;
+      Share.share({
+        // message: `${props.description}`,
+        title: `Check out this event on UniHub - ${props.eventName}`,
+        url: props.uri,
+      });
+    };
   
   return (
     <Provider>

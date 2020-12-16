@@ -92,6 +92,12 @@ export default function EventList({ navigation, scrollEnabled }) {
 
                   /> 
         </View>
+        <View style={{flexDirection:'row', alignContent: 'center', alignItems:'center', justifyContent:'space-between'}}>
+          <Text style={{marginLeft:16, fontFamily:'Avenir-Light', fontSize: 20, fontWeight: 'bold'}}>Recommended</Text>
+          <TouchableOpacity style={{marginRight:16}}>
+            <Text>show more</Text>
+          </TouchableOpacity>
+        </View>
           {  
             events.map(item =>  <EventItem  navigation={ navigation } event={ item }/>)
           }

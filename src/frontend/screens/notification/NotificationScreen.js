@@ -5,6 +5,9 @@ import { screenStyles } from '~/stylesheets/screenStyles'
 
 // Import Header for HomeScreen
 import { NotificationScreenHeader } from '../../components/headers/NotificationScreenHeader'
+import FriendRequestItem from '../../components/lists/FriendRequestItem';
+import JoinGroupRequestItem  from '../../components/lists/JoinGroupRequestItem';
+import ThreadCommentNotificationItem from '../../components/lists/ThreadCommentNotificationItem';
 
 export function NotificationScreen() {
   return (
@@ -12,7 +15,12 @@ export function NotificationScreen() {
       <StatusBar barStyle="dark-content" />
       <NotificationScreenHeader/>
       <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:10}}>
-        <Text>Body of the Screen</Text>
+        <Text>Today</Text>
+          <JoinGroupRequestItem />
+          <FriendRequestItem />
+          <ThreadCommentNotificationItem />
+        <Text>This Week</Text>
+        <Text>This Month</Text>
       </View>
     </SafeAreaView>
   );
