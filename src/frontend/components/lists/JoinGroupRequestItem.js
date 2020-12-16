@@ -50,15 +50,50 @@ const user =
       isPrivate
     } = group
     return(
-      <View>
-        <Image          
-        	source={{ uri }}
-        	style={{width: 50, height: 50 }} 
-        
-        />
-        <Text>{userName}  wants to join {groupName}</Text>
-        <Button >accept</Button>
-        <Button >reject</Button>
+      <View style={{marginVertical:10}}>
+        <View style={{flexDirection:'row',}}>
+          <TouchableOpacity style={{flex:1 , }}>
+            <Image          
+              source={{ uri }}
+              style={{width: 50, height: 50, borderRadius:25 }} 
+            
+            />
+          </TouchableOpacity>
+          <View style={{flex: 4, }}>
+            <View style={{flexDirection:'row'}}>
+              <TouchableOpacity>
+                <Text style={
+                  {
+                    fontFamily:'Avenir-Light',
+                    fontWeight:'bold',
+                    fontSize:14
+                  }
+                }>{userName}</Text>  
+              </TouchableOpacity>
+              <Text style={
+                {
+                  fontFamily:'Avenir-Light',
+                  
+                  fontSize:14
+                }
+              }> wants to join </Text>
+              <TouchableOpacity>
+                <Text style={
+                  {
+                    fontFamily:'Avenir-Light',
+                    fontWeight:'bold',
+                    fontSize:14
+                  }
+                }>{groupName}</Text>  
+              </TouchableOpacity>
+            </View>
+            <View style={{flexDirection:'row'}}>
+              <Button >accept</Button>
+              <Button >reject</Button>
+            </View>
+          </View>
+        </View>
+        <Divider style={{marginTop:10}}/>
       </View>
     )
   }

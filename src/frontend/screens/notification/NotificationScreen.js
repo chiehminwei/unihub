@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StatusBar } from 'react-native';
+import { Text, View, StatusBar, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles'
 
@@ -14,14 +14,29 @@ export function NotificationScreen() {
     <SafeAreaView style={screenStyles.safeArea} edges={['right','top','left']}>
       <StatusBar barStyle="dark-content" />
       <NotificationScreenHeader/>
-      <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:10}}>
-        <Text>Today</Text>
+      <ScrollView style={{backgroundColor :'white', alignSelf: 'stretch', flex:10, paddingHorizontal:16}}>
+        <Text style={{
+          fontFamily:'Avenir-Light',
+          fontWeight:'bold',
+          fontSize:24 }}>
+              Today
+        </Text>
           <JoinGroupRequestItem />
           <FriendRequestItem />
           <ThreadCommentNotificationItem />
-        <Text>This Week</Text>
-        <Text>This Month</Text>
-      </View>
+          <Text style={{
+          fontFamily:'Avenir-Light',
+          fontWeight:'bold',
+          fontSize:24 }}>
+              This Week
+        </Text>
+        <Text style={{
+          fontFamily:'Avenir-Light',
+          fontWeight:'bold',
+          fontSize:24 }}>
+              This Month
+        </Text>
+      </ScrollView>
     </SafeAreaView>
   );
 }

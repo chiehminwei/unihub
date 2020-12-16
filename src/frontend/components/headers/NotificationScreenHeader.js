@@ -9,7 +9,7 @@ export function NotificationScreenHeader() {
   return (
     <View 
       style={{ 
-          flex: 1,
+          flex:0.1,
           backgroundColor: '#F3F3F3', 
           alignSelf: 'stretch', 
           textAlign: 'center', 

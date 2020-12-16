@@ -16,7 +16,7 @@ const user = [
     userName: 'Jimmy Wei',
     numGroups: 10,
     numFriends: 10,
-    userID: 'Uu234',
+    userID: 'Uu2334',
     major: 'Mechanical Enginnering',
     uri: 'https://picsum.photos/700',
     description: 'Cool Guy',

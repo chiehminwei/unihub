@@ -71,12 +71,11 @@ const user =[
       classyear,
     } = user
     return(
-      <View>
-        <Image          
-        	source={{ uri }}
-        	style={{width: 50, height: 50 }} 
-        />
+      <View style={{height: 60}}>
         <Text>{user.length} people reply to your comment: '{content}' </Text>
+        <View style={{flex:1, justifyContent:'flex-end'}}>
+        <Divider style={{marginTop:10}}/>
+        </View>
       </View>
     )
   }

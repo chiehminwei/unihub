@@ -46,15 +46,7 @@ function ProfileTabBar({ state, descriptors, navigation }) {
                   marginBottom: -10,
                   backgroundColor: 'black',
                   alignSelf: 'center',
-                  shadowColor: 'grey',
-                  shadowOffset: {
-                    width: 0,
-                    height: 1
-                  },
-                  shadowRadius: 5,
-                  shadowOpacity: 1,
 
-                  elevation : isFocused ? 0 : 20
               }} />
             <TouchableOpacity
               accessibilityRole="button"
