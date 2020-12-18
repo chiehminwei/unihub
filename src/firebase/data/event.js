@@ -1,34 +1,74 @@
 import * as firebase from "firebase";
+import firebaseConfig from "../firebaseConfig";
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const firestore = firebase.firestore();
+
+const getUserEventRef = (userID, eventID) => firestore.doc(`users/${userID}/events/${eventID}`);
+const getGroupEventRef = (groupID, eventID) => firestore.doc(`groups/${groupID}/events/${eventID}`);
+const getReportRef = (eventID) => firestore.doc(`reported/events/${eventID}`)
+const getEventCollection = () => firestore.collection('events');
+const getEventRef = (eventID) => firestore.doc(`events/${eventID}`);
+
 
 const Event = {
-  createEvent: (data) => {
-    let collection = firebase.firestore().collection('events');
-    return collection.add(data);
+  createEvent: (userID, groupID, event) => {
+    // Create event, add post to author's event list
+    const eventRef = getEventCollection().doc();
+    const eventID = eventRef.id;
+
+    const userEventRef = getUserEventRef(userID, eventID);
+    const groupEventRef = getGroupEventRef(groupID, eventID);
+
+    const batch = firestore.batch();
+    batch.set(eventRef, event)
+    batch.set(userEventRef, event);
+    batch.set(groupEventRef, event);
+    batch.commit()
+         .catch(err => console.error(err));
   },
-  modifyEvent: (data, eventID) => {
-    // TODO: update participant when event is modified
-    // e.g. update user calendar
-    let docRef = firebase.firestore().doc(`events/${eventID}`);
-    return docRef.set(data);
+  modifyEvent: (userID, groupID, eventID, event) => {
+    // TODO: update participant when event is modified e.g. update user calendar
+    // Modify post (public, author's, group's)    
+    const eventRef = getEventRef(eventID);
+    const userEventRef = getUserEventRef(userID, eventID);
+    const groupEventRef = getGroupEventRef(groupID, eventID);
+
+    const batch = firestore.batch();
+    batch.set(eventRef, event);
+    batch.set(userEventRef, event);
+    batch.set(groupEventRef, event);
+    batch.commit()
+         .catch(err => console.error(err));
   },
   deleteEvent: (eventID) => {
-    // TODO: updates fields that keep track of events in user & group
-    // TODO: delete comment
-    // TODO: update participant when event is modified
-    // e.g. update user calendar
-    let docRef = firebase.firestore().doc(`events/${eventID}}`)
-    return docRef.delete();
+    // TODO: comments & calendar
+    const eventRef = getEventRef(eventID);
+    const userEventRef = getUserEventRef(userID, eventID);
+    const groupEventRef = getGroupEventRef(groupID, eventID);
+
+    const batch = firestore.batch();
+    batch.delete(eventRef);
+    batch.delete(userEventRef);
+    batch.delete(groupEventRef, event);
+    batch.commit()
+         .catch(err => console.error(err));
   },
-  reportEvent: (eventID) => {
+  reportEvent: (eventID, event) => {
+    const reportRef = getReportRef(eventID);
+    return reportRef.set(event);
+  },
+  joinEvent: (eventID) => {
     return -1;
   },
-  // TODO: participants
-  likeEvent: (eventID) => {
+  quitEvent: (eventID) => {
     return -1;
   },
-  unlikeEvent: (eventID) => {
-    return -1;
-  },
+  // TODO: comments
+  
   // TODO: turn off comments
   
   // TODO: pagination, sort by time?

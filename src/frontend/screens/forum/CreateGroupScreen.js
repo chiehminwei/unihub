@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef, useEffect } from 'react';
+import React, { Component, useState, useRef, useEffect, useContext } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   Platform,
   TouchableOpacity,
   Dimensions,
+  Text,
 } from 'react-native';
 import { FAB } from 'react-native-paper';
 import { Image, ButtonGroup, Button } from 'react-native-elements';
@@ -24,6 +25,7 @@ import * as firebase from 'firebase';
 import { withFirebaseHOC } from "~/../firebase";
 const uuidv4 = require('random-uuid-v4');
 import Toast from 'react-native-root-toast';
+import { AuthUserContext } from '~/navigation/AuthUserProvider';
 
 
 // Add a Toast on screen.
@@ -52,12 +54,19 @@ let toast = Toast.show('This is a message', {
 setTimeout(function () {
     Toast.hide(toast);
 }, 500);
-
+ 
 
 console.disableYellowBox = true;
 
-const CreateGroupScreen = (props) => {
+const CreateGroupScreen = ({ firebase, navigation }) => {
 
+  const { user } = useContext(AuthUserContext);
+  const userInfo = {
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      uid: user.uid,
+  }
 
   // Group Type
   const groupTypes = ['Public', 'Private'];
@@ -191,6 +200,7 @@ const CreateGroupScreen = (props) => {
   };
 
   const handlePost = async () => {
+    // TODO: fuck this shit
     // Upload image to Firebase Storage
     try {
        const uploadUrl = await uploadImageAsync(uri);
@@ -201,15 +211,17 @@ const CreateGroupScreen = (props) => {
     } 
     // Push group to firestore
     const group = {
+      admin: userInfo,
       groupName,
       description,
-      contact,
       groupType: groupTypes[selectedIndex],
-      uri: uploadUrl,
+      uri: 'uploadUrl',
     };
     try {
-      const result = await postGroup(group); // TODO: firebase (remember to check group name rights)      
-      // TODO: navigate to group screen & send success notification
+      const result = await firebase.createGroup(group); // TODO: firebase (remember to check group name rights)      
+      alert('Yay')
+      console.log(group)
+      // TODO: navigate to previous screen & send success notification
     } catch (e) {
       console.log(e);
       alert('Post failed, sorry :('); // TODO: change this to notification
@@ -275,7 +287,7 @@ const CreateGroupScreen = (props) => {
         }}
         small
         icon="arrow-left"
-        onPress={() => props.navigation.goBack()}/>
+        onPress={() => navigation.goBack()}/>
        
       <BottomSheet
         ref={sheetRef}
