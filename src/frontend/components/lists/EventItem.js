@@ -67,7 +67,7 @@ const EventItem = ({ event, navigation }) => (
 
 
   
-  <View style={{ margin:10, maxHeight:120, maxWidth:'95%', flex:1 , backgroundColor:'white', shadowOffset:{height:10, width:1}, shadowColor:'grey', shadowOpacity: 0.2,shadowRadius:10, elevation: 3}}> 
+  <View style={{ margin:10, maxWidth:'95%', flex:1 , backgroundColor:'white', shadowOffset:{height:10, width:1}, shadowColor:'grey', shadowOpacity: 0.2,shadowRadius:10, elevation: 3}}> 
     <TouchableOpacity style={{flex:1}} onPress={ () => navigation.navigate('EventDetail', { event: event }) }>
       <View style={{flexDirection:'row', flex:1}}>
         <Image source={{uri: event.uri }}

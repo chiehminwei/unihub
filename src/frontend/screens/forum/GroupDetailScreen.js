@@ -1,10 +1,9 @@
 import React from 'react';
-import { Button, StyleSheet, ScrollView, TouchableOpacity, View, Text, ActivityIndicator, Image, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, View, Text, ActivityIndicator, Image, Dimensions } from 'react-native';
 import { withFirebaseHOC } from "~/../firebase";
 import  PrivateScreen  from '~/screens/forum/PrivateScreen';
 import  PublicScreen from './PublicScreen';
 import ThreadList from '../../components/lists/ThreadList';
-import { Divider } from 'react-native-paper';
 
 
 const deviceWidth = Dimensions.get('window').width;
@@ -26,15 +25,14 @@ const group =
     hostName:'Jimmy',
     groupName: 'Group THON 2020',
     numMembers: 10,
-    availability: "Public",
-    isPrivate: true,
+    isPrivate: false,
     groupID: 'U123',
     description: 'longText',
     uri:'https://picsum.photos/700',
   }
 
-function GroupContent({availability}){
-  if (availability === 'Private') return <PrivateScreen/>
+function GroupContent({isPrivate}){
+  if (isPrivate) return <PrivateScreen/>
   return <PublicScreen/>
 }  
 
@@ -72,9 +70,9 @@ const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
             />
 
             <TouchableOpacity style={{marginTop:20}} onPress={ () => alert('to detail')}>
-            <Text style={styles.groupName}>
-              { groupName }
-            </Text>
+              <Text style={styles.groupName}>
+                { groupName }
+              </Text>
             </TouchableOpacity>
 
             <View style={{flexDirection:'row'}}>
@@ -118,7 +116,7 @@ const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
 
             {/* public or private */}
           <View style={{ flex:1, alignSelf:'flex-start'}}>
-            <GroupContent availability={availability}/>
+            <GroupContent isPrivate={isPrivate}/>
           </View>
 
 
@@ -126,52 +124,53 @@ const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
 
 
 
-
-            {/* Activities */}
-          
-          
-          <Text style={{alignSelf:'flex-start', 
-                          marginTop: 20,
-                          marginLeft:16,
-                          fontFamily:'Avenir-Light',
-                          fontWeight:'bold',
-                          fontSize:24 }}>
-              Activities
-          </Text>
-          <View style = {{
-            flex:1, 
-            flexDirection: 'row', 
-            alignItems:'center', 
-            alignContent:'flex-start', 
-            justifyContent:"flex-start", 
-            backgroundColor:'#f1f7f8',
-            padding: 5
-            }}>
-            <TouchableOpacity style={{flex:1}} onPress={() => alert('To profile') }>
-              <Image source={{uri: userUri }}
-                    style={{
-                      borderWidth: 2,
-                      borderColor:'#bbdadf',
-                      borderRadius: 30,
-                      width: 50,
-                      height: 50,
-                      margin: 10}}/>
-            </TouchableOpacity>
-              <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {() => alert('to create thread within current group')}>
-                 
-                <Text style={{fontFamily:'Avenir-Light',
-                              fontSize:18,
-                              color:'grey',
-                              marginTop:20,
-                              fontWeight:'600',
-                              textDecorationLine: 'underline',
-                              }}>
-                  Hi Yufan, wanna share something?
+            {/* Activities */
+             !isPrivate && (
+            <View style={{flex:1, alignSelf:'stretch'}}>
+                <Text style={{alignSelf:'flex-start', 
+                  marginTop: 20,
+                  marginLeft:16,
+                  fontFamily:'Avenir-Light',
+                  fontWeight:'bold',
+                  fontSize:24 }}>
+                  Activities
                 </Text>
-              </TouchableOpacity>
-          </View>
-
-          <ThreadList />
+              <View style = {{
+                flex:1, 
+                flexDirection: 'row', 
+                alignItems:'center', 
+                alignContent:'flex-start', 
+                justifyContent:"flex-start", 
+                backgroundColor:'#f1f7f8',
+                padding: 5
+                }}>
+                <TouchableOpacity style={{flex:1}} onPress={() => alert('To profile') }>
+                  <Image source={{uri: userUri }}
+                        style={{
+                          borderWidth: 2,
+                          borderColor:'#bbdadf',
+                          borderRadius: 30,
+                          width: 50,
+                          height: 50,
+                          margin: 10}}/>
+                </TouchableOpacity>
+                <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {() => alert('to create thread within current group')}>
+                  <Text style={{fontFamily:'Avenir-Light',
+                                fontSize:18,
+                                color:'grey',
+                                marginTop:20,
+                                fontWeight:'600',
+                                textDecorationLine: 'underline',
+                                }}>
+                    Hi Yufan, wanna share something?
+                  </Text>
+                </TouchableOpacity>
+                
+              </View>
+              <ThreadList/>
+            </View>
+             )}
+            
         </View>
       </ScrollView>
   );

@@ -14,9 +14,7 @@ export function ProfileScreen() {
       <View>
       <ScrollView style={{backgroundColor:'white'}}>
         <ProfileScreenHeader/>
-        <View style={{alignSelf: 'stretch', flex: 2}}>
-          <ProfileTabNavigator/>
-        </View>
+        <ProfileTabNavigator/>
       </ScrollView>
       </View>
     </SafeAreaView>

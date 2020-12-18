@@ -47,10 +47,12 @@ class EventCardScreen extends Component{
       },
     ];
     const {navigation}=this.props
-      return  <View style={{flex: 1, alignContent:'center', alignItems: 'stretch', backgroundColor: 'white', }}>              
+      return  <View style={{paddingVertical: 20, alignItems: 'stretch', backgroundColor: 'white' }}> 
+                          
                 {  
                   events.map(item =>  <EventItem  navigation={ navigation } event={ item }/>)
                 }
+                
               </View>   
   }
 };
