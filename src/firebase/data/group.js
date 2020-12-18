@@ -23,6 +23,7 @@ const Group = {
 
     const groupRef = getGroupCollection().doc();
     const groupID = groupRef.id;
+    const { groupName } = group;
     
     const memberRef = getMemberRef(userID, groupID);
     const userGroupRef = getUserGroupRef(userID, groupID);
@@ -30,7 +31,7 @@ const Group = {
     const batch = firestore.batch();
     batch.set(groupRef, group)
     batch.set(memberRef, userInfo);
-    batch.set(userGroupRef, {contains: true});
+    batch.set(userGroupRef, { groupName });
     batch.commit()
          .catch(err => console.error(err));    
   },
@@ -79,18 +80,24 @@ const Group = {
     const memberRef = getMemberRef(userID, groupID);
     const userGroupRef = getUserGroupRef(userID, groupID)
     const userRequestRef = getUserRequestRef(userID, groupID);
+    const groupRef = getGroupRef(groupID);
 
-    return firestore.runTransaction(transaction => {
-      return transaction.get(requestRef).then(request => {
-        if (!request.exists) {
-          throw "Join request does not exist!";
-        }
-        const userInfo = request.data();
-        transaction.set(memberRef, userInfo);
-        transaction.set(userGroupRef, {contains: true});
-        transaction.delete(requestRef);
-        transaction.delete(userRequestRef);
-      })
+    return firestore.runTransaction(async transaction => {
+      const request = await transaction.get(requestRef);
+      const group = await transaction.get(groupRef);
+      if (!request.exists || !group.exists) {
+          throw "Join request or group does not exist!";
+      }
+
+      const userInfo = request.data();
+      const { groupName } = group.data();
+
+      const userInfo = request.data();
+      transaction.set(memberRef, userInfo);
+      transaction.set(userGroupRef, { groupName });
+      transaction.delete(requestRef);
+      transaction.delete(userRequestRef);
+      
     }).catch(err => console.error(err));
   },
   rejectMember: (userID, groupID) => {
@@ -116,6 +123,15 @@ const Group = {
     batch.commit()
          .catch(err => console.error(err));
   },
+  getUserGroups: (userID) => {
+    const groupCollection = firestore.collection(`users/${userID}/groups`);
+    groupCollection.get().then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        groupID = doc.id;
+        groupName = doc.data().groupName;
+      })
+    })
+  }
   banUser: (userID, groupID) => {
     return -1;
   },

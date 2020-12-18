@@ -348,7 +348,7 @@ const CreateEventScreen = ({ navigation, firebase }) => {
           togglePicker={togglePicker}
           value={groupName}
           editable={false}
-          label="Group"
+          label="Host"
           iconClass={MaterialIcons}
           iconName="group"
           iconColor={'#f95a25'}
