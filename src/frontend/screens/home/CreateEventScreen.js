@@ -286,12 +286,8 @@ const CreateEventScreen = ({ navigation, firebase }) => {
         participants: [1, 2, 3],
         filters: [1, 2, 3],
       },
-      creator: {
-        uid: 'abc',
-        name: 'Jimmy Wei',
-        avatar_uri: 'ASDASD',
-      },
-      group: {
+      creator: firebase.getCurrentUserInfo(),
+      host: {
         uid: 'group_uid',
         name: groupName,
         avatar_uri: 'ASDASD',

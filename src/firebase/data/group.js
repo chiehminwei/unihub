@@ -92,7 +92,6 @@ const Group = {
       const userInfo = request.data();
       const { groupName } = group.data();
 
-      const userInfo = request.data();
       transaction.set(memberRef, userInfo);
       transaction.set(userGroupRef, { groupName });
       transaction.delete(requestRef);
@@ -125,13 +124,17 @@ const Group = {
   },
   getUserGroups: (userID) => {
     const groupCollection = firestore.collection(`users/${userID}/groups`);
+    const groups = [];
     groupCollection.get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
         groupID = doc.id;
         groupName = doc.data().groupName;
+        groups.push({ groupID, groupName });
       })
+      return groups;
     })
-  }
+
+  },
   banUser: (userID, groupID) => {
     return -1;
   },
