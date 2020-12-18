@@ -11,7 +11,7 @@ export default function AppStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
-      <Stack.Screen name="Create" component={CreateEventScreen} />      
+      <Stack.Screen options={{headerShown: false}} name="Create" component={CreateEventScreen} />      
       <Stack.Screen options={{headerShown: false}} name='CreateGroup' component={CreateGroupScreen}/>
     </Stack.Navigator>
   );

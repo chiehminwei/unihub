@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef, useEffect } from 'react';
+import React, { Component, useState, useRef, useEffect} from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -7,9 +7,10 @@ import {
   ScrollView,
   Platform,
   TouchableOpacity,
+  Dimensions
 } from 'react-native';
 import { Image, ButtonGroup, Button } from 'react-native-elements';
-import { List, Divider } from 'react-native-paper';
+import { List, Divider, FAB } from 'react-native-paper';
 import { Picker } from '@react-native-community/picker';
 import CalendarTimePicker from '~/components/CalendarTimePicker';
 import MapView, { Marker } from 'react-native-maps';
@@ -60,7 +61,7 @@ import Toast from 'react-native-root-toast';
 
 console.disableYellowBox = true;
 
-const CreateEventScreen = ({ navigation, firebase }) => {
+const CreateEventScreen = (props, { navigation, firebase }) => {
 
   // Calendar Time Picker
   const [startCollapsed, setStartCollapse] = useState(true);
@@ -157,15 +158,16 @@ const CreateEventScreen = ({ navigation, firebase }) => {
   );
 
   // Image
+  const screenHeight = Math.round(Dimensions.get('window').height)
   const [uri, setURI] = useState(''); 
-  const [snapPoints, setSnapPoints] = useState([280, 280, 0]);
+  const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
   
   const sheetRef = useRef(null);
   const renderBottomSheet = () => (
     <View
       style={{
         backgroundColor: 'white',
-        height: 200,
+        height: 0.47*screenHeight,
       }}
     >
       <List.Item
@@ -317,31 +319,32 @@ const CreateEventScreen = ({ navigation, firebase }) => {
     }
 
   }
-   
+  const screenWidth = Math.round(Dimensions.get('window').width)
   return (
-    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center',}} behavior="padding" enabled   keyboardVerticalOffset={100}>
+    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom:0}} behavior="padding" enabled   keyboardVerticalOffset={100}>
       <ScrollView keyboardShouldPersistTaps="never">
         <View
           style={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            padding: 20,
+            padding: 0,
           }}
         >
-         <TouchableOpacity onPress={() => sheetRef.current.snapTo(0)}>
+         <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
             <Image              
               source={{ uri }}
-              style={{ width: 200, height: 300 }}
-              PlaceholderContent={<AntIcon name="plus" size={40} />}
+              style={{ width: screenWidth, height: 300 }}
+              PlaceholderContent={<MaterialIcons name="photo-size-select-actual" size={80} color="grey" />}
             />
           </TouchableOpacity>
         </View>
         <ButtonGroup
+          selectedButtonStyle={{backgroundColor:'#bad4da', borderColor:'transparent'}}
           onPress={updateEventType}
           selectedIndex={selectedIndex}
           buttons={eventTypes}
-          containerStyle={{height: 60}}
+          containerStyle={{height: 40, borderRadius:5}}
         />
         <FumiPicker
           pickerVisible={pickerVisible}
@@ -390,8 +393,26 @@ const CreateEventScreen = ({ navigation, firebase }) => {
         />
         { ContactInput }
         { eventTypes[selectedIndex] === 'In person' ? LocationInput : OnlineLocationInput }
-        <Button style={{ marginTop: 40 }} title="Post" onPress={handlePost}/>
+        <Button  
+          style={{ marginTop: 40, paddingBottom: 50, width:0.7*screenWidth, alignSelf:'center' }} 
+          buttonStyle={{backgroundColor:'#f38b8c',borderRadius:10}}
+          titleStyle={{fontFamily:'Avenir-Light', fontSize: 18, fontWeight:'bold'}} 
+          title="Post" 
+          onPress={handlePost}
+        />
        </ScrollView>
+       <FAB
+        style={{ 
+          position: 'absolute',
+          margin: 16,
+          left: 0,
+          top: 35,
+          backgroundColor:'white'
+        }}
+        small
+        icon="arrow-left"
+        onPress={() => props.navigation.goBack()}/>
+
       <BottomSheet
         ref={sheetRef}
         snapPoints={snapPoints}
@@ -401,6 +422,7 @@ const CreateEventScreen = ({ navigation, firebase }) => {
         enabledInnerScrolling={true}
       />
       { renderShadow() }
+      
     </KeyboardAvoidingView>
   );
 }

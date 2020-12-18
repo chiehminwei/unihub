@@ -97,7 +97,7 @@ const CreateGroupScreen = (props) => {
   // Image
   const screenHeight = Math.round(Dimensions.get('window').height)
   const [uri, setURI] = useState(''); 
-  const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
+  const [snapPoints, setSnapPoints] = useState([0, 0.43*screenHeight, 0]);
   
   const sheetRef = useRef(null);
   const renderBottomSheet = () => (
@@ -218,7 +218,7 @@ const CreateGroupScreen = (props) => {
   }
   const screenWidth = Math.round(Dimensions.get('window').width)
   return (
-    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center',}} behavior="padding" enabled   keyboardVerticalOffset={0}>
+    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
       <ScrollView keyboardShouldPersistTaps="never" style={{backgroundColor:'white'}}>
         <View
           style={{
@@ -232,13 +232,13 @@ const CreateGroupScreen = (props) => {
             <Image              
               source={{ uri }}
               style={{ width: screenWidth, height: 300 }}
-              PlaceholderContent={<AntIcon name="plus" size={40} />}
+              PlaceholderContent={<MaterialIcons name="photo-size-select-actual" size={80} color="grey" />}
             />
           </TouchableOpacity>
         </View>
          <View style={{paddingTop:30}}>
           <ButtonGroup 
-            selectedButtonStyle={{backgroundColor:'#c4c4c4', borderColor:'transparent'}}
+            selectedButtonStyle={{backgroundColor:'#bad4da', borderColor:'transparent'}}
             onPress={updateGroupType}
             selectedIndex={selectedIndex}
             buttons={groupTypes}
@@ -270,7 +270,7 @@ const CreateGroupScreen = (props) => {
           position: 'absolute',
           margin: 16,
           left: 0,
-          top: 20,
+          top: 40,
           backgroundColor:'white'
         }}
         small
