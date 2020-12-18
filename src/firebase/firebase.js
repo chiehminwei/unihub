@@ -3,7 +3,7 @@ import "firebase/auth";
 import "firebase/firestore";
 import firebaseConfig from "./firebaseConfig";
 // import Comment from "./data/comment";
-// import Group from "./data/group";
+import Group from "./data/group";
 // import Notification from "./data/notification";
 // import Post from "./data/post";
 import User from "./data/user";
@@ -41,6 +41,7 @@ const Firebase = {
   ...Calendar,
   ...Event,
   ...User,
+  ...Group,
 };
 
 export default Firebase;

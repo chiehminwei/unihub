@@ -36,6 +36,16 @@ const Users = {
       return firebase.firestore().doc(`users/${userID}`).onSnapshot(observer);
     }
   },
+  getCurrentUserInfo: () => {
+    const user = firebase.auth().currentUser;
+    const userInfo = {
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      uid: user.uid,
+    }
+    return userInfo;
+  },
   // TODO: event posts
   // TODO: forum posts
   // TODO: groups (membership)
