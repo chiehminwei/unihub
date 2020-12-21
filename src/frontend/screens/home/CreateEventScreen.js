@@ -60,7 +60,6 @@ import Toast from 'react-native-root-toast';
 
 
 console.disableYellowBox = true;
-
 const CreateEventScreen = (props, { navigation, firebase }) => {
 
   // Calendar Time Picker
