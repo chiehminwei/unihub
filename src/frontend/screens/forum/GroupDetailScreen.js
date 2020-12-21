@@ -7,57 +7,19 @@ import ThreadList from '../../components/lists/ThreadList';
 
 
 const deviceWidth = Dimensions.get('window').width;
-const longText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
-const user =
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu4256',
-    major: 'Mechanical Enginnering',
-    userUri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  }
 
-const group = 
-  {
-    hostName:'Jimmy',
-    groupName: 'Group THON 2020',
-    numMembers: 10,
-    isPrivate: false,
-    groupID: 'U123',
-    description: 'longText',
-    uri:'https://picsum.photos/700',
-  }
 
 function GroupContent({isPrivate}){
   if (isPrivate) return <PrivateScreen/>
   return <PublicScreen/>
 }  
 
-const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
-  const  
-  {
-    hostName,
-    groupName,
-    numMembers,
-    availability,
-    // groupID,
-    description,
-    uri,
-    isPrivate
-  } = group
-  const {
-    userName,
-    numGroups,
-    numFriends,
-    userID,
-    major,
-    userUri,
-    
-    classyear,
-  } = user
+const GroupDetailScreen = ({ route, navigation, firebase }) => {
+  const { group } = route.params;
+  const { admin, description, groupID, groupName, groupType, uri, numMember } = group;
+  const isPrivate = groupType === 'private';
+  const userInfo = firebase.getCurrentUserInfo();
+
   return (
       <ScrollView style={styles.scrollView}>
         <View style={{flex:1, alignContent:'stretch',alignItems:'center'}}>
@@ -69,19 +31,21 @@ const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
               PlaceholderContent={<ActivityIndicator />}
             />
 
-            <TouchableOpacity style={{marginTop:20}} onPress={ () => alert('to detail')}>
+            <View style={{marginTop:20}}>
               <Text style={styles.groupName}>
                 { groupName }
               </Text>
-            </TouchableOpacity>
+            </View>
 
             <View style={{flexDirection:'row'}}>
               <Text style={styles.groupInfo}>
-                { availability } group · {numMembers} members
+                { groupType } group · {numMember } members
               </Text>
             </View>
 
-            <TouchableOpacity style={{marginVertical:20, alignContent:"stretch"}} onPress={() => alert('join the group')}>
+            {// TODO: deal with the situation when user is already in the group
+            }
+            <TouchableOpacity style={{marginVertical:20, alignContent:"stretch"}} onPress={() => firebase.joinGroup(userInfo, groupID)}>
               <View style={{backgroundColor:'grey', 
                             width: deviceWidth*0.7,
                             alignItems:'center',
@@ -109,7 +73,7 @@ const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
               About
             </Text>
             <Text style={[styles.description,{marginHorizontal:16}]}>
-              { longText }
+              { description }
             </Text>
 
           
@@ -118,11 +82,6 @@ const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
           <View style={{ flex:1, alignSelf:'flex-start'}}>
             <GroupContent isPrivate={isPrivate}/>
           </View>
-
-
-              
-
-
 
             {/* Activities */
              !isPrivate && (
@@ -145,7 +104,7 @@ const GroupDetailScreen = ({ groupID, navigation, firebase }) => {
                 padding: 5
                 }}>
                 <TouchableOpacity style={{flex:1}} onPress={() => alert('To profile') }>
-                  <Image source={{uri: userUri }}
+                  <Image source={{uri: uri }} // TODO
                         style={{
                           borderWidth: 2,
                           borderColor:'#bbdadf',

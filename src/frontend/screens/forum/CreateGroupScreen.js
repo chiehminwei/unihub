@@ -30,6 +30,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 
 
+const EMPTY_URI = 'data:img';
+
 // Add a Toast on screen.
 let toast = Toast.show('This is a message', {
     duration: Toast.durations.LONG,
@@ -107,7 +109,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
   // Image
   const screenHeight = Math.round(Dimensions.get('window').height)
-  const [uri, setURI] = useState('http://www.tiptoncommunications.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png'); 
+  const [uri, setURI] = useState(EMPTY_URI); 
   const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
   
   const sheetRef = useRef(null);
@@ -129,7 +131,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
         title="Choose from Album"
         titleStyle={{ textAlign: 'center' }}
       />
-      {uri !== '' && (
+      {uri !== EMPTY_URI && (
         <List.Item
           onPress={deletePhoto}
           title="Delete Photo"
@@ -190,7 +192,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
   const deletePhoto = () => {
     sheetRef.current.snapTo(2);
-    setURI('');
+    setURI(EMPTY_URI);
     setSnapPoints([0, 0.47*screenHeight, 0]);
   }
 
@@ -204,7 +206,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   const handlePost = async () => {
     // Upload image to Firebase Storage
     let uploadUrl;
-    if (uri) {
+    if (uri !== EMPTY_URI) {
        uploadUrl = await uploadImageAsync(uri);
        setURI(uploadUrl);
     } 
@@ -241,11 +243,16 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
             }}
           >
           <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
-              <Image              
-                source={{ uri }}
-                style={{ width: screenWidth, height: 300, maxHeight:300 }}
-                PlaceholderContent={<MaterialIcons name="photo-size-select-actual" size={80} color="grey" />}
-              />
+              { uri === EMPTY_URI ? 
+                <View style={{ justifyContent: 'center', alignItems: 'center',
+                  width: screenWidth, height: 300, maxHeight:300, backgroundColor: '#bdbdbd' }} > 
+                  <MaterialIcons name="photo-size-select-actual" size={80} color="grey"/>
+                </View>
+                : <Image              
+                    source={{ uri }}
+                    style={{ width: screenWidth, height: 300, maxHeight:300 }}
+                  />
+              }
             </TouchableOpacity>
           </View>
           <View style={{paddingTop:30}}>
@@ -310,6 +317,19 @@ const styles = StyleSheet.create({
   shadowContainer: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#000',
+  },
+  container: {
+    backgroundColor: 'transparent',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  placeholderContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  placeholder: {
+    backgroundColor: '#bdbdbd',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
 

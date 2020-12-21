@@ -32,7 +32,7 @@ const Group = {
     const userGroupRef = getUserGroupRef(userID, groupID);
 
     const batch = firestore.batch();
-    batch.set(groupRef, group)
+    batch.set(groupRef, group);
     batch.set(memberRef, userInfo);
     batch.set(userGroupRef, group);
     batch.commit()

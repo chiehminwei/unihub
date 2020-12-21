@@ -7,10 +7,9 @@ import { useNavigation } from '@react-navigation/native';
 
 
 function GroupItem ({ group, navigation })  {
-  const name = group.groupName
   return(
-  <View style={{margin:5, maxWidth:'95%', flex:1, marginVertical:10 }} onPress={()=>navigation.navigate('GroupDetail',{ name : name })}>
-    <TouchableOpacity style={{flex:1}} onPress={ () => navigation.navigate('GroupDetail') }>
+  <View style={{margin:5, maxWidth:'95%', flex:1, marginVertical:10 }} onPress={()=>navigation.navigate('GroupDetail',{ group })}>
+    <TouchableOpacity style={{flex:1}} onPress={ () => navigation.navigate('GroupDetail',{ group }) }>
       <Card.Content style={{padding:0}}>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', width:'90%' }}>
             <View style={{shadowOffset:{height:10, width:1}, shadowColor:'grey', shadowOpacity: 0.5,shadowRadius:10, elevation: 3}}>
