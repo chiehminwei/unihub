@@ -9,8 +9,9 @@ const MemberItem = ({ name, uri, onPress }) => (
       style={{
               alignContent:"center", 
               alignItems:'center', 
-              margin: screenWidth*0.025, 
-              width: screenWidth*0.2
+              marginHorizontal: screenWidth*0.025, 
+              width: screenWidth*0.2,
+              height: 80
             }}
       onPress={onPress}>
       <Image source={{uri: uri }}
@@ -18,7 +19,9 @@ const MemberItem = ({ name, uri, onPress }) => (
                       borderRadius: 25,
                       width: 50,
                       height: 50,
-                      margin: 10}}/>
+                     
+                    }}
+      />
       <Text style={{fontFamily:'Avenir-Light',
                     fontWeight:'500',
                     fontSize:12}}>
