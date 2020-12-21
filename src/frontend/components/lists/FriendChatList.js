@@ -1,6 +1,5 @@
 import React,{useState, Component} from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, FlatList}  from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import FriendChatItem from './FriendChatItem';
 // import { styles } from '../stylesheets/styles';
 

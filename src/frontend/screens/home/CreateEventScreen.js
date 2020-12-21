@@ -243,13 +243,13 @@ const CreateEventScreen = (props, { navigation, firebase }) => {
   const deletePhoto = () => {
     sheetRef.current.snapTo(2);
     setURI('');
-    setSnapPoints([280, 280, 0]);
+    setSnapPoints([0, 0.47*screenHeight, 0]);
   }
 
   const handleImagePicked = pickerResult => {
     if (!pickerResult.cancelled) {
         setURI(pickerResult.uri);
-        setSnapPoints([315, 315, 0]);
+        setSnapPoints([0, 0.52*screenHeight, 0]);
     }
   };
 
@@ -391,7 +391,7 @@ const CreateEventScreen = (props, { navigation, firebase }) => {
         { eventTypes[selectedIndex] === 'In person' ? LocationInput : OnlineLocationInput }
         <Button  
           style={{ marginTop: 40, paddingBottom: 50, width:0.7*screenWidth, alignSelf:'center' }} 
-          buttonStyle={{backgroundColor:'#f38b8c',borderRadius:10}}
+          buttonStyle={{backgroundColor:'#bad4da',borderRadius:10}}
           titleStyle={{fontFamily:'Avenir-Light', fontSize: 18, fontWeight:'bold'}} 
           title="Post" 
           onPress={handlePost}

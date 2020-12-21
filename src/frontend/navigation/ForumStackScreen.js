@@ -1,5 +1,7 @@
 import * as React from 'react';
+import { Text } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 //import screens
 import { ForumScreen } from '~/screens/forum/ForumScreen';
@@ -12,23 +14,26 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ForumStack = createStackNavigator();
 
+
 export function ForumStackScreen() {
+  const navigation = useNavigation()
   return (
     <ForumStack.Navigator initialRouteName="Forum" >
       <ForumStack.Screen options={{headerShown: false}} name="Forum" component={ForumScreen} />
       <ForumStack.Screen  name="Search" component={ForumSearchScreen} />
-      {/* <ForumStack.Screen  name="CreateGroup" component={CreateGroupScreen} /> */}
       <ForumStack.Screen  
           name='GroupDetail' 
           component={GroupDetailScreen} 
-          options={{
-            // headerTitle: props => <LogoTitle {...props} />,
+          options={
+            // ({ route }) => ({ title: route.params.name })
+            {
             headerRight: () => (
-              <TouchableOpacity style={{marginRight:16}} onPress={() => alert('to group detail')}>
+              <TouchableOpacity style={{marginRight:16}} onPress={() => navigation.navigate('GroupInfo')}>
                 <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
               </TouchableOpacity>
             ),
-          }}/>
+            }
+          }/>
       <ForumStack.Screen  name='ThreadDetail' component={ThreadDetailScreen} />
     </ForumStack.Navigator>
   );

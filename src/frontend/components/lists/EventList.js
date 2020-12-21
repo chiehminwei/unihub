@@ -1,6 +1,5 @@
-import React,{useState, Component} from 'react';
+import React,{ useState, Component } from 'react';
 import { View, StyleSheet, Text, Dimensions, TouchableOpacity, ScrollView, FlatList, SectionList}  from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import EventItem from './EventItem';
 import KeyEventItem from './KeyEventItem'
 import { Divider } from 'react-native-paper';
@@ -70,6 +69,18 @@ const events = [
     uri: 'https://picsum.photos/700',
     description: 'Cool event no no no',
   },
+  {
+    eventName: 'Hi',
+    groupName: 'EROooo',
+    tags: [ '#Billiards', '#Hub' ],
+    numMessages: 10,
+    numGoing: 10,
+    eventLocation: 'WTF',
+    eventID: 'U3456',
+    eventDate: 'Friday JULY 3',
+    uri: 'https://picsum.photos/700',
+    description: 'Cool event no no no',
+  },
 ];
 const windowWidth = Dimensions.get('window').width;
 
@@ -94,15 +105,16 @@ export default function EventList({ navigation, scrollEnabled }) {
         </View>
         <View style={{flexDirection:'row', alignContent: 'center', alignItems:'center', justifyContent:'space-between'}}>
           <Text style={{marginLeft:16, fontFamily:'Avenir-Light', fontSize: 20, fontWeight: 'bold'}}>Recommended</Text>
-          <TouchableOpacity style={{marginRight:16}}>
-            <Text>show more</Text>
-          </TouchableOpacity>
         </View>
-          {  
+          {/* {  
             events.map(item =>  <EventItem  navigation={ navigation } event={ item }/>)
-          }
-      </ScrollView>
-      {/* <SectionList 
+          } */}
+          <FlatList
+            data={events}
+            renderItem={({ item }) =>  <EventItem navigation={ navigation } event={ item }/>}
+            keyExtractor={item => item.eventID}
+          />
+          {/* <SectionList 
         renderSectionHeader={({ section: { title } }) => <Text style={{ fontWeight: 'bold' }}>{title}</Text>} 
         sections={[ 
           { title: 'Trending',
@@ -146,6 +158,8 @@ export default function EventList({ navigation, scrollEnabled }) {
           </Text>
         </View>}
       /> */}
+      </ScrollView>
+      
       </View>
   )
 }

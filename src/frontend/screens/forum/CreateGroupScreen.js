@@ -26,6 +26,8 @@ import { withFirebaseHOC } from "~/../firebase";
 const uuidv4 = require('random-uuid-v4');
 import Toast from 'react-native-root-toast';
 import { AuthUserContext } from '~/navigation/AuthUserProvider';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { screenStyles } from '~/stylesheets/screenStyles';
 
 
 // Add a Toast on screen.
@@ -106,7 +108,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   // Image
   const screenHeight = Math.round(Dimensions.get('window').height)
   const [uri, setURI] = useState(''); 
-  const [snapPoints, setSnapPoints] = useState([0, 0.43*screenHeight, 0]);
+  const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
   
   const sheetRef = useRef(null);
   const renderBottomSheet = () => (
@@ -189,13 +191,13 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   const deletePhoto = () => {
     sheetRef.current.snapTo(2);
     setURI('');
-    setSnapPoints([280, 280, 0]);
+    setSnapPoints([0, 0.47*screenHeight, 0]);
   }
 
   const handleImagePicked = pickerResult => {
     if (!pickerResult.cancelled) {
         setURI(pickerResult.uri);
-        setSnapPoints([315, 315, 0]);
+        setSnapPoints([0, 0.52*screenHeight, 0]);
     }
   };
 
@@ -230,75 +232,77 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   }
   const screenWidth = Math.round(Dimensions.get('window').width)
   return (
-    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
-      <ScrollView keyboardShouldPersistTaps="never" style={{backgroundColor:'white'}}>
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
+    <SafeAreaView style={screenStyles.safeArea} edges={['right','top','left']}>
+      <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
+        <ScrollView keyboardShouldPersistTaps="never" style={{backgroundColor:'white'}}>
+          <View
+            style={{
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
 
+            }}
+          >
+          <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
+              <Image              
+                source={{ uri }}
+                style={{ width: screenWidth, height: 300, maxHeight:300 }}
+                PlaceholderContent={<MaterialIcons name="photo-size-select-actual" size={80} color="grey" />}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={{paddingTop:30}}>
+            <ButtonGroup 
+              selectedButtonStyle={{backgroundColor:'#bad4da', borderColor:'transparent'}}
+              onPress={updateGroupType}
+              selectedIndex={selectedIndex}
+              buttons={groupTypes}
+              containerStyle={{height: 40, borderRadius:5}}
+            />
+
+            { GroupNameInput }
+
+            <MultiLine
+              value={description}
+              maxLines={4}
+              maxLength={280}
+              onChangeText={setDescription}
+              label="Description (use # for tags)"
+              iconClass={MaterialIcons}
+              iconName="description"
+            />
+            <Button 
+              style={{ marginTop: 40, width:0.7*screenWidth, alignSelf:'center' }} 
+              buttonStyle={{backgroundColor:'#bad4da',borderRadius:10}}
+              titleStyle={{fontFamily:'Avenir-Light', fontSize: 18, fontWeight:'bold'}} 
+              title="Create" 
+              onPress={handlePost}
+              />
+              </View> 
+        </ScrollView>
+        <FAB
+          style={{ 
+            position: 'absolute',
+            margin: 16,
+            left: 0,
+            top: 10,
+            backgroundColor:'white'
           }}
-        >
-         <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
-            <Image              
-              source={{ uri }}
-              style={{ width: screenWidth, height: 300 }}
-              PlaceholderContent={<MaterialIcons name="photo-size-select-actual" size={80} color="grey" />}
-            />
-          </TouchableOpacity>
-        </View>
-         <View style={{paddingTop:30}}>
-          <ButtonGroup 
-            selectedButtonStyle={{backgroundColor:'#bad4da', borderColor:'transparent'}}
-            onPress={updateGroupType}
-            selectedIndex={selectedIndex}
-            buttons={groupTypes}
-            containerStyle={{height: 40, borderRadius:5}}
-          />
-
-          { GroupNameInput }
-
-          <MultiLine
-            value={description}
-            maxLines={4}
-            maxLength={280}
-            onChangeText={setDescription}
-            label="Description (use # for tags)"
-            iconClass={MaterialIcons}
-            iconName="description"
-          />
-          <Button 
-            style={{ marginTop: 40, width:0.7*screenWidth, alignSelf:'center' }} 
-            buttonStyle={{backgroundColor:'#f38b8c',borderRadius:10}}
-            titleStyle={{fontFamily:'Avenir-Light', fontSize: 18, fontWeight:'bold'}} 
-            title="Create" 
-            onPress={handlePost}
-            />
-            </View> 
-       </ScrollView>
-       <FAB
-        style={{ 
-          position: 'absolute',
-          margin: 16,
-          left: 0,
-          top: 40,
-          backgroundColor:'white'
-        }}
-        small
-        icon="arrow-left"
-        onPress={() => navigation.goBack()}/>
-       
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        borderRadius={10}
-        renderContent={renderBottomSheet}
-        callbackNode={fall}
-        enabledInnerScrolling={true}
-      />
-      { renderShadow() }
-    </KeyboardAvoidingView>
+          small
+          icon="arrow-left"
+          onPress={() => navigation.goBack()}/>
+        
+        <BottomSheet
+          ref={sheetRef}
+          snapPoints={snapPoints}
+          borderRadius={10}
+          renderContent={renderBottomSheet}
+          callbackNode={fall}
+          enabledInnerScrolling={true}
+        />
+        { renderShadow() }
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 

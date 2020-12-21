@@ -6,10 +6,10 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-function GroupItem ({ group })  {
-  const navigation = useNavigation()
+function GroupItem ({ group, navigation })  {
+  const name = group.groupName
   return(
-  <View style={{margin:5, maxWidth:'95%', flex:1, marginVertical:10 }} onPress={()=>navigation.navigate('GroupDetail')}>
+  <View style={{margin:5, maxWidth:'95%', flex:1, marginVertical:10 }} onPress={()=>navigation.navigate('GroupDetail',{ name : name })}>
     <TouchableOpacity style={{flex:1}} onPress={ () => navigation.navigate('GroupDetail') }>
       <Card.Content style={{padding:0}}>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', width:'90%' }}>

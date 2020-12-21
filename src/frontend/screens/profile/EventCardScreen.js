@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 import EventItem from '../../components/lists/EventItem'
 import { useNavigation } from '@react-navigation/native'
 
@@ -49,9 +49,11 @@ class EventCardScreen extends Component{
     const {navigation}=this.props
       return  <View style={{paddingVertical: 20, alignItems: 'stretch', backgroundColor: 'white' }}> 
                           
-                {  
-                  events.map(item =>  <EventItem  navigation={ navigation } event={ item }/>)
-                }
+                <FlatList
+                  data={events}
+                  renderItem={({ item }) =>  <EventItem navigation={ navigation } event={ item }/>}
+                  keyExtractor={item => item.eventID}
+                />
                 
               </View>   
   }

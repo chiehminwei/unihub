@@ -1,5 +1,7 @@
 import React from 'react';
 import { Text, View, FlatList, Image,TouchableOpacity } from 'react-native';
+import MemberItem from '~/components/lists/MemberItem';
+
 
 const user = [
   {
@@ -45,35 +47,10 @@ const user = [
 ];
 
 
-const MemberItem = ({ name, uri }) => (
-  <View>
-    <TouchableOpacity 
-      style={{
-              alignContent:"center", 
-              alignItems:'center', 
-              margin:5, 
-              width: 100
-            }}
-      onPress={()=> alert('navigate to profile')}>
-      <Image source={{uri: uri }}
-            style={{
-                      borderRadius: 40,
-                      width: 80,
-                      height: 80,
-                      margin: 10}}/>
-      <Text style={{fontFamily:'Avenir-Light',
-                    fontWeight:'500',
-                    fontSize:16}}>
-            {name}
-      </Text>
-    </TouchableOpacity>
-  </View>
-);
-
 
 const MemberList = () => {
   const renderItem = ({ item }) => (
-    <MemberItem name={item.userName} uri={item.uri} />
+    <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')} />
   );
 
   return(
