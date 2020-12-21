@@ -4,6 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 import MemberItem from '~/components/lists/MemberItem';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Image } from 'react-native-elements'
+import { Divider } from 'react-native-paper';
+import { ScrollView } from 'react-native-gesture-handler';
+
 
 
 const shownListLength = 11
@@ -122,15 +126,26 @@ const users = [
     classyear: 2020
   },
   {
-    userName: 'Jimmy Wei',
+    userName: 'Eric Li',
     numGroups: 10,
     numFriends: 10,
-    userID: 'Uu234',
+    userID: 'Uu123',
     major: 'Mechanical Enginnering',
     uri: 'https://picsum.photos/700',
     description: 'Cool Guy',
     classyear: 2020
   },
+  {
+    userName: 'Eric Li',
+    numGroups: 10,
+    numFriends: 10,
+    userID: 'Uu123',
+    major: 'Mechanical Enginnering',
+    uri: 'https://picsum.photos/700',
+    description: 'Cool Guy',
+    classyear: 2020
+  },
+  
 ];
 function SettingButton ({title, subTitle, onPress}) {
   return(
@@ -141,7 +156,7 @@ function SettingButton ({title, subTitle, onPress}) {
           marginLeft: 16,
           fontFamily:'Avenir-Light',
           fontWeight:'bold',
-          fontSize:20 }}>
+          fontSize:18}}>
             { title }
       </Text>
       <View style={{flex:1, flexDirection:'row',alignItems:'center', justifyContent:'flex-end', paddingRight:16}}>
@@ -157,65 +172,69 @@ function SettingButton ({title, subTitle, onPress}) {
   )
 }
 
-function RemoveUserButton ({onPress}) {
+function RemoveUserButton () {
   return(
-
+<View>
     <TouchableOpacity 
       style={{
               alignContent:"center", 
               alignItems:'center', 
-              margin: screenWidth*0.025, 
-              width: screenWidth*0.2
+              marginHorizontal: screenWidth*0.025, 
+              width: screenWidth*0.2,
+              height: 80
             }}
-      onPress={onPress}>
-      {/* <Image source={{uri: uri }}
+      onPress={()=> alert('remove user page')}>
+      <Image source={ require('../../../../assets/remove-user.png')}
             style={{
                       borderRadius: 25,
                       width: 50,
                       height: 50,
-                      margin: 10}}/> */}
-      <MaterialCommunityIcons 
-        style={{margin: 10}}
-        name="minus-circle-outline" 
-        size={50} 
-        color="black" 
-      />               
+                    }}
+      />
       <Text style={{fontFamily:'Avenir-Light',
                     fontWeight:'500',
                     fontSize:12}}>
-            remove user
+            Remove User
       </Text>
     </TouchableOpacity>
+  </View>
   )
 }
 
 export default function GroupInfo() {
+  let rowsOfList = user.length >=12 ?  3  :  Math.ceil((users.length+1)/4)
+  let listheight = 80 * rowsOfList
   return (
-    <SafeAreaView style={[screenStyles.safeArea,{backgroundColor:'white'}]} edges={['right','left']}>
+    <SafeAreaView style={[screenStyles.safeArea,{ backgroundColor:'white' }]} edges={['right','left']}>
+      <ScrollView style={{flex:1}}>
       <View style={{ flex: 1, alignSelf:'stretch'}}>
+        <View style={{backgroundColor:"white"}}>
         <Text style={{  alignSelf:'flex-start', 
                         marginLeft: 16,
+                        marginVertical: 10 ,
                         fontFamily:'Avenir-Light',
                         fontWeight:'bold',
                         fontSize:20 }}>
-            Member
+            Members
         </Text>
+        <Divider style={{height:1, marginBottom: 10}}/>
           { 
           //  check nunber of members 
-            users.length >= shownListLength ?
+            users.length > shownListLength ?
             (
-              <View style={{flex:1}}> 
+              <View style={{height: listheight - 80 + 40 , width: screenWidth, }}> 
                 <View style = {{ flexDirection:'row', alignItems:'flex-start',flexWrap:'wrap',alignSelf:'flex-start'}}>
                   
                   { users.slice(0,shownListLength).map( item  =>  <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
                   { user.isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
                 </View>  
-                <Button  style ={{flex:1}} title='SHOW ALL USERS' onPress={()=> alert('SHOW ALL USERS')}/>
+                <Divider style={{height:1}}/>
+                <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title={'Show All Members'} onPress={()=> alert('SHOW ALL USERS')}/>
               </View>
             ) : 
             (
-              <View style={{flex:1}}> 
+              <View style={{height: listheight , width:screenWidth}}> 
                 <View style = {{ flexDirection:'row', alignItems:'flex-start',flexWrap:'wrap',alignSelf:'flex-start'}}>
                   { users.map( item  =>  <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
@@ -224,14 +243,17 @@ export default function GroupInfo() {
               </View>
             )
           }
-        <View style={{flex:1}}>
+          </View>
+          <Divider style={{height:10}}/>
           <Text style={{  alignSelf:'flex-start', 
                         marginLeft: 16,
+                        marginVertical: 10 ,
                         fontFamily:'Avenir-Light',
                         fontWeight:'bold',
                         fontSize:20 }}>
-            Setting
+            Settings
           </Text>
+          <Divider style={{height:1}}/>
           <SettingButton 
             title={'Group Name'}
             subTitle={'Not Set'}
@@ -241,6 +263,7 @@ export default function GroupInfo() {
               }
             }
           />
+          <Divider style={{height:1}}/>
           <SettingButton 
             title={'Group Notice'}
             subTitle={'Not Set'}
@@ -250,15 +273,16 @@ export default function GroupInfo() {
               }
             }
           />
-          
+          <Divider style={{height:10}}/>
           {
-            user.isAdmin ? 
-            <Button title ='Delete this Group' onPress={() => alert('delete this group')}/>
-              : <Button title ='Leave this Group' onPress={() => alert('leave this group')}/>
+            user.isAdmin ?      
+            <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Delete this Group' onPress={() => alert('delete this group')}/>
+            : 
+            <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Leave this Group' onPress={() => alert('leave this group')}/>
           }
-        
-        </View>
+         <Divider style={{height:10}}/>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
