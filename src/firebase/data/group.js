@@ -23,6 +23,9 @@ const Group = {
 
     const groupRef = getGroupCollection().doc();
     const groupID = groupRef.id;
+    group.groupID = groupID;
+    group.numMember = 1;
+
     const { groupName } = group;
     
     const memberRef = getMemberRef(userID, groupID);
@@ -31,7 +34,7 @@ const Group = {
     const batch = firestore.batch();
     batch.set(groupRef, group)
     batch.set(memberRef, userInfo);
-    batch.set(userGroupRef, { groupName });
+    batch.set(userGroupRef, group);
     batch.commit()
          .catch(err => console.error(err));    
   },
@@ -65,12 +68,22 @@ const Group = {
     // Remove user from group member list, and remove group from user's group list
     const memberRef = getMemberRef(userID, groupID);  
     const userGroupRef = getUserGroupRef(userID, groupID)
-    
-    const batch = firestore.batch();
-    batch.delete(memberRef);
-    batch.delete(userGroupRef);
-    batch.commit()
-         .catch(err => console.error(err));
+    const groupRef = getGroupRef(groupID);
+
+    return firestore.runTransaction(async transaction => {
+      const group = await transaction.get(groupRef);
+      if (!group.exists) {
+          throw "Group does not exist!";
+      }
+
+      const { groupName, numMember } = group.data();
+
+      transaction.delete(memberRef);
+      transaction.delete(userGroupRef);
+
+      transaction.update(groupRef, { numMember: numMember - 1});
+      transaction.update(groupRef, { numMember: numMember - 1});     
+    }).catch(err => console.error(err));
   },
   acceptMember: (userID, groupID) => {
     // Remove requests (from user's request list and group's request list)
@@ -90,8 +103,9 @@ const Group = {
       }
 
       const userInfo = request.data();
-      const { groupName } = group.data();
+      const { groupName, numMember } = group.data();
 
+      transaction.update(group, { numMember: numMember + 1});
       transaction.set(memberRef, userInfo);
       transaction.set(userGroupRef, { groupName });
       transaction.delete(requestRef);
@@ -110,30 +124,18 @@ const Group = {
     batch.commit()
          .catch(err => console.error(err));
   },
-  kickMember: (userID, groupID) => {
-    // Remove user from member list
-    // Remove group from user's group list
-    const memberRef = getMemberRef(userID, groupID)
-    const userGroupRef = getUserGroupRef(userID, groupID)
-
-    const batch = firestore.batch();
-    batch.delete(memberRef);
-    batch.delete(userGroupRef);
-    batch.commit()
-         .catch(err => console.error(err));
-  },
-  getUserGroups: (userID) => {
+  getUserGroups: (userID, setGroups) => {
     const groupCollection = firestore.collection(`users/${userID}/groups`);
-    const groups = [];
-    groupCollection.get().then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        groupID = doc.id;
-        groupName = doc.data().groupName;
-        groups.push({ groupID, groupName });
-      })
-      return groups;
+    const unsubscribe = groupCollection.onSnapshot(snapshot => {
+      if (snapshot.size) {
+        const groups = [];    
+        snapshot.forEach(doc => {          
+          groups.push(doc.data());
+        })
+        setGroups(groups);
+      }
     })
-
+    return unsubscribe;
   },
   banUser: (userID, groupID) => {
     return -1;
