@@ -64,9 +64,9 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
   const { user } = useContext(AuthUserContext);
   const userInfo = {
-      displayName: user.displayName,
+      displayName: user.displayName || 'NO NAME',
       email: user.email,
-      photoURL: user.photoURL,
+      photoURL: user.photoURL || 'http://www.tiptoncommunications.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png', // TODO
       uid: user.uid,
   }
 
@@ -107,7 +107,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
   // Image
   const screenHeight = Math.round(Dimensions.get('window').height)
-  const [uri, setURI] = useState(''); 
+  const [uri, setURI] = useState('http://www.tiptoncommunications.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png'); 
   const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
   
   const sheetRef = useRef(null);
@@ -202,14 +202,11 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   };
 
   const handlePost = async () => {
-    // TODO: fuck this shit
     // Upload image to Firebase Storage
-    try {
-       const uploadUrl = await uploadImageAsync(uri);
+    let uploadUrl;
+    if (uri) {
+       uploadUrl = await uploadImageAsync(uri);
        setURI(uploadUrl);
-    } catch (e) {
-      console.log(e);
-      alert('Image upload failed, sorry :('); // TODO: change this to notification
     } 
     // Push group to firestore
     const group = {
@@ -217,7 +214,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
       groupName,
       description,
       groupType: groupTypes[selectedIndex],
-      uri: 'uploadUrl',
+      uri: uploadUrl,
     };
     try {
       const result = await firebase.createGroup(group); // TODO: firebase (remember to check group name rights)      

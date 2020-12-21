@@ -19,7 +19,7 @@ function GroupItem ({ group, navigation })  {
             </View>
           <View style={{ flex:3, marginHorizontal:20, justifyContent:'space-around'}}>
           <Title>{ group.groupName }</Title>
-          <Text>{ group.numMembers } members  </Text>
+          <Text>{ group.numMember } members  </Text>
           </View>
 
           {/* <Button style={{}}>

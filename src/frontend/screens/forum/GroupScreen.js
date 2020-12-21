@@ -7,11 +7,12 @@ import { withFirebaseHOC } from "~/../firebase";
 const GroupScreen = ({ firebase, navigation }) => {
     const [ groups, setGroups ] = useState([]);
 
-    useEffect(async () => {
+    useEffect(() => {
       const userID = firebase.getCurrentUserInfo().uid;
-      const firebaseGroups = await firebase.getUserGroups(userID);
-      console.log(firebaseGroups)
-      setGroups(firebaseGroups);
+      const unsubscribe = firebase.getUserGroups(userID, setGroups);
+      return () => {
+        unsubscribe();
+      }
     }, [firebase]);
 
     return (
