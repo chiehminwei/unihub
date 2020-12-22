@@ -1,24 +1,112 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, ScrollView, TouchableOpacity, View, Text, ActivityIndicator, Image, Dimensions } from 'react-native';
 import { withFirebaseHOC } from "~/../firebase";
 import  PrivateScreen  from '~/screens/forum/PrivateScreen';
 import  PublicScreen from './PublicScreen';
 import ThreadList from '../../components/lists/ThreadList';
+import { GroupContext } from '~/navigation/GroupProvider';
 
 
 const deviceWidth = Dimensions.get('window').width;
 
 
-function GroupContent({isPrivate}){
+function GroupContent({ isPrivate, members }){
   if (isPrivate) return <PrivateScreen/>
-  return <PublicScreen/>
+  return <PublicScreen members={members}/>
 }  
 
 const GroupDetailScreen = ({ route, navigation, firebase }) => {
   const { group } = route.params;
-  const { admin, description, groupID, groupName, groupType, uri, numMember } = group;
+  const { admin, description, groupID, groupName, groupType, uri, numMember, groupNotice } = group;
   const isPrivate = groupType === 'private';
   const userInfo = firebase.getCurrentUserInfo();
+  const [ members, setMembers ] = useState([]);
+  const [ isInGroup, setIsInGroup ] = useState(false);
+  const [ isWaiting, setIsWaiting ] = useState(false);
+
+  const { contextGroupID, setContextGroupID } = useContext(GroupContext);
+
+  const joinGroup = () => {
+    firebase.joinGroup(userInfo, groupID)
+  }
+
+  const JoinButton = (buttonStatus) => {
+    if (buttonStatus  === 'IN_GROUP') {
+      return;
+    }
+    else if (buttonStatus === 'IS_WAITING') {
+      return (
+        <View
+          style={{marginVertical:20, alignContent:"stretch"}}
+        >
+          <View style={{backgroundColor:'grey', 
+                        width: deviceWidth*0.7,
+                        alignItems:'center',
+                        padding:10,
+                        borderRadius:10}}>
+            <Text style={{fontFamily:'Avenir-Light',
+                          fontSize:18,
+                          fontWeight:'600',
+                          color:'white',
+                          backgroundColor:'grey'}}>
+              Request Sent
+            </Text>
+          </View>
+        </View>
+      )
+    }
+    return (
+      <TouchableOpacity
+          style={{marginVertical:20, alignContent:"stretch"}}
+          onPress={joinGroup}
+        >
+          <View style={{backgroundColor:'#bad4da', 
+                        width: deviceWidth*0.7,
+                        alignItems:'center',
+                        padding:10,
+                        borderRadius:10}}>
+            <Text style={{fontFamily:'Avenir-Light',
+                          fontSize:18,
+                          fontWeight:'600',
+                          color:'white',
+                          backgroundColor:'#bad4da'}}>
+              Join Group
+            </Text>
+          </View>
+        </TouchableOpacity>
+    )
+
+  }
+
+  const getButtonStatus = () => {
+    if (isWaiting) {
+      return 'IS_WAITING';
+    }
+    else if (isInGroup) {
+      return 'IN_GROUP';
+    }
+    else {
+      return 'NOT_IN_GROUP';
+    }
+  }
+
+  const buttonStatus = getButtonStatus();
+
+  useEffect(() => {
+      const memberUnsubscribe = firebase.getMembers(groupID, setMembers);
+      const inGroupUnsubscribe = firebase.userIsInGroup(userInfo.uid, groupID, setIsInGroup);
+      const isWaitingUnsubscribe = firebase.userIsWaiting(userInfo.uid, groupID, setIsWaiting);
+      
+      return () => {
+        memberUnsubscribe();
+        inGroupUnsubscribe();
+      }
+    }, [firebase]);
+
+  useEffect(() => {
+    setContextGroupID(groupID)
+  }, [])
+
 
   return (
       <ScrollView style={styles.scrollView}>
@@ -43,44 +131,48 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
               </Text>
             </View>
 
-            {// TODO: deal with the situation when user is already in the group
-            }
-            <TouchableOpacity style={{marginVertical:20, alignContent:"stretch"}} onPress={() => firebase.joinGroup(userInfo, groupID)}>
-              <View style={{backgroundColor:'grey', 
-                            width: deviceWidth*0.7,
-                            alignItems:'center',
-                            padding:10,
-                            borderRadius:10}}>
-                <Text style={{fontFamily:'Avenir-Light',
-                              fontSize:18,
-                              fontWeight:'600',
-                              color:'white',
-                              backgroundColor:'grey'}}>
-                  Join Group
-                </Text>
-              </View>
-            </TouchableOpacity>
+            { JoinButton(buttonStatus) }
 
 
 
             {/* about */}
-            <Text style={{alignSelf:'flex-start', 
-                          marginTop: 20,
-                          marginLeft:16,
-                          fontFamily:'Avenir-Light',
-                          fontWeight:'bold',
-                          fontSize:24 }}>
-              About
-            </Text>
-            <Text style={[styles.description,{marginHorizontal:16}]}>
-              { description }
-            </Text>
+            { !isInGroup && (
+              <View>
+                <Text style={{alignSelf:'flex-start', 
+                              marginTop: 20,
+                              marginLeft:16,
+                              fontFamily:'Avenir-Light',
+                              fontWeight:'bold',
+                              fontSize:24 }}>
+                  About
+                </Text>
+                <Text style={[styles.description,{marginHorizontal:16}]}>
+                  { description }
+                </Text>
+              </View>
+            )}
+
+            { isInGroup && groupNotice && (
+              <View>
+                <Text style={{alignSelf:'flex-start', 
+                              marginTop: 20,
+                              marginLeft:16,
+                              fontFamily:'Avenir-Light',
+                              fontWeight:'bold',
+                              fontSize:24 }}>
+                  Group Notice
+                </Text>
+                <Text style={[styles.description,{marginHorizontal:16}]}>
+                  { groupNotice }
+                </Text>
+              </View>
+            )}
 
           
 
             {/* public or private */}
           <View style={{ flex:1, alignSelf:'flex-start'}}>
-            <GroupContent isPrivate={isPrivate}/>
+            <GroupContent isPrivate={isPrivate} members={members}/>
           </View>
 
             {/* Activities */
