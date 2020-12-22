@@ -61,7 +61,7 @@ const screenWidth = Dimensions.get('window').width
 const numAvator = Math.floor((screenWidth-32)/40)
 const shownListLength = user.length >= numAvator ? numAvator-1 : user.length
 
-const Avator = ({ name, uri, onPress }) => (
+const Avator = ({ userID, uri, onPress }) => (
   <View>
     <TouchableOpacity 
       style={{
@@ -122,17 +122,8 @@ const ThreeDot = ({onPress}) => (
 export default function Publicscreen() {
   const navigation = useNavigation();
   return (
-    <View style={{flex:1, alignItems:'stretch',alignContent:'stretch'}}>
-      <Text 
-        style={{
-          alignSelf:'flex-start', 
-          marginTop: 20,
-          marginLeft: 16,
-          fontFamily:'Avenir-Light',
-          fontWeight:'bold',
-          fontSize:24 
-        }}
-      >
+    <View style={styles.avatorListContainer}>
+      <Text style={styles.title}>
           Members
       </Text>
       <View style={styles.avatorList}>
@@ -144,6 +135,21 @@ export default function Publicscreen() {
 }
 
 const styles = StyleSheet.create({
+  avatorListContainer:{
+    flex:1, 
+    alignItems:'stretch',
+    alignContent:'stretch'
+  },
+
+  title:{
+    alignSelf:'flex-start', 
+    marginTop: 20,
+    marginLeft: 16,
+    fontFamily:'Avenir-Light',
+    fontWeight:'bold',
+    fontSize:24 
+  },
+  
   avatorList: {
     flex:1, 
     flexDirection:'row', 

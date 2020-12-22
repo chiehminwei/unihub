@@ -15,7 +15,8 @@ export default function AppStack() {
       <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
       <Stack.Screen options={{headerShown: false}} name="Create" component={CreateEventScreen} />      
       <Stack.Screen options={{headerShown: false}} name='CreateGroup' component={CreateGroupScreen}/>
-      <Stack.Screen options={{headerBackTitle: 'Back'}}name='GroupInfo' component={GroupInfo}/>
+      <Stack.Screen options={{headerBackTitle: 'Back', title:''}}name='GroupInfo' component={GroupInfo}/>
+      {/* <Stack.Screen options={{headerBackTitle: 'Back', title:''}}name='AllMemberList' component={AlllMemberlist}/> */}
 
       {/* <Stack.Screen options={{headerShown: false}} name='ChatExample' component={ChatDetailScreen}/> */}
     </Stack.Navigator>

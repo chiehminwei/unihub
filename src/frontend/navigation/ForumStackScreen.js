@@ -25,9 +25,8 @@ export function ForumStackScreen() {
           name='GroupDetail' 
           component={GroupDetailScreen} 
           options={
-            
+            // ({ route }) => ({ title: route.params.name })
             {
-            title: '',
             headerRight: () => (
               <TouchableOpacity style={{marginRight:16}} onPress={() => navigation.navigate('GroupInfo')}>
                 <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
