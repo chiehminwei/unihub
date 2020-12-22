@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Text, View, Button, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, Button, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 import MemberItem from '~/components/lists/MemberItem';
@@ -11,146 +11,8 @@ import { GroupContext } from '~/navigation/GroupProvider';
 import { withFirebaseHOC } from "~/../firebase";
 
 
-const shownListLength = 10
+const shownListLength = 11
 const screenWidth = Dimensions.get('window').width
-const user = {
-  userName: 'Eric Li',
-  numGroups: 10,
-  numFriends: 10,
-  userID: 'Uu123',
-  isAdmin: true, 
-  major: 'Mechanical Enginnering',
-  uri: 'https://picsum.photos/700',
-  description: 'Cool Guy',
-  classyear: 2020
-}
-
-const users = [
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu2334',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Yufan Wang',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu456',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu2334',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Yufan Wang',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu456',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu234',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu2334',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Yufan Wang',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu456',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  
-];
-
-let rowsOfList = user.length >=12 ?  3  :  Math.ceil((users.length+1)/4)
-let listheight = 80 * rowsOfList
 
 function SettingButton ({title, subTitle, onPress}) {
   return(
@@ -179,32 +41,27 @@ function SettingButton ({title, subTitle, onPress}) {
 
 function RemoveUserButton () {
   return(
-  <View>
+<View>
     <TouchableOpacity 
       style={{
-        alignContent:"center", 
-        alignItems:'center', 
-        marginHorizontal: screenWidth*0.025, 
-        width: screenWidth*0.2,
-        height: 80
-      }}
+              alignContent:"center", 
+              alignItems:'center', 
+              marginHorizontal: screenWidth*0.025, 
+              width: screenWidth*0.2,
+              height: 80
+            }}
       onPress={()=> alert('remove user page')}>
-      <Image 
-        source={require('../../../../assets/remove-user.png')}
-        style={{
-          borderRadius: 25,
-          width: 50,
-          height: 50,
-        }}
+      <Image source={ require('../../../../assets/remove-user.png')}
+            style={{
+                      borderRadius: 25,
+                      width: 50,
+                      height: 50,
+                    }}
       />
-      <Text 
-        style={{
-          fontFamily:'Avenir-Light',
-          fontWeight:'500',
-          fontSize:12
-        }}
-      >
-        Remove User
+      <Text style={{fontFamily:'Avenir-Light',
+                    fontWeight:'500',
+                    fontSize:12}}>
+            Remove User
       </Text>
     </TouchableOpacity>
   </View>
@@ -244,25 +101,31 @@ function GroupInfo({ route, firebase }) {
   const listheight = 80 * rowsOfList
   return (
     <SafeAreaView style={[screenStyles.safeArea,{ backgroundColor:'white' }]} edges={['right','left']}>
-      <ScrollView style={{flex:1, alignSelf:'stretch'}}>
+      <ScrollView style={{flex:1}}>
+      <View style={{ flex: 1, alignSelf:'stretch'}}>
         <View style={{backgroundColor:"white"}}>
-        <Text style={styles.title}>
+        <Text style={{  alignSelf:'flex-start', 
+                        marginLeft: 16,
+                        marginVertical: 10 ,
+                        fontFamily:'Avenir-Light',
+                        fontWeight:'bold',
+                        fontSize:20 }}>
             Members
         </Text>
-        <Divider style={[styles.thinDivider,{marginBottom: 10}]}/>
+        <Divider style={{height:1, marginBottom: 10}}/>
           { 
           //  check nunber of members 
             members.length > shownListLength ?
             (
-              <View style={styles.listContainerExtend}> 
-                <View style = {styles.avatorList}>
+              <View style={{height: listheight - 80 + 40 , width: screenWidth, }}> 
+                <View style = {{ flexDirection:'row', alignItems:'flex-start',flexWrap:'wrap',alignSelf:'flex-start'}}>
                   
                   { members.slice(0,shownListLength).map( item  =>  <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
                   { isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
                 </View>  
                 <Divider style={{height:1}}/>
-                <Button style ={styles.longButton} title={'Show All Members'} onPress={()=> alert('SHOW ALL USERS')}/>
+                <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title={'Show All Members'} onPress={()=> alert('SHOW ALL USERS')}/>
               </View>
             ) : 
             (
@@ -276,11 +139,16 @@ function GroupInfo({ route, firebase }) {
             )
           }
           </View>
-          <Divider style={styles.thickDivider}/>
-          <Text style={styles.title}>
+          <Divider style={{height:10}}/>
+          <Text style={{  alignSelf:'flex-start', 
+                        marginLeft: 16,
+                        marginVertical: 10 ,
+                        fontFamily:'Avenir-Light',
+                        fontWeight:'bold',
+                        fontSize:20 }}>
             Settings
           </Text>
-          <Divider style={styles.thinDivider}/>
+          <Divider style={{height:1}}/>
           <SettingButton 
             title={'Group Name'}
             subTitle={group.groupName || 'Not Set'}
@@ -290,7 +158,7 @@ function GroupInfo({ route, firebase }) {
               }
             }
           />
-          <Divider style={styles.thinDivider}/>
+          <Divider style={{height:1}}/>
           <SettingButton 
             title={group.groupNotice || 'Group Notice'}
             subTitle={'Not Set'}
@@ -300,17 +168,61 @@ function GroupInfo({ route, firebase }) {
               }
             }
           />
-          <Divider style={styles.thickDivider}/>
+          <Divider style={{height:10}}/>
           {
             isAdmin ?      
-            <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Delete this Group' onPress={disbandGroup}/>
+            <Button color="#ff5c5" style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Delete this Group' onPress={disbandGroup}/>
             : 
-            <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Leave this Group' onPress={quitGroup}/>
+            <Button color="#ff5c5" style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Leave this Group' onPress={quitGroup}/>
           }
-         <Divider style={styles.thickDivider}/>
+         <Divider style={{height:10}}/>
+      </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+// const styles = StyleSheet.create({
+//   title:{
+//     alignSelf:'flex-start', 
+//     marginLeft: 16,
+//     marginVertical: 10 ,
+//     fontFamily:'Avenir-Light',
+//     fontWeight:'bold',
+//     fontSize:20 
+//   },
+
+//   listContainerExtend:{
+//     height: listheight-80+40 , width:screenWidth
+//   },
+
+//   listContainer:{
+//     height: listheight, 
+//     width: screenWidth, 
+//   },
+
+//   avatorList:{
+//     flexDirection:'row', 
+//     alignItems:'flex-start',
+//     flexWrap:'wrap',
+//     alignSelf:'flex-start'
+//   },
+
+//   thinDivider:{
+//     height:1
+//   },
+
+//   thickDivider: {
+//     height:10
+//   },
+
+//   longButton:{
+//     height: 50, 
+//     width: screenWidth, 
+//     color:'white'
+//   }  
+
+
+// })
 
 export default withFirebaseHOC(GroupInfo);

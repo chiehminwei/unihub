@@ -138,7 +138,7 @@ const Group = {
     return unsubscribe;
   },
   getMembers: (groupID, setMembers) => {
-    const memberCollection = getMemberCollectionRef(`${groupID}`);
+    const memberCollection = getMemberCollectionRef(`${groupID}`).limit(11);
     const unsubscribe = memberCollection.onSnapshot(snapshot => {
       if (snapshot.size) {
         const members = [];    
@@ -156,6 +156,19 @@ const Group = {
       if (snapshot.exists) {
         const group = snapshot.data();
         setGroup(group);
+      }
+    })
+    return unsubscribe;
+  },
+  getGroups: (setGroups) => {
+    const groupCollection = getGroupCollection().limit(10);
+    const unsubscribe = groupCollection.onSnapshot(snapshot => {
+      if (snapshot.size) {
+        const groups = []
+        snapshot.forEach(doc => {          
+          groups.push(doc.data());
+        })
+        setGroups(groups);
       }
     })
     return unsubscribe;
