@@ -13,141 +13,7 @@ import { withFirebaseHOC } from "~/../firebase";
 
 const shownListLength = 11
 const screenWidth = Dimensions.get('window').width
-const user = {
-  userName: 'Eric Li',
-  numGroups: 10,
-  numFriends: 10,
-  userID: 'Uu123',
-  isAdmin: true, 
-  major: 'Mechanical Enginnering',
-  uri: 'https://picsum.photos/700',
-  description: 'Cool Guy',
-  classyear: 2020
-}
 
-const users = [
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu2334',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Yufan Wang',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu456',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu2334',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Yufan Wang',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu456',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu234',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu2334',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Yufan Wang',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu456',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  
-];
 function SettingButton ({title, subTitle, onPress}) {
   return(
     <TouchableOpacity style={{height:50, flexDirection:'row', alignItems:'center', alignSelf:'stretch'}}onPress={onPress}>
@@ -305,9 +171,9 @@ function GroupInfo({ route, firebase }) {
           <Divider style={{height:10}}/>
           {
             isAdmin ?      
-            <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Delete this Group' onPress={disbandGroup}/>
+            <Button color="#ff5c5" style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Delete this Group' onPress={disbandGroup}/>
             : 
-            <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Leave this Group' onPress={quitGroup}/>
+            <Button color="#ff5c5" style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Leave this Group' onPress={quitGroup}/>
           }
          <Divider style={{height:10}}/>
       </View>

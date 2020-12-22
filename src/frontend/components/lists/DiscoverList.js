@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,44 +10,8 @@ import Constants from "expo-constants";
 import ThreadItem from './ThreadItem';
 import GroupItem from './GroupItem';
 import { Divider } from 'react-native-paper'
+import { withFirebaseHOC } from "~/../firebase";
 
-const groups = [
-  {
-    hostName:'Jimmy',
-    groupName: 'Group THON 2020',
-    numMembers: 10,
-    availability: "Public",
-    groupID: 'U123',
-    description: 'long_text',
-    uri:'https://picsum.photos/700',
-  },
-  {
-    hostName:'Timmy',
-    groupName: 'Gogogo',
-    numMembers: 10,
-    availability: "Private",
-    groupID: 'U234',
-    description: 'long_text',
-    uri:'https://picsum.photos/700',
-  },
-  {
-    hostName:'Timmy',
-    groupName: 'Gogogo',
-    numMembers: 10,
-    availability: "Private",
-    groupID: 'U345',
-    description: 'long_text',
-    uri:'https://picsum.photos/700',
-  },{
-    hostName:'Timmy',
-    groupName: 'Gogogo',
-    numMembers: 10,
-    availability: "Private",
-    groupID: 'U456',
-    description: 'long_text',
-    uri:'https://picsum.photos/700',
-  },
-];
 
 const threads = [
   {
@@ -103,7 +67,14 @@ const threads = [
   }, 
 ];
 
-export default function DiscoverList({navigation}) {
+function DiscoverList({ navigation, firebase }) {
+  const [ groups, setGroups ] =  useState([]);
+  useEffect(() => {
+    const unsubscribe = firebase.getGroups(setGroups);
+    return () => {
+      unsubscribe();
+    }
+  })
  
   return(
     <SectionList 
@@ -130,6 +101,7 @@ export default function DiscoverList({navigation}) {
   )
 }
 
+export default withFirebaseHOC(DiscoverList);
 
  
   
