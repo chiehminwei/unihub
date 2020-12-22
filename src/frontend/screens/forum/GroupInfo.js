@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import React from 'react';
-import { Text, View, Button, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
-=======
 import React, { useContext, useState, useEffect } from 'react';
 import { Text, View, Button, TouchableOpacity, Dimensions } from 'react-native';
->>>>>>> 6833d4804e83e270672c71733e1e344679d48d0d
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 import MemberItem from '~/components/lists/MemberItem';
