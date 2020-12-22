@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { Text } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
@@ -10,31 +10,36 @@ import { ForumSearchScreen } from '~/screens/forum/ForumSearchScreen';
 import GroupDetailScreen  from '~/screens/forum/GroupDetailScreen';
 import ThreadDetailScreen  from '~/screens/forum/ThreadDetailScreen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { GroupContext, GroupProvider } from './GroupProvider';
 
 
 const ForumStack = createStackNavigator();
 
 
 export function ForumStackScreen() {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const { contextGroupID, setContextGroupID } = useContext(GroupContext);
+
   return (
-    <ForumStack.Navigator initialRouteName="Forum" >
-      <ForumStack.Screen options={{headerShown: false}} name="Forum" component={ForumScreen} />
-      <ForumStack.Screen  name="Search" component={ForumSearchScreen} />
-      <ForumStack.Screen  
-          name='GroupDetail' 
-          component={GroupDetailScreen} 
-          options={
-            // ({ route }) => ({ title: route.params.name })
-            {
-            headerRight: () => (
-              <TouchableOpacity style={{marginRight:16}} onPress={() => navigation.navigate('GroupInfo')}>
-                <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
-              </TouchableOpacity>
-            ),
-            }
-          }/>
-      <ForumStack.Screen  name='ThreadDetail' component={ThreadDetailScreen} />
-    </ForumStack.Navigator>
+      <ForumStack.Navigator initialRouteName="Forum" >
+        <ForumStack.Screen options={{headerShown: false}} name="Forum" component={ForumScreen} />
+        <ForumStack.Screen  name="Search" component={ForumSearchScreen} />
+          <ForumStack.Screen  
+              name='GroupDetail' 
+              component={GroupDetailScreen} 
+              options={
+                
+                {
+                title: '',
+                headerRight: () => (
+                  <TouchableOpacity style={{marginRight:16}} onPress={() => navigation.navigate('GroupInfo', { contextGroupID })}>
+                    <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
+                  </TouchableOpacity>
+                ),
+                }
+              }/>
+          <ForumStack.Screen  name='ThreadDetail' component={ThreadDetailScreen} />
+        
+      </ForumStack.Navigator>
   );
 }

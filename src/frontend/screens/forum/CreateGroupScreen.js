@@ -64,14 +64,9 @@ console.disableYellowBox = true;
 
 const CreateGroupScreen = ({ firebase, navigation }) => {
 
-  const { user } = useContext(AuthUserContext);
-  const userInfo = {
-      displayName: user.displayName || 'NO NAME',
-      email: user.email,
-      photoURL: user.photoURL || 'http://www.tiptoncommunications.com/components/com_easyblog/themes/wireframe/images/placeholder-image.png', // TODO
-      uid: user.uid,
-  }
-
+  // const { user } = useContext(AuthUserContext);
+  const userInfo = firebase.getCurrentUserInfo();
+  
   // Group Type
   const groupTypes = ['Public', 'Private'];
   const [selectedIndex, setIndex] = useState(0);

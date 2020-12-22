@@ -44,6 +44,7 @@ const Users = {
       photoURL: user.photoURL,
       uid: user.uid,
     }
+    Object.keys(userInfo).forEach((key) => (userInfo[key] == null) && delete userInfo[key]);
     return userInfo;
   },
   // TODO: event posts

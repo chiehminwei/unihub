@@ -1,95 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Text, View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
+import { Avatar } from 'react-native-elements';
+import { GroupContext } from '~/navigation/GroupProvider';
 
-
-const user = [
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu123',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu2334',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Yufan Wang',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu456',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu234',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-  {
-    userName: 'Jimmy Wei',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu234',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  },
-];
-
-
-const screenWidth = Dimensions.get('window').width
-const numAvator = Math.floor((screenWidth-32)/40)
-const shownListLength = user.length >= numAvator ? numAvator-1 : user.length
-
-const Avator = ({ userID, uri, onPress }) => (
-  <View>
-    <TouchableOpacity 
-      style={{
-              alignContent:"center", 
-              alignItems:'center', 
-              width: 40,
-              height: 50
-            }}
-      onPress={onPress}>
-      <Image 
-        source={{uri: uri }}
-        style={{ 
-          borderColor:'white', 
-          borderWidth: 3,            
-          borderRadius: 25,
-          width: 50,
-          height: 50,
-          
-        }}
-      />
-      {/* <Text style={{fontFamily:'Avenir-Light',
-                    fontWeight:'500',
-                    fontSize:12}}>
-            {name}
-      </Text> */}
-    </TouchableOpacity>
-  </View>
-);
+// const user = [
+//   {
+//     userName: 'Eric Li',
+//     numGroups: 10,
+//     numFriends: 10,
+//     userID: 'Uu123',
+//     major: 'Mechanical Enginnering',
+//     uri: 'https://picsum.photos/700',
+//     description: 'Cool Guy',
+//     classyear: 2020
+//   },
+// ];
 
 const ThreeDot = ({onPress}) => (
   <View>
@@ -119,38 +45,29 @@ const ThreeDot = ({onPress}) => (
 );
 
 
-export default function Publicscreen() {
+export default function Publicscreen({ members }) {
   const navigation = useNavigation();
+  const screenWidth = Dimensions.get('window').width
+  const numAvatar = Math.floor((screenWidth - 32) / 40)
+  const shownListLength = members.length >= numAvatar ? numAvatar-1 : members.length;
+  const { contextGroupID } = useContext(GroupContext);
+
+
   return (
     <View style={styles.avatorListContainer}>
       <Text style={styles.title}>
           Members
       </Text>
-      <View style={styles.avatorList}>
-        { user.slice(0,shownListLength).map( item  =>  <Avator name={item.userName} uri={item.uri} onPress={()=> navigation.navigate('GroupInfo')}/>) }
-        { user.length >= numAvator ? <ThreeDot onPress={() => navigation.navigate('GroupInfo')}/> : null }
+      <View style={styles.avatarList}>
+        { members.slice(0,shownListLength).map(item  =>  <Avatar size="medium" key={item.uid} rounded source={{uri: item.photoURL}} onPress={()=> navigation.navigate('GroupInfo', { contextGroupID })}/>) }
+        { members.length >= numAvatar ? <ThreeDot onPress={() => navigation.navigate('GroupInfo', { contextGroupID })}/> : null }
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  avatorListContainer:{
-    flex:1, 
-    alignItems:'stretch',
-    alignContent:'stretch'
-  },
-
-  title:{
-    alignSelf:'flex-start', 
-    marginTop: 20,
-    marginLeft: 16,
-    fontFamily:'Avenir-Light',
-    fontWeight:'bold',
-    fontSize:24 
-  },
-  
-  avatorList: {
+  avatarList: {
     flex:1, 
     flexDirection:'row', 
     alignContent:'stretch', 

@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React from 'react';
 import { Text, View, Button, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+=======
+import React, { useContext, useState, useEffect } from 'react';
+import { Text, View, Button, TouchableOpacity, Dimensions } from 'react-native';
+>>>>>>> 6833d4804e83e270672c71733e1e344679d48d0d
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 import MemberItem from '~/components/lists/MemberItem';
@@ -7,7 +12,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Image } from 'react-native-elements'
 import { Divider } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import { GroupContext } from '~/navigation/GroupProvider';
+import { withFirebaseHOC } from "~/../firebase";
 
 
 const shownListLength = 10
@@ -210,8 +216,37 @@ function RemoveUserButton () {
   )
 }
 
-export default function GroupInfo() {
-  
+function GroupInfo({ route, firebase }) {
+  const { contextGroupID } = route.params;
+  const groupID = contextGroupID;
+  const [ members, setMembers ] = useState([]);
+  const [ isAdmin, setIsAdmin ] = useState(false);
+  const [ group, setGroup ] = useState({});
+  const userInfo = firebase.getCurrentUserInfo();
+
+  const disbandGroup = () => {
+    firebase.disbandGroup(groupID);
+  }
+
+  const quitGroup = () => {
+    firebase.quitGroup(userInfo.uid, groupID);
+  }
+
+  useEffect(() => {
+      const userInfo = firebase.getCurrentUserInfo();
+      const memberUnsubscribe = firebase.getMembers(groupID, setMembers);
+      const adminUnsubscribe = firebase.userIsAdmin(userInfo.uid, groupID, setIsAdmin);
+      const groupUnsubscribe = firebase.getGroup(groupID, setGroup);
+
+      return () => {
+        memberUnsubscribe();
+        adminUnsubscribe();
+        groupUnsubscribe();
+      }
+    }, [firebase]);
+
+  const rowsOfList = members.length >=12 ?  3  :  Math.ceil((members.length+1)/4)
+  const listheight = 80 * rowsOfList
   return (
     <SafeAreaView style={[screenStyles.safeArea,{ backgroundColor:'white' }]} edges={['right','left']}>
       <ScrollView style={{flex:1, alignSelf:'stretch'}}>
@@ -222,25 +257,25 @@ export default function GroupInfo() {
         <Divider style={[styles.thinDivider,{marginBottom: 10}]}/>
           { 
           //  check nunber of members 
-            users.length > shownListLength ?
+            members.length > shownListLength ?
             (
               <View style={styles.listContainerExtend}> 
                 <View style = {styles.avatorList}>
                   
-                  { users.slice(0,shownListLength).map( item  =>  <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
+                  { members.slice(0,shownListLength).map( item  =>  <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
-                  { user.isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
+                  { isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
                 </View>  
                 <Divider style={{height:1}}/>
                 <Button style ={styles.longButton} title={'Show All Members'} onPress={()=> alert('SHOW ALL USERS')}/>
               </View>
             ) : 
             (
-              <View style={styles.listContainer}> 
-                <View style = {styles.avatorList}>
-                  { users.map( item  =>  <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
+              <View style={{height: listheight , width:screenWidth}}> 
+                <View style = {{ flexDirection:'row', alignItems:'flex-start',flexWrap:'wrap',alignSelf:'flex-start'}}>
+                  { members.map( item  =>  <MemberItem name={item.userName} uri={item.photoURL} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
-                  { user.isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
+                  { isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
                 </View>  
               </View>
             )
@@ -253,29 +288,29 @@ export default function GroupInfo() {
           <Divider style={styles.thinDivider}/>
           <SettingButton 
             title={'Group Name'}
-            subTitle={'Not Set'}
+            subTitle={group.groupName || 'Not Set'}
             onPress= {()=> 
               {
-                user.isAdmin ? alert('navigate to edit screen') : alert('you are not group owner');
+                isAdmin ? alert('navigate to edit screen') : alert('You are not the group owner');
               }
             }
           />
           <Divider style={styles.thinDivider}/>
           <SettingButton 
-            title={'Group Notice'}
+            title={group.groupNotice || 'Group Notice'}
             subTitle={'Not Set'}
             onPress= {()=> 
               {
-                user.isAdmin ? alert('navigate to edit screen') : alert('you are not group owner');
+                isAdmin ? alert('navigate to edit screen') : alert('You are not the group owner');
               }
             }
           />
           <Divider style={styles.thickDivider}/>
           {
-            user.isAdmin ?      
-            <Button style ={styles.longButton} title ='Delete this Group' onPress={() => alert('delete this group')}/>
+            isAdmin ?      
+            <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Delete this Group' onPress={disbandGroup}/>
             : 
-            <Button style ={styles.longButton} title ='Leave this Group' onPress={() => alert('leave this group')}/>
+            <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Leave this Group' onPress={quitGroup}/>
           }
          <Divider style={styles.thickDivider}/>
       </ScrollView>
@@ -283,46 +318,4 @@ export default function GroupInfo() {
   );
 }
 
-
-const styles = StyleSheet.create({
-  title:{
-    alignSelf:'flex-start', 
-    marginLeft: 16,
-    marginVertical: 10 ,
-    fontFamily:'Avenir-Light',
-    fontWeight:'bold',
-    fontSize:20 
-  },
-
-  listContainerExtend:{
-    height: listheight-80+40 , width:screenWidth
-  },
-
-  listContainer:{
-    height: listheight, 
-    width: screenWidth, 
-  },
-
-  avatorList:{
-    flexDirection:'row', 
-    alignItems:'flex-start',
-    flexWrap:'wrap',
-    alignSelf:'flex-start'
-  },
-
-  thinDivider:{
-    height:1
-  },
-
-  thickDivider: {
-    height:10
-  },
-
-  longButton:{
-    height: 50, 
-    width: screenWidth, 
-    color:'white'
-  }  
-
-
-})
+export default withFirebaseHOC(GroupInfo);

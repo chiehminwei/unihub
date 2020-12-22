@@ -60,7 +60,7 @@ const Group = {
     
     const batch = firestore.batch();
     batch.set(requestRef, user);
-    batch.set(userRequestRef, { contains: true});
+    batch.set(userRequestRef, { contains: true });
     batch.commit()
          .catch(err => console.error(err));
   },
@@ -133,6 +133,69 @@ const Group = {
           groups.push(doc.data());
         })
         setGroups(groups);
+      }
+    })
+    return unsubscribe;
+  },
+  getMembers: (groupID, setMembers) => {
+    const memberCollection = getMemberCollectionRef(`${groupID}`);
+    const unsubscribe = memberCollection.onSnapshot(snapshot => {
+      if (snapshot.size) {
+        const members = [];    
+        snapshot.forEach(doc => {          
+          members.push(doc.data());
+        })
+        setMembers(members);
+      }
+    })
+    return unsubscribe;
+  },
+  getGroup: (groupID, setGroup) => {
+    const groupRef = getGroupRef(`${groupID}`);
+    const unsubscribe = groupRef.onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        const group = snapshot.data();
+        setGroup(group);
+      }
+    })
+    return unsubscribe;
+  },
+  userIsInGroup: (userID, groupID, setIsInGroup) => {
+    const userGroupRef = getUserGroupRef(userID, groupID);
+    const unsubscribe = userGroupRef.onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        setIsInGroup(true);
+      }
+      else {
+        setIsInGroup(false);
+      }
+    })
+    return unsubscribe;
+  },
+  userIsWaiting: (userID, groupID, setIsWaiting) => {
+    // i.e. waiting for approval to join group
+    const userRequestRef = getUserRequestRef(userID, groupID);
+    const unsubscribe = userRequestRef.onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        setIsWaiting(true);
+      }
+      else {
+        setIsWaiting(false);
+      }
+    })
+    return unsubscribe;
+  },
+  userIsAdmin: (userID, groupID, setIsAdmin) => {
+    const groupRef = getGroupRef(`${groupID}`);
+    const unsubscribe = groupRef.onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        const { admin } = snapshot.data();
+        if (admin.uid === userID) {
+          setIsAdmin(true);
+        }
+        else {
+          setIsAdmin(false);
+        }
       }
     })
     return unsubscribe;
