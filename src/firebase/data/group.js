@@ -105,7 +105,7 @@ const Group = {
       const userInfo = request.data();
       const { groupName, numMember } = group.data();
 
-      transaction.update(group, { numMember: numMember + 1});
+      transaction.update(groupRef, { numMember: numMember + 1});
       transaction.set(memberRef, userInfo);
       transaction.set(userGroupRef, { groupName });
       transaction.delete(requestRef);
