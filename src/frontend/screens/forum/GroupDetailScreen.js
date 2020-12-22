@@ -27,7 +27,11 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   const { contextGroupID, setContextGroupID } = useContext(GroupContext);
 
   const joinGroup = () => {
-    firebase.joinGroup(userInfo, groupID)
+    firebase.joinGroup(userInfo, groupID);
+  }
+
+  const acceptMyself = () => {
+    firebase.acceptMember(userInfo.uid, groupID);
   }
 
   const JoinButton = (buttonStatus) => {
@@ -36,8 +40,9 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
     }
     else if (buttonStatus === 'IS_WAITING') {
       return (
-        <View
+        <TouchableOpacity
           style={{marginVertical:20, alignContent:"stretch"}}
+          onPress={acceptMyself}
         >
           <View style={{backgroundColor:'grey', 
                         width: deviceWidth*0.7,
@@ -52,7 +57,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
               Request Sent
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
       )
     }
     return (
