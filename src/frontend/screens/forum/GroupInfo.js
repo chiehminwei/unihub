@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Text, View, Button, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { Text, View, Button, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 import MemberItem from '~/components/lists/MemberItem';
@@ -13,6 +13,7 @@ import { withFirebaseHOC } from "~/../firebase";
 
 const shownListLength = 11
 const screenWidth = Dimensions.get('window').width
+// 
 
 function SettingButton ({title, subTitle, onPress}) {
   return(
@@ -97,6 +98,7 @@ function GroupInfo({ route, firebase }) {
       }
     }, [firebase]);
 
+
   const rowsOfList = members.length >=12 ?  3  :  Math.ceil((members.length+1)/4)
   const listheight = 80 * rowsOfList
   const styles = StyleSheet.create({
@@ -141,7 +143,9 @@ function GroupInfo({ route, firebase }) {
   
   
   })
-  
+  const submitButton =  () => {
+    Alert.alert('error','', [{ text: 'Ok' }]);
+ }
   return (
     <SafeAreaView style={[screenStyles.safeArea,{ backgroundColor:'white' }]} edges={['right','left']}>
       <ScrollView style={{flex:1}}>
@@ -204,9 +208,9 @@ function GroupInfo({ route, firebase }) {
           <Divider style={styles.thickDivider}/>
           {
             isAdmin ?      
-            <Button color="#ff5c5" style ={styles.longButton} title ='Delete this Group' onPress={disbandGroup}/>
+            <Button  style ={styles.longButton} title ='Delete this Group' onPress={disbandGroup}/>
             : 
-            <Button color="#ff5c5" style ={styles.longButton} title ='Leave this Group' onPress={quitGroup}/>
+            <Button  style ={styles.longButton} title ='Leave this Group' onPress={quitGroup}/>
           }
          <Divider style={styles.thickDivider}/>
       </View>

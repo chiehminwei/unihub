@@ -135,13 +135,13 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
           </View>
 
             {/* // TODO: deal with the situation when user is already in the group  */}
-          <TouchableOpacity style={{marginVertical:20, alignContent:"stretch"}} onPress={() => firebase.joinGroup(userInfo, groupID)}>
+          {/* <TouchableOpacity style={{marginVertical:20, alignContent:"stretch"}} onPress={() => firebase.joinGroup(userInfo, groupID)}>
             <View style={styles.joinGroupButtonContainer}>
               <Text style={styles.joinGroupButtonTitle}>
                 Join Group
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
             { JoinButton(buttonStatus) }
 
