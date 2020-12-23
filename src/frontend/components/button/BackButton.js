@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useNavigation, userNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
 
 export function BackButton({title}){
