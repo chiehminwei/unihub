@@ -7,6 +7,7 @@ import HomeScreen  from '~/screens/home/HomeScreen';
 import FilterScreen from '~/screens/home/FilterScreen';
 import PlannerScreen from '~/screens/home/PlannerScreen';
 import EventDetailScreen from '~/screens/home/EventDetailScreen';
+import { BackButton } from '../components/button/BackButton';
 
 
 const HomeStack = createStackNavigator();
@@ -16,25 +17,23 @@ export function HomeStackScreen() {
     <HomeStack.Navigator initialRouteName="Home" >
       <HomeStack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
       <HomeStack.Screen  
-        options={
-                
+        options={      
           {
-          title: 'Calendar',
-          headerLeft: () => (
-            <BackButton title={'Back'}/>
-          ),
+            title: 'Calendar',
+            headerLeft: () => (
+              <BackButton title={'Back'}/>
+            ),
           }
         }
         name="Filter"  
         component={FilterScreen} />
       <HomeStack.Screen 
         options={
-                
           {
-          title: 'Calendar',
-          headerLeft: () => (
-            <BackButton title={'Back'}/>
-          ),
+            title: 'Calendar',
+            headerLeft: () => (
+              <BackButton title={'Back'}/>
+            ),
           }
         }
         name="Planner" 

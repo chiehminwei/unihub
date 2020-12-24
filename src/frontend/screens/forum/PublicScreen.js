@@ -73,7 +73,15 @@ const styles = StyleSheet.create({
     alignContent:'stretch', 
     alignItems:'stretch',
     paddingHorizontal:16
-  }
+  },
+  title: {
+    alignSelf:'flex-start', 
+    marginTop: 20,
+    marginLeft:16,
+    fontFamily:'Avenir-Light',
+    fontWeight:'bold',
+    fontSize:24 
+  },
 
 
 })

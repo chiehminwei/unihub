@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, ScrollView, TouchableOpacity, View, Text, ActivityIndicator, Image, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, TouchableOpacity, Button, Alert, View, Text, ActivityIndicator, Image, Dimensions } from 'react-native';
 import { withFirebaseHOC } from "~/../firebase";
 import  PrivateScreen  from '~/screens/forum/PrivateScreen';
 import  PublicScreen from './PublicScreen';
 import ThreadList from '../../components/lists/ThreadList';
 import { GroupContext } from '~/navigation/GroupProvider';
+
 
 
 const deviceWidth = Dimensions.get('window').width;
@@ -130,9 +131,14 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
           </View>
           <View style={{flexDirection:'row'}}>
             <Text style={styles.groupInfo}>
-              { groupType } group · {numMember } members
+              { groupType } group · 
             </Text>
+            { (numMember === 1) ?
+              <Text style={styles.groupInfo}>{numMember} member</Text>
+              :<Text style={styles.groupInfo}>{numMember} members</Text>
+            }
           </View>
+          
 
             {/* // TODO: deal with the situation when user is already in the group  */}
           {/* <TouchableOpacity style={{marginVertical:20, alignContent:"stretch"}} onPress={() => firebase.joinGroup(userInfo, groupID)}>
@@ -180,7 +186,6 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
               </View>
             )}
 
-          
 
             {/* public or private */}
           <View style={{ flex:1, alignSelf:'flex-start'}}>

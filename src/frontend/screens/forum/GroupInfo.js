@@ -9,6 +9,8 @@ import { Divider } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GroupContext } from '~/navigation/GroupProvider';
 import { withFirebaseHOC } from "~/../firebase";
+import { TwoButtonAlert } from '../../components/button/TwoButtonAlert';
+import { useNavigation } from '@react-navigation/native';
 
 
 const shownListLength = 11
@@ -79,11 +81,17 @@ function GroupInfo({ route, firebase }) {
 
   const disbandGroup = () => {
     firebase.disbandGroup(groupID);
+    navigation.navigate('Group')
   }
 
   const quitGroup = () => {
     firebase.quitGroup(userInfo.uid, groupID);
+    navigation.navigate('Group')
   }
+  
+
+
+
 
   useEffect(() => {
       const userInfo = firebase.getCurrentUserInfo();
@@ -143,9 +151,7 @@ function GroupInfo({ route, firebase }) {
   
   
   })
-  const submitButton =  () => {
-    Alert.alert('error','', [{ text: 'Ok' }]);
- }
+  const navigation=useNavigation()
   return (
     <SafeAreaView style={[screenStyles.safeArea,{ backgroundColor:'white' }]} edges={['right','left']}>
       <ScrollView style={{flex:1}}>
@@ -208,11 +214,12 @@ function GroupInfo({ route, firebase }) {
           <Divider style={styles.thickDivider}/>
           {
             isAdmin ?      
-            <Button  style ={styles.longButton} title ='Delete this Group' onPress={disbandGroup}/>
+            <TwoButtonAlert title='Disband this group' onPress={disbandGroup} alert={'Are you sure disbanding this group?'}/> 
             : 
-            <Button  style ={styles.longButton} title ='Leave this Group' onPress={quitGroup}/>
+            <TwoButtonAlert title='Quit this group' onPress={quitGroup} alert={'Are you sure leaving this group?'}/> 
           }
          <Divider style={styles.thickDivider}/>
+         
       </View>
       </ScrollView>
     </SafeAreaView>

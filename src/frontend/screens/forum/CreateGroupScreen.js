@@ -198,6 +198,8 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     }
   };
 
+
+
   const handlePost = async () => {
     // Upload image to Firebase Storage
     let uploadUrl;
@@ -215,7 +217,8 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     };
     try {
       const result = await firebase.createGroup(group); // TODO: firebase (remember to check group name rights)      
-      alert('Yay')
+      alert('Successfully Created')
+      navigation.navigate('Group')
       console.log(group)
       // TODO: navigate to previous screen & send success notification
     } catch (e) {
