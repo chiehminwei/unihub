@@ -54,17 +54,8 @@ export default function Publicscreen({ members }) {
 
 
   return (
-    <View style={{flex:1, alignItems:'stretch',alignContent:'stretch'}}>
-      <Text 
-        style={{
-          alignSelf:'flex-start', 
-          marginTop: 20,
-          marginLeft: 16,
-          fontFamily:'Avenir-Light',
-          fontWeight:'bold',
-          fontSize:24 
-        }}
-      >
+    <View style={styles.avatorListContainer}>
+      <Text style={styles.title}>
           Members
       </Text>
       <View style={styles.avatarList}>

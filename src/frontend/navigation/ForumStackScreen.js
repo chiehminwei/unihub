@@ -11,6 +11,7 @@ import GroupDetailScreen  from '~/screens/forum/GroupDetailScreen';
 import ThreadDetailScreen  from '~/screens/forum/ThreadDetailScreen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GroupContext, GroupProvider } from './GroupProvider';
+import { BackButton } from '../components/button/BackButton'
 
 
 const ForumStack = createStackNavigator();
@@ -28,15 +29,20 @@ export function ForumStackScreen() {
               name='GroupDetail' 
               component={GroupDetailScreen} 
               options={
-                
                 {
-                title: '',
-                headerRight: () => (
-                  <TouchableOpacity style={{marginRight:16}} onPress={() => navigation.navigate('GroupInfo', { contextGroupID })}>
-                    <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
-                  </TouchableOpacity>
-                ),
-                }
+                  title: '',
+                  headerRight: () => (
+                    <TouchableOpacity style={{marginRight:16}} onPress={() => navigation.navigate('GroupInfo', { contextGroupID })}>
+                      <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
+                    </TouchableOpacity>
+                  ),
+                  
+                  headerLeft: () => (
+                    <BackButton title={'Back'}/>
+                  ),
+                    
+                  }
+                
               }/>
           <ForumStack.Screen  name='ThreadDetail' component={ThreadDetailScreen} />
         

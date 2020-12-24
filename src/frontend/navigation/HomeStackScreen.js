@@ -15,8 +15,31 @@ export function HomeStackScreen() {
   return (
     <HomeStack.Navigator initialRouteName="Home" >
       <HomeStack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="Filter" component={FilterScreen}  />
-      <HomeStack.Screen name="Planner" component={PlannerScreen} />
+      <HomeStack.Screen  
+        options={
+                
+          {
+          title: 'Calendar',
+          headerLeft: () => (
+            <BackButton title={'Back'}/>
+          ),
+          }
+        }
+        name="Filter"  
+        component={FilterScreen} />
+      <HomeStack.Screen 
+        options={
+                
+          {
+          title: 'Calendar',
+          headerLeft: () => (
+            <BackButton title={'Back'}/>
+          ),
+          }
+        }
+        name="Planner" 
+        component={PlannerScreen} 
+        />
       <HomeStack.Screen options={{headerShown: false}} name="EventDetail" component={EventDetailScreen} />      
     </HomeStack.Navigator>
   );

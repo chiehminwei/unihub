@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Text, View, Button, TouchableOpacity, Dimensions } from 'react-native';
+import { Text, View, Button, TouchableOpacity, StyleSheet, Dimensions, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 import MemberItem from '~/components/lists/MemberItem';
@@ -13,6 +13,7 @@ import { withFirebaseHOC } from "~/../firebase";
 
 const shownListLength = 11
 const screenWidth = Dimensions.get('window').width
+// 
 
 function SettingButton ({title, subTitle, onPress}) {
   return(
@@ -97,40 +98,81 @@ function GroupInfo({ route, firebase }) {
       }
     }, [firebase]);
 
+
   const rowsOfList = members.length >=12 ?  3  :  Math.ceil((members.length+1)/4)
   const listheight = 80 * rowsOfList
+  const styles = StyleSheet.create({
+    title:{
+      alignSelf:'flex-start', 
+      marginLeft: 16,
+      marginVertical: 10 ,
+      fontFamily:'Avenir-Light',
+      fontWeight:'bold',
+      fontSize:20 
+    },
+  
+    listContainerExtend:{
+      height: listheight-80+40 , width:screenWidth
+    },
+  
+    listContainer:{
+      height: listheight, 
+      width: screenWidth, 
+    },
+  
+    avatorList:{
+      flexDirection:'row', 
+      alignItems:'flex-start',
+      flexWrap:'wrap',
+      alignSelf:'flex-start'
+    },
+  
+    thinDivider:{
+      height:1
+    },
+  
+    thickDivider: {
+      height:10
+    },
+  
+    longButton:{
+      height: 50, 
+      width: screenWidth, 
+      color:'white'
+    }  
+  
+  
+  })
+  const submitButton =  () => {
+    Alert.alert('error','', [{ text: 'Ok' }]);
+ }
   return (
     <SafeAreaView style={[screenStyles.safeArea,{ backgroundColor:'white' }]} edges={['right','left']}>
       <ScrollView style={{flex:1}}>
       <View style={{ flex: 1, alignSelf:'stretch'}}>
         <View style={{backgroundColor:"white"}}>
-        <Text style={{  alignSelf:'flex-start', 
-                        marginLeft: 16,
-                        marginVertical: 10 ,
-                        fontFamily:'Avenir-Light',
-                        fontWeight:'bold',
-                        fontSize:20 }}>
+        <Text style={styles.title}>
             Members
         </Text>
-        <Divider style={{height:1, marginBottom: 10}}/>
+        <Divider style={[styles.thinDivider,{marginBottom: 10}]}/>
           { 
           //  check nunber of members 
             members.length > shownListLength ?
             (
-              <View style={{height: listheight - 80 + 40 , width: screenWidth, }}> 
-                <View style = {{ flexDirection:'row', alignItems:'flex-start',flexWrap:'wrap',alignSelf:'flex-start'}}>
+              <View style={styles.listContainerExtend}> 
+                <View style = {styles.avatorList}>
                   
                   { members.slice(0,shownListLength).map( item  =>  <MemberItem key={item.uid} name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
                   { isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
                 </View>  
-                <Divider style={{height:1}}/>
-                <Button style ={{ height: 50, width: screenWidth, color:'whtie'}} title={'Show All Members'} onPress={()=> alert('SHOW ALL USERS')}/>
+                <Divider style={styles.thinDivider}/>
+                <Button style ={styles.longButton} title={'Show All Members'} onPress={()=> alert('SHOW ALL USERS')}/>
               </View>
             ) : 
             (
-              <View style={{height: listheight , width:screenWidth}}> 
-                <View style = {{ flexDirection:'row', alignItems:'flex-start',flexWrap:'wrap',alignSelf:'flex-start'}}>
+              <View style={styles.listContainer}> 
+                <View style = {styles.avatorList}>
                   { members.map( item  =>  <MemberItem name={item.userName} uri={item.photoURL} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
                   { isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
@@ -139,16 +181,11 @@ function GroupInfo({ route, firebase }) {
             )
           }
           </View>
-          <Divider style={{height:10}}/>
-          <Text style={{  alignSelf:'flex-start', 
-                        marginLeft: 16,
-                        marginVertical: 10 ,
-                        fontFamily:'Avenir-Light',
-                        fontWeight:'bold',
-                        fontSize:20 }}>
+          <Divider style={styles.thickDivider}/>
+          <Text style={styles.title}>
             Settings
           </Text>
-          <Divider style={{height:1}}/>
+          <Divider style={styles.thinDivider}/>
           <SettingButton 
             title={'Group Name'}
             subTitle={group.groupName || 'Not Set'}
@@ -158,7 +195,7 @@ function GroupInfo({ route, firebase }) {
               }
             }
           />
-          <Divider style={{height:1}}/>
+          <Divider style={styles.thinDivider}/>
           <SettingButton 
             title={group.groupNotice || 'Group Notice'}
             subTitle={'Not Set'}
@@ -168,18 +205,19 @@ function GroupInfo({ route, firebase }) {
               }
             }
           />
-          <Divider style={{height:10}}/>
+          <Divider style={styles.thickDivider}/>
           {
             isAdmin ?      
-            <Button color="#ff5c5" style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Delete this Group' onPress={disbandGroup}/>
+            <Button  style ={styles.longButton} title ='Delete this Group' onPress={disbandGroup}/>
             : 
-            <Button color="#ff5c5" style ={{ height: 50, width: screenWidth, color:'whtie'}} title ='Leave this Group' onPress={quitGroup}/>
+            <Button  style ={styles.longButton} title ='Leave this Group' onPress={quitGroup}/>
           }
-         <Divider style={{height:10}}/>
+         <Divider style={styles.thickDivider}/>
       </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
 
 export default withFirebaseHOC(GroupInfo);

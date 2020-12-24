@@ -37,7 +37,7 @@ class ForumCreateMenu extends React.PureComponent {
                     iconFamily={'material'}
                     />}
         >
-          <MenuItem onPress={() => { this._menu.hide();  alert('CreateThread')}}>Create thread</MenuItem>
+          <MenuItem onPress={() => { this._menu.hide();  navigation.navigate('CreateThread')}}>Create thread</MenuItem>
           <MenuItem onPress={() => { this._menu.hide();  navigation.navigate('CreateGroup')}}>Create group</MenuItem>
         </Menu>
       </View>
