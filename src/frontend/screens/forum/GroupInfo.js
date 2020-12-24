@@ -120,7 +120,7 @@ function GroupInfo({ route, firebase }) {
               <View style={{height: listheight - 80 + 40 , width: screenWidth, }}> 
                 <View style = {{ flexDirection:'row', alignItems:'flex-start',flexWrap:'wrap',alignSelf:'flex-start'}}>
                   
-                  { members.slice(0,shownListLength).map( item  =>  <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
+                  { members.slice(0,shownListLength).map( item  =>  <MemberItem key={item.uid} name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
                   { isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
                 </View>  

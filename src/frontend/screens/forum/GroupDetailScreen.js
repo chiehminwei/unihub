@@ -105,6 +105,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
       return () => {
         memberUnsubscribe();
         inGroupUnsubscribe();
+        isWaitingUnsubscribe();
       }
     }, [firebase]);
 
