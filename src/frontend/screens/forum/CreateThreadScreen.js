@@ -305,29 +305,6 @@ function CreateThreadScreen ({ firebase, navigation }) {
 
   const screenWidth = Math.round(Dimensions.get('window').width)
 
-  // const[photos, setPhotos] = useState([])
-   
-  // const componentDidUpdate = (props) => {
-  //   const {params} = props.route;
-  //   if (params) {
-  //     const {photos} = params;
-  //     if (photos) setPhotos({photos});
-  //     delete params.photos;
-  //   }
-  // }
-
-  // const renderImage =(item, i) =>{
-  //   return (
-  //     <Image
-  //       style={{ height: 100, width: 100 }}
-  //       source={{ uri: item.uri }}
-  //       key={i}
-  //     />
-  //   )
-  // }
-  // const render = ()=> {
-  //   const { navigate } = props.navigation;
-  
 
 
   const {
