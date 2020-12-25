@@ -4,10 +4,9 @@ import EventItem from '../../components/lists/EventItem'
 import { useNavigation } from '@react-navigation/native'
 
 
-class EventCardScreen extends Component{
+function EventCardScreen (){
 
   
-  render(){
     const events = [
       {
         eventName: 'Hi',
@@ -46,8 +45,9 @@ class EventCardScreen extends Component{
         description: 'Cool event no no no',
       },
     ];
-    const {navigation}=this.props
-      return  <View style={{paddingVertical: 20, alignItems: 'stretch', backgroundColor: 'white' }}> 
+    const navigation=useNavigation()
+
+      return  <View style={{ flex:1, paddingVertical: 20, justifyContent: 'center', alignItems: 'stretch' , backgroundColor: 'white' }}> 
                           
                 <FlatList
                   data={events}
@@ -56,6 +56,6 @@ class EventCardScreen extends Component{
                 />
                 
               </View>   
-  }
+  
 };
 export default EventCardScreen;
