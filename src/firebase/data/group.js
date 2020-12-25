@@ -103,11 +103,13 @@ const Group = {
       }
 
       const userInfo = request.data();
-      const { groupName, numMember } = group.data();
+      const groupData = group.data();
+      const { numMember } = groupData;
+      groupData.numMember += 1;
 
       transaction.update(groupRef, { numMember: numMember + 1});
       transaction.set(memberRef, userInfo);
-      transaction.set(userGroupRef, { groupName });
+      transaction.set(userGroupRef, groupData);
       transaction.delete(requestRef);
       transaction.delete(userRequestRef);
       

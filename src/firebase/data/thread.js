@@ -12,6 +12,9 @@ const getGroupPostRef = (groupID, postID) => firestore.doc(`groups/${groupID}/po
 const getReportRef = (postID) => firestore.doc(`reported/posts/${postID}`)
 const getPostCollection = () => firestore.collection('posts');
 const getPostRef = (postID) => firestore.doc(`posts/${postID}`);
+const getComments = (postID) => firestore.collection(`post/${postID}/comments`);
+const getUserComments = (userID, postID) => firestore.collection(`users/${userID}/posts/${postID}`);
+
 
 const Post = {
   addPost: (userID, groupID, post) => {
@@ -109,17 +112,18 @@ const Post = {
     const reportRef = getReportRef(postID);
     return reportRef.set(post);
   },
-  replyPost: (userID, groupID) => {
-    // ???????
-    const memberRef = getMemberRef(userID, groupID)
-    const userGroupRef = getUserGroupRef(userID, groupID)
+  replyPost: (userID, groupID, postID) => {
+    // S
+    const postRef = getPostRef(userID, groupID)
+    const userPostRef = getUserPostRef(userID, postID)
 
     const batch = firestore.batch();
     batch.delete(memberRef);
     batch.delete(userGroupRef);
     batch.commit()
          .catch(err => console.error(err));
-  }
+  },
+  replyComment: ()
 };
 
 export default Post;

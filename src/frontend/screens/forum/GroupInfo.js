@@ -168,7 +168,7 @@ function GroupInfo({ route, firebase }) {
               <View style={styles.listContainerExtend}> 
                 <View style = {styles.avatorList}>
                   
-                  { members.slice(0,shownListLength).map( item  =>  <MemberItem name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
+                  { members.slice(0,shownListLength).map( item  =>  <MemberItem key={item.uid} name={item.userName} uri={item.uri} onPress={()=> alert('navigate to profile')}/>) }
                   {/* check whether user is groupadmin */}
                   { isAdmin && (<RemoveUserButton onPress={()=>alert('remove user from a new page of user list')}/>) }
                 </View>  
