@@ -9,15 +9,13 @@ import {
   TouchableOpacity,
   Dimensions,
   Text,
-  Image
+  Image,
+  ImageBackground
 } from 'react-native';
 import { TextInput as NativeTextInput } from 'react-native';
 import {  ButtonGroup, Button, Avatar } from 'react-native-elements';
 import { List, Divider } from 'react-native-paper';
-import AntIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { Fumi } from 'react-native-textinput-effects';
-import MultiLine from '~/components/input/MultiLine';
 import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated'
 import * as Permissions from 'expo-permissions';
@@ -30,10 +28,9 @@ import { AuthUserContext } from '~/navigation/AuthUserProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 import { BackButton } from '../../components/button/BackButton';
-import { PostButton } from '../../components/button/PostButton';
+import { HeaderRightButton } from '../../components/button/HeaderRightButton';
 import { TextInput } from 'react-native-paper';
 import { Video } from 'expo-av';
-// import MultiImagePicker from '~/components/MultiImagePicker'
 
 
 
@@ -173,14 +170,11 @@ setTimeout(function () {
 
 console.disableYellowBox = true;
 
-function CreateThreadScreen ({ firebase, navigation }) {
+function CreateThreadScreen ({ firebase, navigation, route }) {
 
   // const { user } = useContext(AuthUserContext);
   const userInfo = firebase.getCurrentUserInfo();
 
-
-
-  // Image
   
   const [uri, setURI] = useState(EMPTY_URI); 
   const [snapPoints, setSnapPoints] = useState([0, 0.45*screenHeight, 0]);
@@ -204,13 +198,13 @@ function CreateThreadScreen ({ firebase, navigation }) {
         title="Choose from Album"
         titleStyle={{ textAlign: 'center' }}
       />
-      {uri !== EMPTY_URI && (
+      {/* {uri !== EMPTY_URI && (
         <List.Item
           onPress={deletePhoto}
           title="Delete Photo"
           titleStyle={{ textAlign: 'center', color: 'red' }}
         />)
-      }
+      } */}
       <Divider style={{ height: 5 }}/>
       <List.Item
         onPress={() => sheetRef.current.snapTo(2)}
@@ -255,55 +249,56 @@ function CreateThreadScreen ({ firebase, navigation }) {
   const chooseFromAlbum = async () => {
     sheetRef.current.snapTo(2);
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    let pickerResult = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [2, 3],
-    });
+    navigation.navigate('ImageSelector', {numSelectedImage})
 
-    handleImagePicked(pickerResult);
+    // handleImagePicked(pickerResult);
   }
 
-  const deletePhoto = () => {
-    sheetRef.current.snapTo(2);
-    setURI(EMPTY_URI);
-    setSnapPoints([0, 0.45*screenHeight, 0]);
+
+  const  deletePhoto =( uri ) => {
+    // sheetRef.current.snapTo(2);
+    const currentUri  = uri 
+    const fileredAlluri = allUri.filter(item => item !== currentUri)
+    photos.data = photos.data.filter( item => item.uri !== currentUri)
+    setAllUri(fileredAlluri)
+
   }
 
   const handleImagePicked = pickerResult => {
     if (!pickerResult.cancelled) {
         setURI(pickerResult.uri);
+        setAllUri([...allUri, pickerResult.uri])
         setSnapPoints([0, 0.5*screenHeight, 0]);
     }
   };
 
-  // const handlePost = async () => {
-  //   // Upload image to Firebase Storage
-  //   let uploadUrl;
-  //   if (uri !== EMPTY_URI) {
-  //      uploadUrl = await uploadImageAsync(uri);
-  //      setURI(uploadUrl);
-  //   } 
-  //   // Push group to firestore
-  //   const group = {
-  //     admin: userInfo,
-  //     groupName,
-  //     description,
-  //     groupType: groupTypes[selectedIndex],
-  //     uri: uploadUrl,
-  //   };
-  //   try {
-  //     const result = await firebase.createGroup(group); // TODO: firebase (remember to check group name rights)      
-  //     alert('Yay')
-  //     console.log(group)
-  //     // TODO: navigate to previous screen & send success notification
-  //   } catch (e) {
-  //     console.log(e);
-  //     alert('Post failed, sorry :('); // TODO: change this to notification
-  //   }
+  const handlePost = async () => {
+    // Upload image to Firebase Storage
+    let uploadUrl;
+    if (uri !== EMPTY_URI) {
+       uploadUrl = await uploadImageAsync(uri);
+       setURI(uploadUrl);
+    } 
+    // Push group to firestore
+    const group = {
+      admin: userInfo,
+      groupName,
+      description,
+      groupType: groupTypes[selectedIndex],
+      uri: uploadUrl,
+    };
+    try {
+      const result = await firebase.createGroup(group); // TODO: firebase (remember to check group name rights)      
+      alert('Yay')
+      console.log(group)
+      // TODO: navigate to previous screen & send success notification
+    } catch (e) {
+      console.log(e);
+      alert('Post failed, sorry :('); // TODO: change this to notification
+    }
 
-  // }
+  }
 
-  const screenWidth = Math.round(Dimensions.get('window').width)
 
 
 
@@ -328,13 +323,31 @@ function CreateThreadScreen ({ firebase, navigation }) {
     groupName: 'Choose a group here (required)',
     groupID: 'dummyID',
     groupUri:'',
-  }
+  } 
 
   const [ showGroup, setShowGroup ] = useState(true)
   const [ group, setGroup ] = useState(groupPlaceHolder)
-  const isGroupChosenColor = (group === groupPlaceHolder) ? 'grey' : 'black'
+  const isGroupChosenColor = (group.groupName === groupPlaceHolder.groupName) ? 'grey' : 'black'
   const isPostEnabled = ( group !== groupPlaceHolder && post !== '' && title !== '')
+
+  const photos = route.params
+
+  const [allUri, setAllUri] = useState([])
+  
+  const numSelectedImage = allUri.length
+
+
+  if (photos !== undefined ) {
+    photos.data.map(item=>{
+      if (!allUri.includes(item.uri)) {
+        setAllUri([...allUri, item.uri])
+      }    
+    })
+  }
+
+ 
   return (
+    
     <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch'}]} edges={['right','top','left']}>
       <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
         
@@ -344,7 +357,7 @@ function CreateThreadScreen ({ firebase, navigation }) {
             <BackButton title={'Back'} navigation={navigation}/>
           </View>
           <View style={{flex:1, alignItems:'flex-end'}}>
-            <PostButton enabled= {isPostEnabled} onPress={()=>alert('post~!!!!')}/> 
+            <HeaderRightButton title='post' enabled= {isPostEnabled} onPress={()=>alert('post~!!!!')}/> 
             {/* update onPress={handlePost} */}
           </View>
         </View>
@@ -353,18 +366,19 @@ function CreateThreadScreen ({ firebase, navigation }) {
         {/* body */}
         <ScrollView keyboardShouldPersistTaps="never" style={{backgroundColor:'white'}}>
           
+
           {/* choose a group */}
           <View
             style={{
               flex: 1,
               alignItems: 'stretch',
               justifyContent: 'center',
-              padding:16,
+              
             }}
           >
           <View style={styles.userInputContainer}>
             <Avatar size="small" key={group.groupID} rounded source={{uri:group.groupUri}} />
-              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>setShowGroup(!showGroup)}>
+              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{setShowGroup(!showGroup)}}>
                 <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>
                 <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor} />
               </TouchableOpacity>
@@ -374,7 +388,7 @@ function CreateThreadScreen ({ firebase, navigation }) {
           {/* choose group here  or user input here */}
         { showGroup ? 
           <View>
-            <View style={{flex:1, marginVertical:10}}>
+            <View style={{flex:1, marginVertical:10, marginHorizontal:16}}>
               <UserInput  
                 value={title} 
                 onChangeText={onChangeTitle}
@@ -390,28 +404,47 @@ function CreateThreadScreen ({ firebase, navigation }) {
                 placeholder={'Write Your Post Here...'}
                 multiline={true}/>
             </View>
-            <TouchableOpacity style ={{width: screenWidth*0.3, height: 0.3*screenWidth, maxHeight:0.3*screenWidth, borderRadius:15}} onPress={() => sheetRef.current.snapTo(1)}>
-              { uri === EMPTY_URI ? 
-                <View style={{ justifyContent: 'center', alignItems: 'center',
-                  width: screenWidth*0.3, height: 0.3*screenWidth, maxHeight:0.3*screenWidth, backgroundColor: '#bdbdbd',borderRadius:15 }} > 
-                  <MaterialIcons name="photo-size-select-actual" size={80} color="grey"/>
-                </View>
-                : 
-                  <Image              
-                    source={{ uri }}
-                    style={{ width: 0.3*screenWidth, height: 0.3*screenWidth, maxHeight:0.3*screenWidth, borderRadius:15 }}
-                  />
-              }
-            </TouchableOpacity>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+              <TouchableOpacity style ={styles.image} onPress={() => sheetRef.current.snapTo(1)}>
+                
+                  <View style={styles.imagePlaceHolder} > 
+                    <MaterialIcons name="photo-size-select-actual" size={80} color="grey"/>
+                  </View>
+                  
+              </TouchableOpacity>
+              { allUri !== undefined && (allUri.map( item =>  
+                  <ImageBackground 
+                    style={ styles.image }
+                    imageStyle={{ width: 0.3*screenWidth, 
+                      height: 0.3*screenWidth, 
+                      maxHeight:0.3*screenWidth, 
+                      borderRadius:15, 
+                    }} 
+                    source={{ uri: item }}>
+                    <TouchableOpacity  style={{ margin: 4, width:30, height:30, backgroundColor:'#bad4da', borderRadius:10, alignItems:'center', justifyContent:'center'}}onPress={()=>deletePhoto(item)}>
+                      <MaterialIcons name="close" size={24} color="white" />
+                    </TouchableOpacity>
+                  </ImageBackground>
+                ))}  
+            </ScrollView>
           </View>
           :
           <View>
             {
               groups.map(item => 
                 <View style={styles.userInputContainer}>
-                  <Avatar size="small" key={item.groupID} rounded source={{uri:item.groupUri}} />
-                  <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{setGroup(item),setShowGroup(!showGroup)}}>
-                    <Text style={styles.groupNameText}> {item.groupName}</Text>  
+                  <Avatar 
+                    size="small" 
+                    key={item.groupID} 
+                    rounded source={{uri:item.groupUri}} 
+                  />
+                  <TouchableOpacity 
+                    style={styles.userInputTouchable} 
+                    onPress={()=>{setGroup(item),setShowGroup(!showGroup)}}
+                  >
+                    <Text style={styles.groupNameText}> 
+                      {item.groupName}
+                    </Text>  
                   </TouchableOpacity>
                 </View>
               )
@@ -420,7 +453,10 @@ function CreateThreadScreen ({ firebase, navigation }) {
         }
 
 
-      <Video
+
+     
+      
+      {/* <Video
         source={{ uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4' }}
         rate={1.0}
         volume={1.0}
@@ -430,49 +466,8 @@ function CreateThreadScreen ({ firebase, navigation }) {
         isLooping
         usePoster
         style={{ width: 300, height: 300 }}
-      />
+      /> */}
 
-
-          {/* <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
-              { uri === EMPTY_URI ? 
-                <View style={{ justifyContent: 'center', alignItems: 'center',
-                  width: screenWidth, height: 300, maxHeight:300, backgroundColor: '#bdbdbd' }} > 
-                  <MaterialIcons name="photo-size-select-actual" size={80} color="grey"/>
-                </View>
-                : <Image              
-                    source={{ uri }}
-                    style={{ width: screenWidth, height: 300, maxHeight:300 }}
-                  />
-              }
-            </TouchableOpacity>
-          </View>
-          <View style={{paddingTop:30}}>
-            <ButtonGroup 
-              selectedButtonStyle={{backgroundColor:'#bad4da', borderColor:'transparent'}}
-              onPress={updateGroupType}
-              selectedIndex={selectedIndex}
-              buttons={groupTypes}
-              containerStyle={{height: 40, borderRadius:5}}
-            />
-
-            { GroupNameInput }
-
-            <MultiLine
-              value={description}
-              maxLines={4}
-              maxLength={280}
-              onChangeText={setDescription}
-              label="Description (use # for tags)"
-              iconClass={MaterialIcons}
-              iconName="description"
-            />
-            <Button 
-              style={{ marginTop: 40, width:0.7*screenWidth, alignSelf:'center' }} 
-              buttonStyle={{backgroundColor:'#bad4da',borderRadius:10}}
-              titleStyle={{fontFamily:'Avenir-Light', fontSize: 18, fontWeight:'bold'}} 
-              title="Create" 
-              onPress={handlePost}
-              /> */}
           </View> 
         </ScrollView>
         
@@ -492,12 +487,33 @@ function CreateThreadScreen ({ firebase, navigation }) {
 
 export default withFirebaseHOC(CreateThreadScreen);
 
-
+  const screenWidth = Math.round(Dimensions.get('window').width)
   const styles = StyleSheet.create({
+    deleteButton:{
+      alignItems:'center'
+    },
+    imagePlaceHolder:{
+      justifyContent: 'center', 
+      alignItems: 'center',
+      width: screenWidth*0.3, 
+      height: 0.3*screenWidth, 
+      maxHeight:0.3*screenWidth, 
+      backgroundColor: '#bdbdbd',
+      borderRadius:15 
+    },
+    image:{
+      width: 0.3*screenWidth, 
+      height: 0.3*screenWidth, 
+      maxHeight:0.3*screenWidth, 
+      borderRadius:15, 
+      margin: 4
+    },
+
     userInputContainer:{
       flexDirection:"row",
       height:50,
-      alignItems:'center'
+      alignItems:'center',
+      marginHorizontal:16
     },
 
     userInputTouchable:{

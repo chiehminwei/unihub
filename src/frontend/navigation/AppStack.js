@@ -7,7 +7,7 @@ import CreateEventScreen from '~/screens/home/CreateEventScreen';
 import CreateThreadScreen from '~/screens/forum/CreateThreadScreen';
 import GroupInfo from '~/screens/forum/GroupInfo'
 import { BackButton } from '../components/button/BackButton';
-import { PostButton } from '../components/button/PostButton';
+import ImageSelector from '../components/ImageSelector';
 // import ChatDetailScreen from '~/screens/chat/ChatDetailScreen';
 
 
@@ -20,6 +20,7 @@ export default function AppStack() {
       <Stack.Screen options={{headerShown: false}} name="Create" component={CreateEventScreen} />      
       <Stack.Screen options={{headerShown: false,}} name='CreateGroup' component={CreateGroupScreen}/>
       <Stack.Screen options={{headerShown: false }} name='CreateThread' component={CreateThreadScreen}/>
+      <Stack.Screen options={{headerShown: false }} name='ImageSelector' component={ImageSelector}/>
       <Stack.Screen 
         options={{ 
           headerLeft:() =>

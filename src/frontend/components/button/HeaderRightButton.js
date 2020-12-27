@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 
 
 
-export function PostButton({navigation, onPress, enabled}){
+export function HeaderRightButton({title, navigation, onPress, enabled}){
 
   const styles = StyleSheet.create({
     backButton:{
@@ -27,8 +27,8 @@ export function PostButton({navigation, onPress, enabled}){
     }
   })
   return(
-    <TouchableOpacity style={ styles.postButton } onPress={ enabled ? onPress : ()=>alert('required item incomplete')}>
-    <Text style={ styles.postButtonText }>Post</Text>
+  <TouchableOpacity style={ styles.postButton } onPress={ enabled ? onPress : ()=>alert('required item incomplete')}>
+    <Text style={ styles.postButtonText }>{title}</Text>
   </TouchableOpacity>
   )
 }
