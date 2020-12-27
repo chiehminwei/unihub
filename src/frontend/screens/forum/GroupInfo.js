@@ -212,7 +212,8 @@ function GroupInfo({ route, firebase }) {
             }
           />
           <Divider style={styles.thickDivider}/>
-          {
+
+          { 
             isAdmin ?      
             <TwoButtonAlert title='Disband this group' onPress={disbandGroup} alert={'Are you sure disbanding this group?'}/> 
             : 

@@ -4,14 +4,14 @@ import { StyleSheet, ScrollView, TouchableOpacity, Button, Alert, View, Text, Ac
 
 const createTwoButtonAlert = (onPress, alert) =>
 Alert.alert(
-  "",
   alert,
+  "",
   [
     { text: "OK", onPress: onPress },
 
     {
       text: "Cancel",
-      onPress: () => console.log("Cancel Pressed"),
+      // onPress: () => console.log("Cancel Pressed"),
       style: "cancel"
     }
   ],
@@ -21,8 +21,7 @@ Alert.alert(
 
 export function TwoButtonAlert ({ title, onPress, alert }){
   return(
-    
-  <Button title={title} onPress={()=>createTwoButtonAlert(onPress)} alert={alert}/>
+  <Button title={title} onPress={()=>createTwoButtonAlert(onPress, alert)}/>
 
   )
 }
