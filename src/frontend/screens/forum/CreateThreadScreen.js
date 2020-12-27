@@ -125,7 +125,8 @@ const groups = [
                 paddingBottom: 8,
                 paddingHorizontal:8,
                 height: props.height,
-                backgroundColor:'#f1f7f8'
+                backgroundColor:'#f1f7f8',
+                
               }   
             ]}
           />
@@ -268,7 +269,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
     if (!pickerResult.cancelled) {
         setURI(pickerResult.uri);
         setAllUri([...allUri, pickerResult.uri])
-        setSnapPoints([0, 0.5*screenHeight, 0]);
+        setSnapPoints([0, 0.45*screenHeight, 0]);
     }
   };
 
@@ -349,7 +350,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   return (
     
     <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch'}]} edges={['right','top','left']}>
-      <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
+      <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding"  enabled   keyboardVerticalOffset={0}>
         
         {/* header */}
         <View style={styles.headerContainer}>
@@ -364,7 +365,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
 
 
         {/* body */}
-        <ScrollView keyboardShouldPersistTaps="never" style={{backgroundColor:'white'}}>
+        <ScrollView style={{backgroundColor:'white'}}>
           
 
           {/* choose a group */}
@@ -404,14 +405,17 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
                 placeholder={'Write Your Post Here...'}
                 multiline={true}/>
             </View>
-            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{paddingLeft:12}}>
+
+
+              {/* Choose Image */}
               <TouchableOpacity style ={styles.image} onPress={() => sheetRef.current.snapTo(1)}>
-                
                   <View style={styles.imagePlaceHolder} > 
                     <MaterialIcons name="photo-size-select-actual" size={80} color="grey"/>
-                  </View>
-                  
+                  </View>   
               </TouchableOpacity>
+
+              {/* image list */}
               { allUri !== undefined && (allUri.map( item =>  
                   <ImageBackground 
                     style={ styles.image }
@@ -477,7 +481,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
           borderRadius={10}
           renderContent={renderBottomSheet}
           callbackNode={fall}
-          enabledInnerScrolling={true}
+          enabledInnerScrolling={false}
         />
         { renderShadow() }
       </KeyboardAvoidingView>
