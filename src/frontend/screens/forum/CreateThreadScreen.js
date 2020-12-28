@@ -75,7 +75,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    const { group } = route.params.group;
+    const { group } = route.params;
     if (!group) {
       // Go to firebase and get available
       const unsubscribe = firebase.getUserGroups(userID, setGroups);
@@ -283,7 +283,19 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
 
   const [photos, setPhotos] = useState([]);
 
-
+  useEffect(() => {
+    const newPhotos = route.params.photos || [];
+    
+    console.log('wtf', allUri, newPhotos)
+    let newAllUri = [...allUri];      
+    newPhotos.forEach(item =>{
+      if (!newAllUri.includes(item.uri)) {
+        newAllUri.push(item.uri);
+      }
+    })
+    setPhotos(newPhotos);
+    setAllUri(newAllUri);
+  }, [isFocused]);
 
  
   return (
