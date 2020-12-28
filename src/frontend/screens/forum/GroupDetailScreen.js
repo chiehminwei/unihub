@@ -5,18 +5,25 @@ import  PrivateScreen  from '~/screens/forum/PrivateScreen';
 import  PublicScreen from './PublicScreen';
 import ThreadList from '../../components/lists/ThreadList';
 import { GroupContext } from '~/navigation/GroupProvider';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+// TODO pass username and profile uri to members
 
 
 const deviceWidth = Dimensions.get('window').width;
 
 
-function GroupContent({ isPrivate, members }){
-  if (isPrivate) return <PrivateScreen/>
-  return <PublicScreen members={members}/>
-}  
+function GroupContent({ isPrivate, members, isInGroup }){
+  if (isPrivate) return <PrivateScreen members={members} isInGroup={isInGroup}/>
+  return <PublicScreen members={members} isInGroup = {isInGroup}/>
+} 
+
 
 const GroupDetailScreen = ({ route, navigation, firebase }) => {
+
+
+
+
   const { group } = route.params;
   const { admin, description, groupID, groupName, groupType, uri, numMember, groupNotice } = group;
   const isPrivate = groupType === 'private';
@@ -25,6 +32,20 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   const [ isInGroup, setIsInGroup ] = useState(false);
   const [ isWaiting, setIsWaiting ] = useState(false);
 
+
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => isInGroup ?  (
+        <TouchableOpacity style={{marginRight:16}} onPress={() => navigation.navigate('GroupInfo', { contextGroupID })}>
+          <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
+        </TouchableOpacity>
+      ) : []
+    });
+    console.log('im in group?',isInGroup)
+  }, [navigation,isInGroup]);
+
+  
   const { contextGroupID, setContextGroupID } = useContext(GroupContext);
 
   const joinGroup = () => {
@@ -223,7 +244,13 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   );
 }
 
+
+
 export default withFirebaseHOC(GroupDetailScreen);
+
+
+
+
 
 const styles = StyleSheet.create({
   container: {

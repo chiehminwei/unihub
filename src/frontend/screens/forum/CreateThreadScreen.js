@@ -91,7 +91,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   }, []);
 
   
-  const [uri, setURI] = useState(EMPTY_URI); 
+  // const [uri, setURI] = useState(EMPTY_URI); 
   const [snapPoints, setSnapPoints] = useState([0, 0.45*screenHeight, 0]);
   
   const sheetRef = useRef(null);
@@ -181,7 +181,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
 
   const handleImagePicked = pickerResult => {
     if (!pickerResult.cancelled) {
-        setURI(pickerResult.uri);
+        // setURI(pickerResult.uri);
         setAllUri([...allUri, pickerResult.uri])
         setSnapPoints([0, 0.45*screenHeight, 0]);
     }

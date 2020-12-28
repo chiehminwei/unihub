@@ -52,7 +52,7 @@ export default function Publicscreen({ members }) {
   const shownListLength = members.length >= numAvatar ? numAvatar-1 : members.length;
   const { contextGroupID } = useContext(GroupContext);
 
-
+// console.log(members)
   return (
     <View style={styles.avatorListContainer}>
       <Text style={styles.title}>
