@@ -13,7 +13,7 @@ class DiscoverScreen extends Component{
    const {navigation}=this.props
       return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>
-          <DiscoverList navigation={navigation}/>
+          <DiscoverList threads={[]} navigation={navigation}/>
         </View>
       )       
   }

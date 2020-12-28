@@ -13,61 +13,7 @@ import { Divider } from 'react-native-paper'
 import { withFirebaseHOC } from "~/../firebase";
 
 
-const threads = [
-  {
-    groupName: 'Thon 2020',
-    userName: 'Jimmy Wei',
-    threadTitle: 'For the kid!!',
-    content: 'long_text',
-    numThumbsups: 20,
-    numComments: 10,
-    groupID: 'U123',
-    userID: 'Y123',
-    threadID: 'T123',
-    publishTime: 'MONDAY JULY 3',
-    uri:'https://picsum.photos/700',
-  },
-  {
-    groupName: 'ERO',
-    userName: 'Tim Wang',
-    threadTitle: 'Members recruitment',
-    content:'long_text',
-    numThumbsups: 100,
-    numComments: 20,
-    groupID: 'U234',
-    userID: 'Y234',
-    threadID: 'T234',
-    publishTime: 'MONDAY JULY 3',
-    uri:'https://picsum.photos/700',
-  },
-  {
-    groupName: 'ERO',
-    userName: 'Tim Wang',
-    threadTitle: 'Members recruitment',
-    content:'long_text',
-    numThumbsups: 100,
-    numComments: 20,
-    groupID: 'U345',
-    userID: 'Y345',
-    threadID: 'T345',
-    publishTime: 'MONDAY JULY 3',
-    uri:'https://picsum.photos/700',
-  }, {
-    groupName: 'ERO',
-    userName: 'Tim Wang',
-    threadTitle: 'Members recruitment',
-    content:'long_text',
-    numThumbsups: 100,
-    numComments: 20,
-    groupID: 'U456',
-    userID: 'Y456',
-    threadID: 'T456',
-    publishTime: 'MONDAY JULY 3',
-    uri:'https://picsum.photos/700',
-  }, 
-];
-
-function DiscoverList({ navigation, firebase }) {
+function DiscoverList({ navigation, firebase, threads }) {
   const [ groups, setGroups ] =  useState([]);
   useEffect(() => {
     const unsubscribe = firebase.getGroups(setGroups);

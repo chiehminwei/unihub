@@ -27,7 +27,7 @@
     "expo-random": "~8.2.1",
     "firebase": "7.9.0",
     "formik": "2.1.4",
-    "moment": "^2.27.0",
+    "moment": "^2.29.1",
     "nanoid": "^3.1.9",
     "random-uuid-v4": "^0.0.9",
     "react": "16.11.0",

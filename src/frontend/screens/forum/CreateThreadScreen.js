@@ -71,20 +71,19 @@ console.disableYellowBox = true;
 function CreateThreadScreen ({ firebase, navigation, route }) {
 
   const isFocused = useIsFocused();
-  const { uid } = firebase.getCurrentUserInfo();
+  const userInfo = firebase.getCurrentUserInfo();
+  const { uid } = userInfo;
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     const   { newgroup }   = route.params || [];
     if (!newgroup) {
       // Go to firebase and get available
-      const userID = firebase.getCurrentUserInfo().uid;
-      const unsubscribe = firebase.getUserGroups(userID, setGroups);
+      const unsubscribe = firebase.getUserGroups(uid, setGroups);
       return unsubscribe;
     }
     else {
       // setGroups([ newgroup ]);
-      console.log(newgroup)
       setGroup(newgroup)
       setIsShowGroupEnabled(false)
     }
@@ -200,11 +199,13 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
     
     // Post to firestore
     const postContent = {
-      creator: uid,
+      creator: userInfo,
       post,
       title,
       group,
-      imgs,    
+      imgs,
+      numLikes: 0,
+      numComments: 0,
     };
     try {
       const result = await firebase.addPost(uid, group.groupID, postContent);      
@@ -274,7 +275,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const groupPlaceHolder = {
     groupName: 'Choose a group here (required)',
     groupID: 'dummyID',
-    groupUri:'',
+    uri:'',
   } 
 
   const [ isShowGroupEnabled, setIsShowGroupEnabled ] = useState(true)
@@ -395,7 +396,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
                   <Avatar 
                     size="small" 
                     key={item.groupID} 
-                    rounded source={{uri:item.groupUri}} 
+                    rounded source={{uri:item.uri}} 
                   />
                   <TouchableOpacity 
                     style={styles.userInputTouchable} 

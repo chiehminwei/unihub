@@ -31,6 +31,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   const [ members, setMembers ] = useState([]);
   const [ isInGroup, setIsInGroup ] = useState(false);
   const [ isWaiting, setIsWaiting ] = useState(false);
+  const [ groupPosts, setGroupPosts ] = useState([]);
 
 
 
@@ -123,11 +124,13 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
       const memberUnsubscribe = firebase.getMembers(groupID, setMembers);
       const inGroupUnsubscribe = firebase.userIsInGroup(userInfo.uid, groupID, setIsInGroup);
       const isWaitingUnsubscribe = firebase.userIsWaiting(userInfo.uid, groupID, setIsWaiting);
-      
+      const groupPostsUnsubscribe = firebase.getGroupPosts(groupID, setGroupPosts);
+
       return () => {
         memberUnsubscribe();
         inGroupUnsubscribe();
         isWaitingUnsubscribe();
+        groupPostsUnsubscribe();
       }
     }, []);
 
@@ -236,7 +239,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
                 </TouchableOpacity>
                 
               </View>
-              <ThreadList/>
+              <ThreadList threads={groupPosts}/>
             </View>
              )}
         </View>
