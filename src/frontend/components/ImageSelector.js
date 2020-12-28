@@ -16,8 +16,8 @@ export default function  ImageSelector ({navigation,route, selected}){
   const Params = route.params
   const maxSelections = 9
   const numCanbeSelected = maxSelections - Params.numSelectedImage
-  const onDone = (data) => {
-    navigation.navigate('CreateThread',{ data })
+  const onDone = (photos) => {
+    navigation.navigate('CreateThread',{ photos })
   };
   const onSelected = selected
   // if (selected === numCanbeSelected) return (

@@ -9,6 +9,8 @@ import Group from "./data/group";
 import User from "./data/user";
 import Event from "./data/event";
 import Calendar from "./data/calendar";
+import Thread from "./data/thread";
+
 
 // Initialize Firebase
 if (!firebase.apps.length) {
@@ -42,6 +44,7 @@ const Firebase = {
   ...Event,
   ...User,
   ...Group,
+  ...Thread,
 };
 
 export default Firebase;

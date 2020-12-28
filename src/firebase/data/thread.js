@@ -12,8 +12,12 @@ const getGroupPostRef = (groupID, postID) => firestore.doc(`groups/${groupID}/po
 const getReportRef = (postID) => firestore.doc(`reported/posts/${postID}`)
 const getPostCollection = () => firestore.collection('posts');
 const getPostRef = (postID) => firestore.doc(`posts/${postID}`);
-const getComments = (postID) => firestore.collection(`post/${postID}/comments`);
-const getUserComments = (userID, postID) => firestore.collection(`users/${userID}/posts/${postID}`);
+
+const getComments = () => firestore.collection(`comments`)
+const getPostComments = (postID) => firestore.collection(`post/${postID}/comments`);
+const getUserComments = (userID, postID) => firestore.collection(`users/${userID}/posts/${postID}/comments`);
+const getGroupComments = (groupID, postID) => firestore.collection(`groups/${groupID}/posts/${postID}/comments`);
+// const getComment = ()
 
 
 const Post = {
@@ -114,16 +118,30 @@ const Post = {
   },
   replyPost: (userID, groupID, postID) => {
     // S
-    const postRef = getPostRef(userID, groupID)
-    const userPostRef = getUserPostRef(userID, postID)
+    // const commentsRef = getComments(postID);
+    // const commentID = 
 
-    const batch = firestore.batch();
-    batch.delete(memberRef);
-    batch.delete(userGroupRef);
-    batch.commit()
-         .catch(err => console.error(err));
+    // const postRef = getPostCollection().doc();
+    // const postID = postRef.id;
+    // post.group = groupID;
+    // post.author = userID;
+
+    // const userPostRef = getUserPostRef(userID, postID);
+    // const groupPostRef = getGroupPostRef(groupID, postID);
+
+    // const userCommentsRef = getUserComments(userID, postID);
+    // const groupCommentsRef = getGroupComments(groupID, postID);
+
+    // const batch = firestore.batch();
+    // batch.delete(memberRef);
+    // batch.delete(userGroupRef);
+    // batch.commit()
+    //      .catch(err => console.error(err));
+    console.log(123)
   },
-  replyComment: ()
+  replyComment: () => {
+    console.log(123)
+  }
 };
 
 export default Post;

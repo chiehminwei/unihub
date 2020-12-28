@@ -81,12 +81,12 @@ function GroupInfo({ route, firebase }) {
 
   const disbandGroup = () => {
     firebase.disbandGroup(groupID);
-    navigation.navigate('Group')
+    navigation.goBack();
   }
 
   const quitGroup = () => {
     firebase.quitGroup(userInfo.uid, groupID);
-    navigation.navigate('Group')
+    navigation.goBack();
   }
   
 

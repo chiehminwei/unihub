@@ -1,4 +1,5 @@
 import React, { Component, useState, useRef, useEffect, useContext } from 'react';
+import { useIsFocused } from "@react-navigation/native";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -33,149 +34,57 @@ import { TextInput } from 'react-native-paper';
 import { Video } from 'expo-av';
 
 
+const screenHeight = Math.round(Dimensions.get('window').height)
 
-
-
-
-// dummy user data
-const user =
-  {
-    userName: 'Eric Li',
-    numGroups: 10,
-    numFriends: 10,
-    userID: 'Uu456',
-    major: 'Mechanical Enginnering',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool Guy',
-    classyear: 2020
-  }
-
-
-// dummy group data
-
-const groups = [
-  {
-    hostName:'Jimmy',
-    groupName: 'yyyyyoyoyo',
-    numMembers: 10,
-    availability: "Public",
-    groupID: 'U123',
-    description: 'long_text',
-    groupUri:'https://picsum.photos/700',
-  },
-  {
-    hostName:'Jimmy',
-    groupName: 'ero niubi',
-    numMembers: 10,
-    availability: "Public",
-    groupID: 'U234',
-    description: 'long_text',
-    groupUri:'https://picsum.photos/700',
-  },
-  {
-    hostName:'Jimmy',
-    groupName: 'Group THON 2020',
-    numMembers: 10,
-    availability: "Public",
-    groupID: 'U345',
-    description: 'long_text',
-    groupUri:'https://picsum.photos/700',
-  },
-  {
-    hostName:'Jimmy',
-    groupName: 'xmas',
-    numMembers: 10,
-    availability: "Public",
-    groupID: 'U456',
-    description: 'long_text',
-    groupUri:'https://picsum.photos/700',
-  },
-  {
-    hostName:'Jimmy',
-    groupName: 'gogoogogogo',
-    numMembers: 10,
-    availability: "Public",
-    groupID: 'U567',
-    description: 'long_text',
-    groupUri:'https://picsum.photos/700',
-  },
-
-]
+const UserInput = (props) => {
   
-  
-
-
-  const screenHeight = Math.round(Dimensions.get('window').height)
-
-  const UserInput = (props) => {
-    
-    return (
-      <TextInput
-        // {...props}
-        style={{height:props.height}}
-        render={() => (
-          <NativeTextInput
-            placeholder={props.placeholder}
-            onChangeText={props.onChangeText}
-            value={props.value}
-            multiline={props.multiline}
-            style={[
-              {
-                paddingTop: 8,
-                paddingBottom: 8,
-                paddingHorizontal:8,
-                height: props.height,
-                backgroundColor:'#f1f7f8',
-                
-              }   
-            ]}
-          />
-        )}
-      />
-    );
-  };
-
-  
-
-
+  return (
+    <TextInput
+      // {...props}
+      style={{height:props.height}}
+      render={() => (
+        <NativeTextInput
+          placeholder={props.placeholder}
+          onChangeText={props.onChangeText}
+          value={props.value}
+          multiline={props.multiline}
+          style={[
+            {
+              paddingTop: 8,
+              paddingBottom: 8,
+              paddingHorizontal:8,
+              height: props.height,
+              backgroundColor:'#f1f7f8',
+              
+            }   
+          ]}
+        />
+      )}
+    />
+  );
+};
   
 const EMPTY_URI = 'data:img';
-
-// Add a Toast on screen.
-let toast = Toast.show('This is a message', {
-    duration: Toast.durations.LONG,
-    position: Toast.positions.BOTTOM,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0,
-    onShow: () => {
-        // calls on toast\`s appear animation start
-    },
-    onShown: () => {
-        // calls on toast\`s appear animation end.
-    },
-    onHide: () => {
-        // calls on toast\`s hide animation start.
-    },
-    onHidden: () => {
-        // calls on toast\`s hide animation end.
-    }
-});
-
-// You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
-setTimeout(function () {
-    Toast.hide(toast);
-}, 500);
  
-
 console.disableYellowBox = true;
 
 function CreateThreadScreen ({ firebase, navigation, route }) {
 
-  // const { user } = useContext(AuthUserContext);
-  const userInfo = firebase.getCurrentUserInfo();
+  const isFocused = useIsFocused();
+  const { uid } = firebase.getCurrentUserInfo();
+  const [groups, setGroups] = useState([]);
 
+  useEffect(() => {
+    const { group } = route.params;
+    if (!group) {
+      // Go to firebase and get available
+      const unsubscribe = firebase.getUserGroups(userID, setGroups);
+      return unsubscribe;
+    }
+    else {
+      setGroups([ group ]);
+    }
+  }, []);
   
   const [uri, setURI] = useState(EMPTY_URI); 
   const [snapPoints, setSnapPoints] = useState([0, 0.45*screenHeight, 0]);
@@ -255,14 +164,13 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
     // handleImagePicked(pickerResult);
   }
 
-
   const  deletePhoto =( uri ) => {
     // sheetRef.current.snapTo(2);
     const currentUri  = uri 
-    const fileredAlluri = allUri.filter(item => item !== currentUri)
-    photos.data = photos.data.filter( item => item.uri !== currentUri)
-    setAllUri(fileredAlluri)
-
+    const filteredAlluri = allUri.filter(item => item !== currentUri);
+    const newPhotos = photos.filter( item => item.uri !== currentUri);
+    setPhotos(newPhotos);
+    setAllUri(filteredAlluri);
   }
 
   const handleImagePicked = pickerResult => {
@@ -274,48 +182,85 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   };
 
   const handlePost = async () => {
-    // Upload image to Firebase Storage
-    let uploadUrl;
-    if (uri !== EMPTY_URI) {
-       uploadUrl = await uploadImageAsync(uri);
-       setURI(uploadUrl);
-    } 
-    // Push group to firestore
-    const group = {
-      admin: userInfo,
-      groupName,
-      description,
-      groupType: groupTypes[selectedIndex],
-      uri: uploadUrl,
+    // Upload images to Firebase Storage
+    const imgs = [];
+    const uploadImages = async () => {
+      await asyncForEach(allUri, async uri => {
+        const uploadUrl = await uploadImageAsync(uri);
+        imgs.push(uploadUrl);
+      })
+    }
+    await uploadImages();
+    
+    // Post to firestore
+    const postContent = {
+      creator: uid,
+      post,
+      title,
+      group,
+      imgs,    
     };
     try {
-      const result = await firebase.createGroup(group); // TODO: firebase (remember to check group name rights)      
-      alert('Yay')
-      console.log(group)
-      // TODO: navigate to previous screen & send success notification
+      const result = await firebase.addPost(uid, group.groupID, postContent);      
+      navigation.goBack()
+      let toast = Toast.show('Thread successfully posted.', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          onShow: () => {
+              // calls on toast\`s appear animation start
+          },
+          onShown: () => {
+              // calls on toast\`s appear animation end.
+          },
+          onHide: () => {
+              // calls on toast\`s hide animation start.
+          },
+          onHidden: () => {
+              // calls on toast\`s hide animation end.
+          }
+      });
+
+      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+      setTimeout(function () {
+          Toast.hide(toast);
+      }, 2000);
+
     } catch (e) {
       console.log(e);
-      alert('Post failed, sorry :('); // TODO: change this to notification
-    }
+      let toast = Toast.show('Network error.', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          onShow: () => {
+              // calls on toast\`s appear animation start
+          },
+          onShown: () => {
+              // calls on toast\`s appear animation end.
+          },
+          onHide: () => {
+              // calls on toast\`s hide animation start.
+          },
+          onHidden: () => {
+              // calls on toast\`s hide animation end.
+          }
+      });
 
+      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+      setTimeout(function () {
+          Toast.hide(toast);
+      }, 2000);
+    }
   }
 
 
-
-
-  const {
-    userName,
-    numGroups,
-    numFriends,
-    userID,
-    major,
-   
-    classyear,
-  } = user 
-
-
   // user input
-
   const [post, onChangePost] = useState('');
   const [title, onChangeTitle] = useState('');
 
@@ -331,20 +276,25 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const isGroupChosenColor = (group.groupName === groupPlaceHolder.groupName) ? 'grey' : 'black'
   const isPostEnabled = ( group !== groupPlaceHolder && post !== '' && title !== '')
 
-  const photos = route.params
-
-  const [allUri, setAllUri] = useState([])
   
+  const [allUri, setAllUri] = useState([])
   const numSelectedImage = allUri.length
 
+  const [photos, setPhotos] = useState([]);
 
-  if (photos !== undefined ) {
-    photos.data.map(item=>{
-      if (!allUri.includes(item.uri)) {
-        setAllUri([...allUri, item.uri])
-      }    
+  useEffect(() => {
+    const newPhotos = route.params.photos || [];
+    
+    console.log('wtf', allUri, newPhotos)
+    let newAllUri = [...allUri];      
+    newPhotos.forEach(item =>{
+      if (!newAllUri.includes(item.uri)) {
+        newAllUri.push(item.uri);
+      }
     })
-  }
+    setPhotos(newPhotos);
+    setAllUri(newAllUri);
+  }, [isFocused]);
 
  
   return (
@@ -358,8 +308,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
             <BackButton title={'Back'} navigation={navigation}/>
           </View>
           <View style={{flex:1, alignItems:'flex-end'}}>
-            <HeaderRightButton title='post' enabled= {isPostEnabled} onPress={()=>alert('post~!!!!')}/> 
-            {/* update onPress={handlePost} */}
+            <HeaderRightButton title='post' enabled= {isPostEnabled} onPress={handlePost}/> 
           </View>
         </View>
 
@@ -557,6 +506,12 @@ export default withFirebaseHOC(CreateThreadScreen);
       justifyContent: 'center',
     },
   })
+
+  async function asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
+  }
 
   async function uploadImageAsync(uri) {
     // Why are we using XMLHttpRequest? See:

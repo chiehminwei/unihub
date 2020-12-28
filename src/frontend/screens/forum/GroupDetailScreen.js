@@ -108,11 +108,15 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
         inGroupUnsubscribe();
         isWaitingUnsubscribe();
       }
-    }, [firebase]);
+    }, []);
 
   useEffect(() => {
     setContextGroupID(groupID)
   }, [])
+
+  const postThread = () => {
+    navigation.navigate('CreateThread', { group });
+  }
 
 
   return (
@@ -204,7 +208,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
                     style={styles.avator}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {() => alert('to create thread within current group')}>
+                <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {postThread}>
                   <Text style={styles.textInputPrompt}>
                     Hi Yufan, wanna share something?
                   </Text>
