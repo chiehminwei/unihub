@@ -115,7 +115,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   }, [])
 
   const postThread = () => {
-    navigation.navigate('CreateThread', { group });
+    navigation.navigate('CreateThread', { newgroup: group });
   }
 
 

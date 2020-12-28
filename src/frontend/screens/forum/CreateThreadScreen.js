@@ -75,16 +75,21 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const [groups, setGroups] = useState([]);
 
   useEffect(() => {
-    const { group } = route.params;
-    if (!group) {
+    const   { newgroup }   = route.params || [];
+    if (!newgroup) {
       // Go to firebase and get available
+      const userID = firebase.getCurrentUserInfo().uid;
       const unsubscribe = firebase.getUserGroups(userID, setGroups);
       return unsubscribe;
     }
     else {
-      setGroups([ group ]);
+      // setGroups([ newgroup ]);
+      console.log(newgroup)
+      setGroup(newgroup)
+      setIsShowGroupEnabled(false)
     }
   }, []);
+
   
   const [uri, setURI] = useState(EMPTY_URI); 
   const [snapPoints, setSnapPoints] = useState([0, 0.45*screenHeight, 0]);
@@ -272,6 +277,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
     groupUri:'',
   } 
 
+  const [ isShowGroupEnabled, setIsShowGroupEnabled ] = useState(true)
   const [ showGroup, setShowGroup ] = useState(true)
   const [ group, setGroup ] = useState(groupPlaceHolder)
   const isGroupChosenColor = (group.groupName === groupPlaceHolder.groupName) ? 'grey' : 'black'
@@ -284,9 +290,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
-    const newPhotos = route.params.photos || [];
-    
-    console.log('wtf', allUri, newPhotos)
+    const  newPhotos  = route.params.photos || [];
     let newAllUri = [...allUri];      
     newPhotos.forEach(item =>{
       if (!newAllUri.includes(item.uri)) {
@@ -328,10 +332,11 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
             }}
           >
           <View style={styles.userInputContainer}>
-            <Avatar size="small" key={group.groupID} rounded source={{uri:group.groupUri}} />
-              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{setShowGroup(!showGroup)}}>
+            <Avatar size="small" key={group.groupID} rounded source={{uri:group.uri}} />
+              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{isShowGroupEnabled? setShowGroup(!showGroup): null}}>
                 <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>
-                <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor} />
+                
+                { isShowGroupEnabled ? <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/> : null }
               </TouchableOpacity>
           </View>
           <Divider/>
