@@ -5,10 +5,9 @@ import { withFirebaseHOC } from "~/../firebase";
 
 
 const AllScreen = ({ firebase }) => {
-
   const [ threads, setThreads ] = useState([]);
   useEffect(() => {
-      return firebase.getPosts(setThreads);
+      return firebase.getPosts(setThreads)
     }, []);
 
   return (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor:'white' }}>

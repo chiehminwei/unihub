@@ -7,6 +7,7 @@ import { NaviButton } from '~/components/button/NaviButton';
 import Search from '~/components/Search';
 import MapContent from '~/components/MapContent';
 import EventList from '~/components/lists/EventList';
+import { Button } from 'react-native';
 
 
 
@@ -76,6 +77,7 @@ export default class HomeScreen extends Component {
             </View>
           </View>
         </View>
+        
               {/* CONTENT */}
         <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6 }}>
             { isMap ? <MapContent navigation={navigation}/> : <EventList navigation={navigation}/> }

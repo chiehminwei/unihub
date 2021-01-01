@@ -3,6 +3,7 @@ import { View, Image, Dimensions, Share } from 'react-native';
 import { Button, Card, Title, Divider, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from "react-native-gesture-handler";
+import ImageCarousel from '~/components/lists/ImageCarousel'
 
 // import useNavigation from '@react-navigation/native';
 
@@ -33,23 +34,21 @@ function ThreadItem ({ thread })  {
     numComments,
     publishTime,
   } = thread;
-
-
-  console.log(thread)
-  const { displayName } = creator;
+ 
+  const { email } = creator; // TODO pass username
   const { groupName } = group;
   const uri = imgs[0]; // TODO: display multiple images
-
   return(
-  <Card style={{ width:screenWidth, marginVertical:5, flex:1 }} onPress={ () => navigation.navigate('ThreadDetail') }>
+  <Card style={{ width:screenWidth, marginVertical:5, flex:1 }}  >
   <Card.Content style={{paddingHorizontal:0}}>
+    <TouchableOpacity onPress={ () => navigation.navigate('ThreadDetail',{thread})}>
     <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
       <Image  source={{uri: uri }}
                 style={{width: 50, height: 50, borderRadius: 25}} />
       <View style={{flex:1, marginLeft: 12}}>
         <View style={{ flex: 1, flexDirection: 'row'}}>
           <TouchableOpacity>
-            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}>{ displayName }</Text>
+            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}> { email }</Text>
           </TouchableOpacity>
             
           <Text style={{ fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
@@ -62,7 +61,9 @@ function ThreadItem ({ thread })  {
           <Text> 19h </Text>
         </View>
       </View>
-      <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>{ publishTime }</Text>
+      <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>
+        { publishTime } 
+      </Text>
     </View>
       <View style={{ flex: 1, marginTop:10, flexDirection: 'column', justifyContent: 'space-between'}}>
         <View>
@@ -70,8 +71,14 @@ function ThreadItem ({ thread })  {
           <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ post }</Text>
         </View>
       </View>
-      <Image  source={{uri: uri }}
-              style={{ width: screenWidth, height: 200}} />
+      </TouchableOpacity>
+      { ( imgs.length === 0 ) ? null: (imgs.length === 1) ? 
+        <Image  source={{uri: uri }}
+        style={{ width: screenWidth, height: screenWidth}} />
+        :
+        <ImageCarousel uris={thread.imgs}/>
+      }
+      
       
   </Card.Content>
   <Divider/>

@@ -1,7 +1,12 @@
-import React from 'react';
-import { StyleSheet, Image, ScrollView, View, Share, TouchableOpacity, Dimensions } from 'react-native';
+import * as React from 'react';
+import { View, Image, Dimensions, Share, StyleSheet, ScrollView } from 'react-native';
 import { Button, Card, Title, Divider, Text } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from "react-native-gesture-handler";
+import ImageCarousel from '~/components/lists/ImageCarousel'
 import { withFirebaseHOC } from "~/../firebase";
+// import useNavigation from '@react-navigation/native';
+
 
 const share = (props) => {
   const { threadTitle, description, uri } = props;
@@ -11,81 +16,80 @@ const share = (props) => {
     url: props.uri,
   });
 };
-const long_text = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-const thread = 
-  {
-    groupName: 'Thon 2020',
-    userName: 'Jimmy Wei',
-    threadTitle: 'For the kid!!',
-    content: 'long_text',
-    numThumbsups: 20,
-    numComments: 10,
-    groupID: 'U123',
-    userID: 'Y123',
-    threadID: 'T123',
-    publishTime: 'MONDAY JULY 3',
-    uri:'https://picsum.photos/700',
-  }
-const ThreadDetailScreen = ({ threadID, navigation, firebase }) => {
 
-  const  
-  {
-    groupName,
-    userName,
-    threadTitle,
-    content,
-    numThumbsups,
+
+const ThreadDetailScreen = ({ threadID, firebase, route }) => {
+  const navigation = useNavigation()
+  const { 
+    creator,
+    post,
+    title,
+    group,
+    imgs,
+    numLikes,
     numComments,
-    groupID,
-    userID,
-    // threadID,
     publishTime,
-    uri,
-  } = thread
+  } = route.params.thread
+
+  const { email } = creator;
+  const { groupName } = group;
+  const uri = imgs[0]; // TODO: display multiple images
 
   return (
       <ScrollView style={styles.scrollView}>
-        <Card style={{ width:screenWidth, marginVertical:5, flex:1 }}>
-          <Card.Content style={{paddingHorizontal:0}}>
-            <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
-              <Image  source={{uri: thread.uri }}
-                        style={{width: 50, height: 50, borderRadius: 25}} />
-              <View style={{flex:1, marginLeft: 12}}>
-                <View style={{ flex: 1, flexDirection: 'row'}}>
-                  <TouchableOpacity>
-                    <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}>{ thread.userName }</Text>
-                  </TouchableOpacity>
-                    
-                  <Text style={{fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
+        <Card style={{ width:screenWidth, marginVertical:5, flex:1 }}  >
+  <Card.Content style={{paddingHorizontal:0}}>
+    <TouchableOpacity>
+    <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
+      <Image  source={{uri: uri }}
+                style={{width: 50, height: 50, borderRadius: 25}} />
+      <View style={{flex:1, marginLeft: 12}}>
+        <View style={{ flex: 1, flexDirection: 'row'}}>
+          <TouchableOpacity>
+            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}>
+              { email }
+              sss
+            </Text>
+          </TouchableOpacity>
+            
+          <Text style={{ fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
 
-                  <TouchableOpacity>
-                    <Text style={{fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ thread.groupName }</Text>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <Text> 19h </Text>
-                </View>
-              </View>
-              <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>{ thread.publishTime }</Text>
-            </View>
-              <View style={{ flex: 1, marginTop:10, flexDirection: 'column', justifyContent: 'space-between'}}>
-                <View>
-                  <Title style={{margin:10, fontFamily:'Avenir-Book'}}>{ thread.threadTitle }</Title>
-                  <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ long_text }</Text>
-                </View>
-              </View>
-              <Image  source={{uri: thread.uri }}
-                      style={{ width: screenWidth, height: 200}} />
-          </Card.Content>
-          <Divider/>
-          <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-            <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ thread.numThumbsups}</Button>
-            <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ thread.numComments}</Button>
-            <Button onPress={ () => () => share(thread) } icon="share" color='grey'></Button>
-          </Card.Actions>
-        </Card>
+          <TouchableOpacity>
+            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ groupName }</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text> 19h </Text>
+        </View>
+      </View>
+      <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>
+        { publishTime.toString() } 
+      </Text>
+    </View>
+      <View style={{ flex: 1, marginTop:10, flexDirection: 'column', justifyContent: 'space-between'}}>
+        <View>
+          <Title style={{margin:10, fontFamily:'Avenir-Book'}}>{ title }</Title>
+          <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ post }</Text>
+        </View>
+      </View>
+      </TouchableOpacity>
+      { ( imgs.length === 0 ) ? null: (imgs.length === 1) ? 
+        <Image  source={{uri: uri }}
+        style={{ width: screenWidth, height: screenWidth}} />
+        :
+        <ImageCarousel uris={thread.imgs}/>
+      }
+      
+      
+  </Card.Content>
+  <Divider/>
+  <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ numLikes }</Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ numComments }</Button>
+    <Button onPress={ () => share(thread) } icon="share" color='grey'></Button>
+  </Card.Actions>
+</Card>
 
         <View style={{paddingHorizontal:16}}>
           <Text style={{fontFamily:"Avenir-Light",
@@ -136,3 +140,5 @@ const styles = StyleSheet.create({
   },
   
 });
+
+

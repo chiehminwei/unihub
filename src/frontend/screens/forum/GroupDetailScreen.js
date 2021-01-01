@@ -34,7 +34,6 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   const [ groupPosts, setGroupPosts ] = useState([]);
 
 
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => isInGroup ?  (
@@ -43,7 +42,6 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
         </TouchableOpacity>
       ) : []
     });
-    console.log('im in group?',isInGroup)
   }, [navigation,isInGroup]);
 
   
@@ -184,10 +182,11 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
 
             {/* about */}
             { !isInGroup && (
-              <View>
+              <View style ={{ flex:1, alignSelf:'stretch' }}>
                 <Text style={{alignSelf:'flex-start', 
                               marginTop: 20,
                               marginLeft:16,
+                              // fontAlign: 'center', 
                               fontFamily:'Avenir-Light',
                               fontWeight:'bold',
                               fontSize:24 }}>
@@ -221,8 +220,32 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
             <GroupContent isPrivate={isPrivate} members={members}/>
           </View>
 
-            {/* Activities */
-             !isPrivate && (
+          {/* Activities */}
+             {/* !isPrivate  && (
+            <View style={{flex:1, alignSelf:'stretch'}}>
+              <Text style={styles.title}> Activities </Text>
+              <View style = {styles.textInputPromptContainer}>
+                <TouchableOpacity style={{flex:1}} onPress={() => alert('To profile') }>
+                  <Image 
+                    source={{uri: uri }} // TODO
+                    style={styles.avator}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {postThread}>
+                 { isInGroup &&
+                  <Text style={styles.textInputPrompt}>
+                    Hi Yufan, wanna share something?
+                  </Text>
+                  }
+                </TouchableOpacity>
+                
+              </View>
+              <ThreadList threads={groupPosts}/>
+            </View>
+             ) */}
+
+             { isPrivate ? 
+             (isInGroup ?  
             <View style={{flex:1, alignSelf:'stretch'}}>
               <Text style={styles.title}> Activities </Text>
               <View style = {styles.textInputPromptContainer}>
@@ -241,7 +264,29 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
               </View>
               <ThreadList threads={groupPosts}/>
             </View>
-             )}
+           : 
+           <Text>This is a private group </Text>) 
+           : 
+           <View style={{flex:1, alignSelf:'stretch'}}>
+              <Text style={styles.title}> Activities </Text>
+              <View style = {styles.textInputPromptContainer}>
+                <TouchableOpacity style={{flex:1}} onPress={() => alert('To profile') }>
+                  <Image 
+                    source={{uri: uri }} // TODO
+                    style={styles.avator}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {postThread}>
+                 { isInGroup &&
+                  <Text style={styles.textInputPrompt}>
+                    Hi Yufan, wanna share something?
+                  </Text>
+                  }
+                </TouchableOpacity>
+                
+              </View>
+              <ThreadList threads={groupPosts}/>
+            </View> }
         </View>
       </ScrollView>
   );

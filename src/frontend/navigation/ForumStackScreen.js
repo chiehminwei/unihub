@@ -44,7 +44,25 @@ export function ForumStackScreen() {
                   }
                 
               }/>
-          <ForumStack.Screen  name='ThreadDetail' component={ThreadDetailScreen} />
+          <ForumStack.Screen  
+            name='ThreadDetail' 
+            component={ThreadDetailScreen} 
+            options={
+              {
+                title: '',
+                // headerRight: () => (
+                //   <TouchableOpacity style={{marginRight:16}} onPress={() => navigation.navigate('GroupInfo', { contextGroupID })}>
+                //     <MaterialCommunityIcons name="dots-horizontal" size={24} color="black" />
+                //   </TouchableOpacity>
+                // ),
+                
+                headerLeft: () => (
+                  <BackButton title={'Back'}/>
+                ),
+                  
+                }
+              
+            }/>
         
       </ForumStack.Navigator>
   );

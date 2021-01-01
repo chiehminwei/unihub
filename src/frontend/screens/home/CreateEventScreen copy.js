@@ -22,8 +22,6 @@ import FumiPicker from '~/components/input/FumiPicker';
 import Collapsible from 'react-native-collapsible';
 import MultiLine from '~/components/input/MultiLine';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { screenStyles } from '~/stylesheets/screenStyles';
 import Animated from 'react-native-reanimated'
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
@@ -32,38 +30,34 @@ import { withFirebaseHOC } from "~/../firebase";
 const uuidv4 = require('random-uuid-v4');
 import Toast from 'react-native-root-toast';
 import { useNavigation } from '@react-navigation/native';
-import { BackButton } from '../../components/button/BackButton';
-import { HeaderRightButton } from '../../components/button/HeaderRightButton';
 
 
-// Add a Toast on screen.
-let toast = Toast.show('This is a message', {
-    duration: Toast.durations.LONG,
-    position: Toast.positions.BOTTOM,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0,
-    onShow: () => {
-        // calls on toast\`s appear animation start
-    },
-    onShown: () => {
-        // calls on toast\`s appear animation end.
-    },
-    onHide: () => {
-        // calls on toast\`s hide animation start.
-    },
-    onHidden: () => {
-        // calls on toast\`s hide animation end.
-    }
-});
+// // Add a Toast on screen.
+// let toast = Toast.show('This is a message', {
+//     duration: Toast.durations.LONG,
+//     position: Toast.positions.BOTTOM,
+//     shadow: true,
+//     animation: true,
+//     hideOnPress: true,
+//     delay: 0,
+//     onShow: () => {
+//         // calls on toast\`s appear animation start
+//     },
+//     onShown: () => {
+//         // calls on toast\`s appear animation end.
+//     },
+//     onHide: () => {
+//         // calls on toast\`s hide animation start.
+//     },
+//     onHidden: () => {
+//         // calls on toast\`s hide animation end.
+//     }
+// });
 
-// You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
-setTimeout(function () {
-    Toast.hide(toast);
-}, 500);
-
-
+// // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+// setTimeout(function () {
+//     Toast.hide(toast);
+// }, 500);
 
 
 
@@ -166,9 +160,8 @@ const CreateEventScreen = (props, { route, firebase }) => {
   );
 
   // Image
-  const EMPTY_URI = 'data:img';
   const screenHeight = Math.round(Dimensions.get('window').height)
-  const [uri, setURI] = useState('data:img'); 
+  const [uri, setURI] = useState(''); 
   const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
   
   const sheetRef = useRef(null);
@@ -190,7 +183,7 @@ const CreateEventScreen = (props, { route, firebase }) => {
         title="Choose from Album"
         titleStyle={{ textAlign: 'center' }}
       />
-      {uri !== EMPTY_URI && (
+      {uri !== '' && (
         <List.Item
           onPress={deletePhoto}
           title="Delete Photo"
@@ -251,7 +244,7 @@ const CreateEventScreen = (props, { route, firebase }) => {
 
   const deletePhoto = () => {
     sheetRef.current.snapTo(2);
-    setURI(EMPTY_URI);
+    setURI('');
     setSnapPoints([0, 0.47*screenHeight, 0]);
   }
 
@@ -326,20 +319,8 @@ const CreateEventScreen = (props, { route, firebase }) => {
   }
   const screenWidth = Math.round(Dimensions.get('window').width)
   return (
-  <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch'}]} edges={['right','top','left']}>
-    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
-      <View style={styles.headerContainer}>
-        <View style={{flex:1,}}>
-          <BackButton title={'Back'} navigation={navigation}/>
-        </View>
-        <View style={{flex:1, alignItems:'flex-end'}}>
-          <HeaderRightButton title='post' 
-          // enabled= {isPostEnabled} 
-          onPress={handlePost}/> 
-        </View>
-      </View>
-      
-      <ScrollView keyboardShouldPersistTaps="never" showsVerticalScrollIndicator={false}>
+    <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom:0}} behavior="padding" enabled   keyboardVerticalOffset={100}>
+      <ScrollView keyboardShouldPersistTaps="never">
         <View
           style={{
             flex: 1,
@@ -349,17 +330,12 @@ const CreateEventScreen = (props, { route, firebase }) => {
           }}
         >
          <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
-              { uri === EMPTY_URI ? 
-                <View style={{ justifyContent: 'center', alignItems: 'center',
-                  width: screenWidth, height: 300, maxHeight:300, backgroundColor: '#bdbdbd' }} > 
-                  <MaterialIcons name="photo-size-select-actual" size={80} color="grey"/>
-                </View>
-                : <Image              
-                    source={{ uri }}
-                    style={{ width: screenWidth, height: 300, maxHeight:300 }}
-                  />
-              }
-            </TouchableOpacity>
+            <Image              
+              source={{ uri }}
+              style={{ width: screenWidth, height: 300 }}
+              PlaceholderContent={<MaterialIcons name="photo-size-select-actual" size={80} color="grey" />}
+            />
+          </TouchableOpacity>
         </View>
         <ButtonGroup
           selectedButtonStyle={{backgroundColor:'#bad4da', borderColor:'transparent'}}
@@ -437,7 +413,6 @@ const CreateEventScreen = (props, { route, firebase }) => {
       { renderShadow() }
       
     </KeyboardAvoidingView>
-  </SafeAreaView>
   );
 }
 
@@ -445,14 +420,6 @@ export default withFirebaseHOC(CreateEventScreen);
 
 const styles = StyleSheet.create({
   // Shadow
-  headerContainer:{
-    flexDirection:'row' , 
-    // height: headerHeight, 
-    backgroundColor:"white",
-    height:60,
-    alignItems:'center', 
-    alignSelf:'stretch'
-  },
   shadowContainer: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#000',
@@ -487,5 +454,3 @@ async function uploadImageAsync(uri) {
 
   return await snapshot.ref.getDownloadURL();
 }
-
-

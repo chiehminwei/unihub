@@ -48,8 +48,12 @@ const Post = {
         const posts = [];    
         snapshot.forEach(docRef => {
           const doc = docRef.data();
-          doc.publishTime = doc.publishTime.toDate();      
+          const timestampDate = doc.publishTime.toDate();    
+          const m = moment(timestampDate);
+          const publishTime = m.format('ddd, MMM D');
+          doc.publishTime = publishTime;
           posts.push(doc);
+
         })
         setGroupPosts(posts);
       }
@@ -64,11 +68,12 @@ const Post = {
         const posts = [];    
         snapshot.forEach(docRef => {
           const doc = docRef.data();
-          const timestampDate = doc.publishTime.toDate();      
+          const timestampDate = doc.publishTime.toDate();    
           const m = moment(timestampDate);
           const publishTime = m.format('ddd, MMM D');
           doc.publishTime = publishTime;
           posts.push(doc);
+
         })
         setPosts(posts);
       }

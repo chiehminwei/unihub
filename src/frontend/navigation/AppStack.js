@@ -8,6 +8,7 @@ import CreateThreadScreen from '~/screens/forum/CreateThreadScreen';
 import GroupInfo from '~/screens/forum/GroupInfo'
 import { BackButton } from '../components/button/BackButton';
 import ImageSelector from '../components/ImageSelector';
+import ChooseLocationScreen from '~/screens/home/ChooseLocationScreen';
 // import ChatDetailScreen from '~/screens/chat/ChatDetailScreen';
 
 
@@ -17,8 +18,32 @@ export default function AppStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen options={{headerShown: false}} name="Home" component={HomeScreen} />
-      <Stack.Screen options={{headerShown: false}} name="Create" component={CreateEventScreen} />      
-      <Stack.Screen options={{headerShown: false,}} name='CreateGroup' component={CreateGroupScreen}/>
+      <Stack.Screen 
+        options={{ 
+          headerShown:false
+        }}
+        name="Create" 
+        component={CreateEventScreen} />    
+      <Stack.Screen 
+        options={{ 
+          headerLeft:() =>
+            (
+              <BackButton title={'Back'} />
+            ),
+          title:''
+        }} 
+        name="ChooseLocation" 
+        component={ChooseLocationScreen} />    
+      <Stack.Screen 
+      options={{ 
+        headerLeft:() =>
+          (
+            <BackButton title={'Back'} />
+          ),
+        title:''
+      }}
+        name='CreateGroup' 
+        component={CreateGroupScreen}/>
       <Stack.Screen options={{headerShown: false }} name='CreateThread' component={CreateThreadScreen}/>
       <Stack.Screen options={{headerShown: false }} name='ImageSelector' component={ImageSelector}/>
       <Stack.Screen 
