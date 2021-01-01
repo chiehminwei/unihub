@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { View, Image, Share, TouchableOpacity, Text } from 'react-native';
-import { IconButton, Avatar, Button, Card, Title, Subheading, Paragraph, Divider } from 'react-native-paper';
+import { IconButton, Button, Card, Title, Subheading, Paragraph, Divider } from 'react-native-paper';
 import AntIcon from "react-native-vector-icons/AntDesign";
+import UserAvatar from 'react-native-user-avatar';
 
 
 const blue = '#76D0DE';
