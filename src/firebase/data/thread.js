@@ -48,6 +48,7 @@ const Post = {
         const posts = [];    
         snapshot.forEach(docRef => {
           const doc = docRef.data();
+          console.log('getGroupPosts', doc)
           const timestampDate = doc.publishTime.toDate();    
           const m = moment(timestampDate);
           const publishTime = m.format('ddd, MMM D');
@@ -68,6 +69,7 @@ const Post = {
         const posts = [];    
         snapshot.forEach(docRef => {
           const doc = docRef.data();
+          console.log('getPosts', doc)
           const timestampDate = doc.publishTime.toDate();    
           const m = moment(timestampDate);
           const publishTime = m.format('ddd, MMM D');

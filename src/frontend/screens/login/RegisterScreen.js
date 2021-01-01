@@ -61,9 +61,14 @@ function RegisterScreen({ navigation, firebase }) {
   }
 
   async function handleOnSignUp(values, actions) {
-    const { email, password } = values;
+    const { email, password, name } = values;
     try {
+      const profile = {
+        displayName: name,
+        // photoURL: "",
+      }
       await firebase.registerWithEmail(email, password);
+      await firebase.updateUserProfile(profile);
     } catch (error) {
       setRegisterError(error.message);
     }

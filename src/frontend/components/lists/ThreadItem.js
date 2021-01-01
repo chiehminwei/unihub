@@ -35,9 +35,8 @@ function ThreadItem ({ thread })  {
     publishTime,
   } = thread;
  
-  const { email } = creator; // TODO pass username
-  const { groupName } = group;
-  const uri = imgs[0]; // TODO: display multiple images
+  const { displayName } = creator;
+  const { groupName, uri } = group;
   return(
   <Card style={{ width:screenWidth, marginVertical:5, flex:1 }}  >
   <Card.Content style={{paddingHorizontal:0}}>
@@ -48,7 +47,7 @@ function ThreadItem ({ thread })  {
       <View style={{flex:1, marginLeft: 12}}>
         <View style={{ flex: 1, flexDirection: 'row'}}>
           <TouchableOpacity>
-            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}> { email }</Text>
+            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}> { displayName }</Text>
           </TouchableOpacity>
             
           <Text style={{ fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
@@ -73,7 +72,7 @@ function ThreadItem ({ thread })  {
       </View>
       </TouchableOpacity>
       { ( imgs.length === 0 ) ? null: (imgs.length === 1) ? 
-        <Image  source={{uri: uri }}
+        <Image  source={{uri: imgs[0] }}
         style={{ width: screenWidth, height: screenWidth}} />
         :
         <ImageCarousel uris={thread.imgs}/>

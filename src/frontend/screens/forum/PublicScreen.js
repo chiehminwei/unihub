@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Text, View, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native'
-import { Avatar } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 import { GroupContext } from '~/navigation/GroupProvider';
+import UserAvatar from 'react-native-user-avatar';
 
 // const user = [
 //   {
@@ -59,7 +59,7 @@ export default function Publicscreen({ members }) {
           Members
       </Text>
       <View style={styles.avatarList}>
-        { members.slice(0,shownListLength).map(item  =>  <Avatar size="medium" key={item.uid} rounded source={{uri: item.photoURL}} onPress={()=> navigation.navigate('GroupInfo', { contextGroupID })}/>) }
+        { members.slice(0,shownListLength).map(item  =>  <UserAvatar size={50} key={item.uid} src={item.photoURL} name={item.displayName} onPress={()=> navigation.navigate('GroupInfo', { contextGroupID })}/>) }
         { members.length >= numAvatar ? <ThreeDot onPress={() => navigation.navigate('GroupInfo', { contextGroupID })}/> : null }
       </View>
     </View>

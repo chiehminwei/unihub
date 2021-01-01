@@ -30,6 +30,9 @@ const Firebase = {
   registerWithEmail: (email, password) => {
     return auth.createUserWithEmailAndPassword(email, password);
   },
+  updateUserProfile: profile => {
+    return auth.currentUser.updateProfile(profile);
+  },
   logout: () => {
     return auth.signOut();
   },
