@@ -44,10 +44,10 @@ function ThreadItem ({ thread })  {
 
   const [currentTime, setCurrentTime] = useState({});
 
-  useEffect(() => {
-    const unsubscribe = firebase.getCurrentTime(setCurrentTime);
-    return unsubscribe;
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = firebase.getCurrentTime(setCurrentTime);
+  //   return unsubscribe;
+  // }, []);
  
   const { displayName } = creator;
   const { groupName, uri } = group;

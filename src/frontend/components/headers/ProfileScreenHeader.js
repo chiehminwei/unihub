@@ -3,7 +3,7 @@ import { Alert, View, TouchableOpacity,StyleSheet, Button, Image } from 'react-n
 import { useNavigation } from '@react-navigation/native';
 import { Text } from 'react-native-elements';
 import { withFirebaseHOC, auth } from '~/../firebase';
-import { AuthUserContext } from '~/navigation/AuthUserProvider';
+import { AuthUserContext, AuthUserInfoContext } from '~/navigation/AuthUserProvider';
 
 //********* User Name Update*************//
 const user=
@@ -32,24 +32,25 @@ function NumDisplay({number,title, onPress}){
 }   
 
 function ProfileScreenHeader({ firebase }) {
+
+  const userInfo = firebase.getCurrentUserInfo();
   const {
-    userName,
-    userID,
-    birthDate,
-    uri,
+    displayName,
+    photoURL,
+  } = userInfo;
+
+  const {
     bio,
-    contact,
-    interests, 
     numPosts,
     numGroups,
     numFriends,
-    availability, 
     major,
     classYear,
-  } = user;
+  } = user; // TODO: store these info in firebase
+
   const navigation = useNavigation();
   const { setUser } = useContext(AuthUserContext);
-
+  
   async function handleSignOut() {
     try {
       await firebase.logout();
@@ -72,7 +73,7 @@ function ProfileScreenHeader({ firebase }) {
       style={{flex:2, backgroundColor:'#bad4da', justifyContent:"center", alignItems:"center",}}>
         
         {/* profile image */}
-        <Image source={{ uri }}
+        <Image source={{ uri: photoURL }}
                style={{ flex:1, width: 90, height: 90,minHeight:90,minWidth:90, maxHeight:90, maxWidth: 90 , marginTop: 30, marginBottom: 30, borderRadius:45, borderWidth: 2, borderColor:'grey'}}
         />
 
@@ -80,7 +81,7 @@ function ProfileScreenHeader({ firebase }) {
       <View style={{alignItems:'center',alignContent:'center', marginTop: 5, maxWidth: 290 }}>
         {/* User's full name */}
         <Text style = {styles.name}>
-          {userName}
+          {displayName}
         </Text>
 
         {/* user's major class year */}

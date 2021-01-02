@@ -19,8 +19,8 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import Animated from 'react-native-reanimated';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
-
-
+import * as firebase from 'firebase';
+const uuidv4 = require('random-uuid-v4');
 
 
 const validationSchema = Yup.object().shape({
@@ -74,12 +74,23 @@ function RegisterScreen({ navigation, firebase }) {
   async function handleOnSignUp(values, actions) {
     const { email, password, name } = values;
     try {
-      const profile = {
-        displayName: name,
-        // photoURL: "",
-      }
       await firebase.registerWithEmail(email, password);
-      await firebase.updateUserProfile(profile);
+        
+      if (uri !== EMPTY_URI) {
+        const photoURL = await uploadImageAsync(uri);
+        const profile = {
+          displayName: name,
+          photoURL,
+        }
+        await firebase.updateUserProfile(profile);
+      }
+      else {
+        const profile = {
+          displayName: name,
+        }
+        await firebase.updateUserProfile(profile);
+      }
+            
     } catch (error) {
       setRegisterError(error.message);
     }
@@ -155,7 +166,7 @@ function RegisterScreen({ navigation, firebase }) {
     await Permissions.askAsync(Permissions.CAMERA);
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
-      aspect: [2, 3],
+      aspect: [1, 1],
     });
 
     handleImagePicked(pickerResult);
@@ -292,6 +303,35 @@ function RegisterScreen({ navigation, firebase }) {
 }
 
 export default withFirebaseHOC(RegisterScreen);
+
+async function uploadImageAsync(uri) {
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function(e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+
+    const ref = firebase
+      .storage()
+      .ref()
+      .child(uuidv4());
+    const snapshot = await ref.put(blob);
+
+    // We're done with the blob, close and release it
+    blob.close();
+
+    return await snapshot.ref.getDownloadURL();
+  }
 
 const styles = StyleSheet.create({
   container: {
