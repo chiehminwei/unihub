@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
-import { StyleSheet, KeyboardAvoidingView, View, ScrollView } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, KeyboardAvoidingView,Text, View, ScrollView, Image ,Dimensions, TouchableOpacity } from 'react-native';
 import * as Yup from 'yup';
-
+import { List, Divider } from 'react-native-paper';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import colors from '~/utils/colors';
 import SafeView from '~/components/copy/SafeView';
 import Form from '~/components/form/Form';
 import FormField from '~/components/form/FormField';
 import FormButton from '~/components/form/FormButton';
 import IconButton from '~/components/copy/IconButton';
+// import { Image } from 'react-native-elements';
 import FormErrorMessage from '~/components/form/FormErrorMessage';
 import { withFirebaseHOC } from '~/../firebase';
 import useStatusBar from '~/hooks/useStatusBar';
+import { screenStyles } from '~/stylesheets/screenStyles';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BottomSheet from 'reanimated-bottom-sheet';
+import Animated from 'react-native-reanimated';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+
+
+
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -31,7 +42,7 @@ const validationSchema = Yup.object().shape({
 
 function RegisterScreen({ navigation, firebase }) {
   useStatusBar('light-content');
-
+  const screenWidth = Math.round(Dimensions.get('window').width)
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [rightIcon, setRightIcon] = useState('eye');
   const [confirmPasswordIcon, setConfirmPasswordIcon] = useState('eye');
@@ -74,9 +85,110 @@ function RegisterScreen({ navigation, firebase }) {
     }
   }
 
+
+
+  // image
+  const EMPTY_URI = 'data:img';
+  const screenHeight = Math.round(Dimensions.get('window').height)
+  const [uri, setURI] = useState('data:img'); 
+  const [snapPoints, setSnapPoints] = useState([0, 0.43*screenHeight, 0]);
+  // console.log(screenHeight)
+  const sheetRef = useRef(null);
+  const renderBottomSheet = () => (
+    <View
+      style={{
+        backgroundColor: 'white',
+        height: 0.43*screenHeight,
+        alignSelf:'stretch'
+      }}
+    >
+      <List.Item
+        onPress={takePhoto}
+        title="Take Photo"
+        titleStyle={{ textAlign: 'center' }}
+      />
+      <Divider/>
+      <List.Item
+        onPress={chooseFromAlbum}
+        title="Choose from Album"
+        titleStyle={{ textAlign: 'center' }}
+      />
+      {uri !== EMPTY_URI && (
+        <List.Item
+          onPress={deletePhoto}
+          title="Delete Photo"
+          titleStyle={{ textAlign: 'center', color: 'red' }}
+        />)
+      }
+      <Divider style={{ height: 5 }}/>
+      <List.Item
+        onPress={() => sheetRef.current.snapTo(2)}
+        title="Cancel"
+        titleStyle={{ textAlign: 'center' }}
+      />
+    </View>
+  );
+
+  let fall = new Animated.Value(1)    
+  const renderShadow = () => {
+    const animatedShadowOpacity = Animated.interpolate(fall, {
+      inputRange: [0, 1],
+      outputRange: [0.5, 0],
+    })
+    const AnimatedView = Animated.View;
+
+    return (
+      <AnimatedView
+        pointerEvents="none"
+        style={[
+          styles.shadowContainer,
+          {
+            opacity: animatedShadowOpacity,
+          },
+        ]}
+      />
+    )
+  }
+
+  const takePhoto = async () => {
+    sheetRef.current.snapTo(2);
+    await Permissions.askAsync(Permissions.CAMERA);
+    let pickerResult = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [2, 3],
+    });
+
+    handleImagePicked(pickerResult);
+  }
+
+  const chooseFromAlbum = async () => {
+    sheetRef.current.snapTo(2);
+    await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    let pickerResult = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [2, 3],
+    });
+
+    handleImagePicked(pickerResult);
+  }
+
+  const deletePhoto = () => {
+    sheetRef.current.snapTo(2);
+    setURI(EMPTY_URI);
+    setSnapPoints([0, 0.43*screenHeight , 0]);
+  }
+
+  const handleImagePicked = pickerResult => {
+    if (!pickerResult.cancelled) {
+        setURI(pickerResult.uri);
+        setSnapPoints([0, 0.47*screenHeight, 0]);
+    }
+  };
+
   return (
-   
-    <SafeView style={styles.container}>
+    <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch',padding: 15, backgroundColor: 'white',}]} edges={['right','top','left']}>
+    {/* // <SafeView style={styles.container}> */}
+      <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
       
         <IconButton
           style={styles.backButton}
@@ -85,8 +197,33 @@ function RegisterScreen({ navigation, firebase }) {
           size={30}
           onPress={() => navigation.goBack()}
         />
-        <ScrollView>
-        <View style={{flex:1}}>
+        <ScrollView style={{flex:1 }}  showsVerticalScrollIndicator={false}>
+          <View style={{flex:1, alignItems:'center'}}>
+            <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
+              { uri === EMPTY_URI ? 
+              <View style={{alignItems:'center'}}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', borderRadius:50,
+                  width: 100, height:100, maxHeight:100, backgroundColor: '#bdbdbd' }} > 
+                  <FontAwesome5 name="user-alt" size={50} color="grey"/>
+                </View>
+                <Text style={{padding:10, fontFamily:'Avenir-Light', fontWeight: '100', fontSize:12, color:'grey'}}>
+                  You can update your profile image later
+                </Text>
+              </View>
+                : 
+                <View style={{alignItems:'center'}}>
+                  <Image              
+                    source={{ uri }}
+                    style={{ justifyContent: 'center', alignItems: 'center', borderRadius:50, borderWidth: 4,
+                    width: 100, height:100, maxHeight:100,}}
+                  />
+                  <Text style={{padding:10, fontFamily:'Avenir-Light', fontWeight: '100', fontSize:12, color:'grey'}}>
+                    You photo has been uploaded!
+                  </Text>
+                </View>
+              }
+            </TouchableOpacity>
+            
           
           <Form
             initialValues={{
@@ -139,8 +276,18 @@ function RegisterScreen({ navigation, firebase }) {
           </Form>
         </View>
       </ScrollView>
-    </SafeView>
-
+      <BottomSheet
+        ref={sheetRef}
+        snapPoints={snapPoints}
+        borderRadius={10}
+        renderContent={renderBottomSheet}
+        callbackNode={fall}
+        enabledInnerScrolling={true}
+      />
+      { renderShadow() }
+      </KeyboardAvoidingView>
+    {/* // </SafeView> */}
+    </SafeAreaView>
   );
 }
 
