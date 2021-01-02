@@ -10,7 +10,6 @@ import {
   Dimensions,
   Text,
 } from 'react-native';
-import { FAB } from 'react-native-paper';
 import { Image, ButtonGroup, Button } from 'react-native-elements';
 import { List, Divider } from 'react-native-paper';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -29,40 +28,35 @@ import { AuthUserContext } from '~/navigation/AuthUserProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 
+import * as Yup from 'yup';
+import Form from '~/components/form/Form';
+import FormField from '~/components/form/FormField';
+import FormButton from '~/components/form/FormButton';
+import IconButton from '~/components/copy/IconButton';
+import FormErrorMessage from '~/components/form/FormErrorMessage';
+import useStatusBar from '~/hooks/useStatusBar';
+import SafeView from '~/components/copy/SafeView';
 
-const EMPTY_URI = 'data:img';
 
-// Add a Toast on screen.
-let toast = Toast.show('This is a message', {
-    duration: Toast.durations.LONG,
-    position: Toast.positions.BOTTOM,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0,
-    onShow: () => {
-        // calls on toast\`s appear animation start
-    },
-    onShown: () => {
-        // calls on toast\`s appear animation end.
-    },
-    onHide: () => {
-        // calls on toast\`s hide animation start.
-    },
-    onHidden: () => {
-        // calls on toast\`s hide animation end.
-    }
+
+const validationSchema = Yup.object().shape({
+  groupName: Yup.string()
+    .required()
+    .label('Group Name'),
+  description: Yup.string()
+    .required()
+    .min(6, 'Password must have at least 6 characters')
+    .label('Description'),
 });
 
-// You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
-setTimeout(function () {
-    Toast.hide(toast);
-}, 500);
- 
+
+const EMPTY_URI = 'data:img';
 
 console.disableYellowBox = true;
 
 const CreateGroupScreen = ({ firebase, navigation }) => {
+
+  useStatusBar('light-content');
 
   // const { user } = useContext(AuthUserContext);
   const userInfo = firebase.getCurrentUserInfo();
@@ -74,10 +68,12 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     setIndex(index);
   };
 
-
   // Group Name Input
   const [groupName, setGroupName] = useState('');
   const [description, setDescription] = useState('');
+
+  // Error Message
+  const [postError, setPostError] = useState('');
   
 
   const fumiInput = ({ label, iconName, iconClass, onChangeText }) => (
@@ -99,8 +95,6 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
       onChangeText: setGroupName,
     }
   );
-
-
 
   // Image
   const screenHeight = Math.round(Dimensions.get('window').height)
@@ -198,8 +192,6 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     }
   };
 
-
-
   const handlePost = async () => {
     // Upload image to Firebase Storage
     let uploadUrl;
@@ -215,15 +207,38 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
       groupType: groupTypes[selectedIndex],
       uri: uploadUrl,
     };
-    try {
-      const result = await firebase.createGroup(group); // TODO: firebase (remember to check group name rights)      
-      alert('Successfully Created')
-      navigation.navigate('Group')
-      console.log(group)
-      // TODO: navigate to previous screen & send success notification
+    try {  
+      const result = await firebase.createGroup(group); // TODO: check for duplicate group names   
+      navigation.navigate('GroupDetail', { group });
+      let toast = Toast.show('Group successfully created.', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+      });
+
+      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+      setTimeout(function () {
+          Toast.hide(toast);
+      }, 2000);
     } catch (e) {
+
       console.log(e);
-      alert('Post failed, sorry :('); // TODO: change this to notification
+      let toast = Toast.show('Network error.', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+      });
+
+      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
+      setTimeout(function () {
+          Toast.hide(toast);
+      }, 2000);
     }
 
   }
@@ -273,6 +288,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
               iconClass={MaterialIcons}
               iconName="description"
             />
+            {<FormErrorMessage error={postError} visible={true} />}
             <Button 
               style={{ marginTop: 40, width:0.7*screenWidth, alignSelf:'center' }} 
               buttonStyle={{backgroundColor:'#bad4da',borderRadius:10}}
@@ -282,17 +298,6 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
               />
               </View> 
         </ScrollView>
-        <FAB
-          style={{ 
-            position: 'absolute',
-            margin: 16,
-            left: 0,
-            top: 10,
-            backgroundColor:'white'
-          }}
-          small
-          icon="arrow-left"
-          onPress={() => navigation.goBack()}/>
         
         <BottomSheet
           ref={sheetRef}

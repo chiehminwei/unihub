@@ -129,6 +129,7 @@ const Group = {
   getUserGroups: (userID, setGroups) => {
     const groupCollection = firestore.collection(`users/${userID}/groups`);
     const unsubscribe = groupCollection.onSnapshot(snapshot => {
+      console.log('firebase:getUserGroups:snapShot')
       if (snapshot.size) {
         const groups = [];    
         snapshot.forEach(doc => {          
@@ -142,6 +143,7 @@ const Group = {
   getMembers: (groupID, setMembers) => {
     const memberCollection = getMemberCollectionRef(`${groupID}`).limit(11);
     const unsubscribe = memberCollection.onSnapshot(snapshot => {
+      console.log('firebase:getMembers:snapShot')
       if (snapshot.size) {
         const members = [];    
         snapshot.forEach(doc => {          
@@ -155,6 +157,7 @@ const Group = {
   getGroup: (groupID, setGroup) => {
     const groupRef = getGroupRef(`${groupID}`);
     const unsubscribe = groupRef.onSnapshot(snapshot => {
+      console.log('firebase:getGroup:snapShot')
       if (snapshot.exists) {
         const group = snapshot.data();
         setGroup(group);
@@ -165,6 +168,7 @@ const Group = {
   getGroups: (setGroups) => {
     const groupCollection = getGroupCollection().limit(10);
     const unsubscribe = groupCollection.onSnapshot(snapshot => {
+      console.log('firebase:getGroups:snapShot')
       if (snapshot.size) {
         const groups = []
         snapshot.forEach(doc => {          
@@ -178,6 +182,7 @@ const Group = {
   userIsInGroup: (userID, groupID, setIsInGroup) => {
     const userGroupRef = getUserGroupRef(userID, groupID);
     const unsubscribe = userGroupRef.onSnapshot(snapshot => {
+      console.log('firebase:userIsInGroup:snapShot')
       if (snapshot.exists) {
         setIsInGroup(true);
       }
@@ -191,6 +196,7 @@ const Group = {
     // i.e. waiting for approval to join group
     const userRequestRef = getUserRequestRef(userID, groupID);
     const unsubscribe = userRequestRef.onSnapshot(snapshot => {
+      console.log('firebase:userIsWaiting:snapShot')
       if (snapshot.exists) {
         setIsWaiting(true);
       }
@@ -203,6 +209,7 @@ const Group = {
   userIsAdmin: (userID, groupID, setIsAdmin) => {
     const groupRef = getGroupRef(`${groupID}`);
     const unsubscribe = groupRef.onSnapshot(snapshot => {
+      console.log('firebase:userIsAdmin:snapShot')
       if (snapshot.exists) {
         const { admin } = snapshot.data();
         if (admin.uid === userID) {

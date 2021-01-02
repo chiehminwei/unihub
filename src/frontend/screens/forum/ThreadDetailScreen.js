@@ -21,6 +21,7 @@ const screenWidth = Dimensions.get('window').width;
 
 const ThreadDetailScreen = ({ threadID, firebase, route }) => {
   const navigation = useNavigation()
+<<<<<<< HEAD
   // const { 
   //   creator,
   //   post,
@@ -35,6 +36,21 @@ const ThreadDetailScreen = ({ threadID, firebase, route }) => {
   // const {  displayName  } = route.params.thread.creator;
   // const { groupName, uri } = route.params.thread.group;
 
+=======
+  const { 
+    creator,
+    post,
+    title,
+    group,
+    imgs,
+    numLikes,
+    numComments,
+    publishTime,
+  } = route.params.thread
+
+  const { email } = creator;
+  const { groupName, uri } = group;
+>>>>>>> 8bfd1a27488fdbb11ed51be0a51b353013e32656
 
   return (
       <ScrollView style={styles.scrollView}>
@@ -73,11 +89,19 @@ const ThreadDetailScreen = ({ threadID, firebase, route }) => {
         </View>
       </View>
       </TouchableOpacity>
+<<<<<<< HEAD
       { ( route.params.thread.imgs.length === 0 ) ? null: (route.params.thread.imgs.length === 1) ? 
         <Image  source={{uri: route.params.thread.uri }}
         style={{ width: screenWidth, height: screenWidth}} />
         :
         <ImageCarousel uris={route.params.thread.imgs}/>
+=======
+      { ( imgs.length === 0 ) ? null: (imgs.length === 1) ? 
+        <Image  source={{uri: imgs[0] }}
+        style={{ width: screenWidth, height: screenWidth}} />
+        :
+        <ImageCarousel uris={imgs}/>
+>>>>>>> 8bfd1a27488fdbb11ed51be0a51b353013e32656
       }
       
       
