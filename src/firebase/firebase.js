@@ -18,6 +18,7 @@ if (!firebase.apps.length) {
 }
 
 export const auth = firebase.auth();
+const firestore = firebase.firestore();
 
 const Firebase = {
   // auth
@@ -41,6 +42,21 @@ const Firebase = {
   },
   passwordReset: email => {
     return auth.sendPasswordResetEmail(email);
+  },
+  getCurrentTime: (setCurrentTime) => {
+    console.log('firebase:getCurrentTime')
+    const currentTimeStamp = firebase.firestore.FieldValue.serverTimestamp();
+    const timeOffsetRef = firestore.doc('info/serverTimeOffset');
+    timeOffsetRef.set({ timestamp: currentTimeStamp });
+
+    const unsubscribe = timeOffsetRef.onSnapshot(snapshot => {
+      console.log('firebase:getCurrentTime:snapshot')
+      const { timestamp } = snapshot.data();
+      if (timestamp) {
+        setCurrentTime(timestamp);
+      }      
+    });
+    return unsubscribe;
   },
   // firestore
   ...Calendar,

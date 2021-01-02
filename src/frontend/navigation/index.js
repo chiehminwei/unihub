@@ -1,5 +1,6 @@
 import React from 'react';
 import { AuthUserProvider } from './AuthUserProvider';
+import { CurrentTimeProvider } from './CurrentTimeProvider';
 import { GroupProvider } from './GroupProvider';
 import Routes from './Routes';
 
@@ -9,10 +10,12 @@ import Routes from './Routes';
 
 export default function Providers() {
   return (
-    <AuthUserProvider>
-      <GroupProvider>
-        <Routes />
-      </GroupProvider>
-    </AuthUserProvider>
+    <CurrentTimeProvider>
+      <AuthUserProvider>
+        <GroupProvider>
+          <Routes />
+        </GroupProvider>
+      </AuthUserProvider>
+    </CurrentTimeProvider>
   );
 }

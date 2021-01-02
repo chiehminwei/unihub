@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Image, Dimensions, Share } from 'react-native';
 import { Button, Card, Title, Divider, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ImageCarousel from '~/components/lists/ImageCarousel'
-
+import { CurrentTimeContext } from '~/navigation/CurrentTimeProvider';
+import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
+import { withFirebaseHOC } from "~/../firebase";
 // import useNavigation from '@react-navigation/native';
+
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -21,16 +24,40 @@ const share = (props) => {
 };
 
 
-function calculateDelta(current, past) {
+function calculateTimeDifference(current, past) {
+  if (!past) {
+    return 'Just now';
+  }
+
   const deltaSeconds = current.seconds - past.seconds;
-  const secondsPerDay = 24 * 60 * 60;
-  // const secondsPerHour = 60 * 
+
+  const secondsPerMin = 60;
+  const secondsPerHour = 60 * secondsPerMin;
+  const secondsPerDay = 24 * secondsPerHour;
+
+  const daysAgo = Math.floor(deltaSeconds / secondsPerDay);
+  const hoursAgo = Math.floor(deltaSeconds / secondsPerHour);
+  const minsAgo = Math.floor(deltaSeconds / secondsPerMin);
+
+  if (daysAgo > 0) {
+    return (daysAgo > 1) ? `${daysAgo} days ago` : `${daysAgo} day ago`;
+  }
+  else if (hoursAgo > 0) {
+    return (hoursAgo > 1) ? `${hoursAgo} hours ago` : `${hoursAgo} hour ago`;
+  }
+  else {
+    if (minsAgo < 1) {
+      return 'Just now';
+    }
+    return (minsAgo > 1) ? `${minsAgo} mins ago` : `${minsAgo} min ago`;
+  }
 }
 
 
-function ThreadItem ({ thread })  {
+function ThreadItem ({ thread, firebase })  {
   const navigation = useNavigation()
   const { 
+    postID,
     creator,
     post,
     title,
@@ -42,21 +69,35 @@ function ThreadItem ({ thread })  {
     timestampStr,
   } = thread;
 
-  const [currentTime, setCurrentTime] = useState({});
+  const { userInfo } = useContext(AuthUserInfoContext);
+  const userID = userInfo.uid;
 
-  // useEffect(() => {
-  //   const unsubscribe = firebase.getCurrentTime(setCurrentTime);
-  //   return unsubscribe;
-  // }, []);
- 
-  const { displayName } = creator;
-  const { groupName, uri } = group;
+  const { currentTime } = useContext(CurrentTimeContext);
+  const timeDifference = calculateTimeDifference(currentTime, timestamp);
+  
+  const { displayName, photoURL } = creator;
+  const { groupName, uri, groupID } = group;
+
+  const [ hasLiked, setHasLiked ] = useState(false);
+  useEffect(() => {
+    const unsubscribe = firebase.checkHasLiked(userID, postID, setHasLiked);
+    return unsubscribe;
+  }, []);
+
+  const likePost = () => {
+    firebase.likePost(userID, groupID, postID);
+  }
+
+  const unlikePost = () => {
+    firebase.unlikePost(userID, groupID, postID);
+  }
+
   return(
   <Card style={{ width:screenWidth, marginVertical:5, flex:1 }}  >
   <Card.Content style={{paddingHorizontal:0}}>
-    <TouchableOpacity onPress={ () => navigation.navigate('ThreadDetail',{thread})}>
+    <TouchableOpacity onPress={ () => navigation.navigate('ThreadDetail',{thread, timeDifference})}>
     <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
-      <Image  source={{uri: uri }}
+      <Image  source={{uri: photoURL }}
                 style={{width: 50, height: 50, borderRadius: 25}} />
       <View style={{flex:1, marginLeft: 12}}>
         <View style={{ flex: 1, flexDirection: 'row'}}>
@@ -71,7 +112,7 @@ function ThreadItem ({ thread })  {
           </TouchableOpacity>
         </View>
         <View>
-          <Text> {'timeDifference'} </Text>
+          <Text> {timeDifference} </Text>
         </View>
       </View>
       <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>
@@ -92,11 +133,14 @@ function ThreadItem ({ thread })  {
         <ImageCarousel uris={thread.imgs}/>
       }
       
-      
+       
   </Card.Content>
   <Divider/>
   <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ numLikes }</Button>
+    <Button onPress={hasLiked ? unlikePost : likePost} icon="thumb-up"
+            color={hasLiked ? 'green' : 'grey'}>
+      { numLikes }
+    </Button>
     <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ numComments }</Button>
     <Button onPress={ () => share(thread) } icon="share" color='grey'></Button>
   </Card.Actions>
@@ -104,4 +148,4 @@ function ThreadItem ({ thread })  {
 )
 };
 
-export default ThreadItem;
+export default withFirebaseHOC(ThreadItem);

@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styled from 'styled-components';
-import ImageSelector from '../ImageSelector';
 import { HeaderRightButton } from '../../components/button/HeaderRightButton';
 import { BackButton } from '../../components/button/BackButton';
 const ImageSelectorHeader = ({

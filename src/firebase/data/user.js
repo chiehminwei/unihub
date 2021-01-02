@@ -44,14 +44,18 @@ const Users = {
   getCurrentUserInfo: () => {
     console.log('firebase:getCurrentUserInfo')
     const user = firebase.auth().currentUser;
-    const userInfo = {
-      displayName: user.displayName,
-      email: user.email,
-      photoURL: user.photoURL,
-      uid: user.uid,
+    if (user) {
+      const userInfo = {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        uid: user.uid,
+      }
+      Object.keys(userInfo).forEach((key) => (userInfo[key] == null) && delete userInfo[key]);
+      return userInfo;
     }
-    Object.keys(userInfo).forEach((key) => (userInfo[key] == null) && delete userInfo[key]);
-    return userInfo;
+    return {};
+    
   },
   // TODO: event posts
   // TODO: forum posts

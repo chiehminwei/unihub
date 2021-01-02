@@ -21,72 +21,73 @@ const screenWidth = Dimensions.get('window').width;
 
 const ThreadDetailScreen = ({ threadID, firebase, route }) => {
   const navigation = useNavigation()
-  // const { 
-  //   creator,
-  //   post,
-  //   title,
-  //   group,
-  //   imgs,
-  //   numLikes,
-  //   numComments,
-  //   publishTime,
-  // } = route.params
+  const { timeDifference, thread } = route.params;
+  const { 
+    creator,
+    post,
+    title,
+    group,
+    imgs,
+    numLikes,
+    numComments,
+    timestampStr,
+  } = thread;
 
-  // const {  displayName  } = route.params.thread.creator;
-  // const { groupName, uri } = route.params.thread.group;
+  const { displayName, photoURL  } = creator;
+  const { groupName, uri } = group;
 
-
+ 
   return (
       <ScrollView style={styles.scrollView}>
         <Card style={{ width:screenWidth, marginVertical:5, flex:1 }}  >
   <Card.Content style={{paddingHorizontal:0}}>
     <TouchableOpacity>
     <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
-      <Image  source={{uri: route.params.thread.uri }}
+      <Image  source={{uri: photoURL }}
                 style={{width: 50, height: 50, borderRadius: 25}} />
       <View style={{flex:1, marginLeft: 12}}>
         <View style={{ flex: 1, flexDirection: 'row'}}>
           <TouchableOpacity>
             <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}>
-              { route.params.thread.creator.displayName }
+              { thread.creator.displayName }
             </Text>
           </TouchableOpacity>
             
           <Text style={{ fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
 
           <TouchableOpacity>
-            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ route.params.thread.group.groupName }</Text>
+            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ groupName }</Text>
           </TouchableOpacity>
         </View>
         <View>
-          <Text> 19h </Text>
+          <Text> {timeDifference} </Text>
         </View>
       </View>
       <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>
-        { route.params.thread.publishTime } 
+        { timestampStr } 
       </Text>
     </View>
       <View style={{ flex: 1, marginTop:10, flexDirection: 'column', justifyContent: 'space-between'}}>
         <View>
-          <Title style={{margin:10, fontFamily:'Avenir-Book'}}>{ route.params.thread.title }</Title>
-          <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ route.params.thread.post }</Text>
+          <Title style={{margin:10, fontFamily:'Avenir-Book'}}>{ title }</Title>
+          <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ post }</Text>
         </View>
       </View>
       </TouchableOpacity>
-      { ( route.params.thread.imgs.length === 0 ) ? null: (route.params.thread.imgs.length === 1) ? 
-        <Image  source={{uri: route.params.thread.uri }}
+      { ( imgs.length === 0 ) ? null: (imgs.length === 1) ? 
+        <Image  source={{uri: uri }}
         style={{ width: screenWidth, height: screenWidth}} />
         :
-        <ImageCarousel uris={route.params.thread.imgs}/>
+        <ImageCarousel uris={imgs}/>
       }
       
       
   </Card.Content>
   <Divider/>
   <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ route.params.thread.numLikes }</Button>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ route.params.thread.numComments }</Button>
-    <Button onPress={ () => share(route.params.thread) } icon="share" color='grey'></Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ numLikes }</Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ numComments }</Button>
+    <Button onPress={ () => share(thread) } icon="share" color='grey'></Button>
   </Card.Actions>
 </Card>
 

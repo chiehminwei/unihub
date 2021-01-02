@@ -6,12 +6,14 @@ import navigationTheme from './navigationTheme';
 import AuthStack from './AuthStack';
 import AppStack from './AppStack';
 import { AuthUserContext, AuthUserInfoContext } from './AuthUserProvider';
+import { CurrentTimeContext } from './CurrentTimeProvider';
 import Spinner from '~/components/copy/Spinner';
 import { withFirebaseHOC } from "~/../firebase";
 
 function Routes({ firebase }) {
   const { user, setUser } = useContext(AuthUserContext);
-  const { userInfo, setUserInfo } = useContext(AuthUserInfoContext);
+  const { setUserInfo } = useContext(AuthUserInfoContext);
+  const { setCurrentTime } = useContext(CurrentTimeContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -27,8 +29,13 @@ function Routes({ firebase }) {
       }
     });
 
+    const unsubscribeCurrentTime = firebase.getCurrentTime(setCurrentTime);
+
     // unsubscribe auth listener on unmount
-    return unsubscribeAuth;
+    return () => {
+      unsubscribeAuth();
+      unsubscribeCurrentTime();
+    };
   }, []);
 
   if (isLoading) {

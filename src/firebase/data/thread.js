@@ -8,7 +8,10 @@ if (!firebase.apps.length) {
 }
 const firestore = firebase.firestore();
 
+const getUserLikePostRef = (userID, postID) => firestore.doc(`users/${userID}/liked_posts/${postID}`);
+
 const getUserPostRef = (userID, postID) => firestore.doc(`users/${userID}/posts/${postID}`);
+const getUserPosstRef = (userID) => firestore.collection(`users/${userID}/posts`);
 const getGroupPostsRef = (groupID) => firestore.collection(`groups/${groupID}/posts`);
 const getGroupPostRef = (groupID, postID) => firestore.doc(`groups/${groupID}/posts/${postID}`);
 const getReportRef = (postID) => firestore.doc(`reported/posts/${postID}`)
@@ -21,45 +24,8 @@ const getUserComments = (userID, postID) => firestore.collection(`users/${userID
 const getGroupComments = (groupID, postID) => firestore.collection(`groups/${groupID}/posts/${postID}/comments`);
 // const getComment = ()
 
-function calculateTimeDifference(past) {
-  const currentTimeStamp = firebase.firestore.FieldValue.serverTimestamp();
-  const timeOffsetRef = firestore.doc('/.info/serverTimeOffset');
-  timeOffsetRef.set({ timestamp: currentTimeStamp })
-  .then(() => {
-    timeOffsetRef.onSnapshot(snapshot => {
-      console.log('calculateTimeDifference')
-
-      const { timestamp } = snapshot.data();
-      if (timestamp) {
-        console.log(timestamp)
-        const pastSeconds = past.seconds;
-        const currentSeconds = timestamp.seconds;
-        const delta = currentSeconds - pastSeconds;
-
-        const deltaString = 'getDeltaString(delta)';
-        return deltaString;
-
-      }      
-    });
-  });  
-};
-
-
 
 const Post = {
-  getCurrentTime: (setCurrentTime) => {
-    const currentTimeStamp = firebase.firestore.FieldValue.serverTimestamp();
-    const timeOffsetRef = firestore.doc('/.info/serverTimeOffset');
-    timeOffsetRef.set({ timestamp: currentTimeStamp });
-
-    const unsubscribe = timeOffsetRef.onSnapshot(snapshot => {
-      const { timestamp } = snapshot.data();
-      if (timestamp) {
-        setCurrentTime(timestamp);
-      }      
-    });
-    return unsubscribe;
-  },
   addPost: (userID, groupID, post) => {
     console.log('firebase:addPost')
     // Create post, add post to author's post list, and group's post list
@@ -101,6 +67,32 @@ const Post = {
 
         })
         setGroupPosts(posts);
+      }
+    })
+    return unsubscribe;
+  },
+  getUserPosts: (userID, setUserPosts) => {
+    console.log('firebase:getUserPosts')
+    const userPosts = getUserPosstRef(userID)
+                        .orderBy('timestamp', 'desc')
+                        .limit(10);
+
+    const unsubscribe = userPosts.onSnapshot(snapshot => {
+      console.log('firebase:getUserPosts:snapShot')
+      if (snapshot.size) {
+        const posts = [];    
+        snapshot.forEach(docRef => {
+          const doc = docRef.data();
+          if (doc.timestamp) {
+            const timestampDate = doc.timestamp.toDate();    
+            const m = moment(timestampDate);
+            const timestamp = m.format('ddd, MMM D');
+            doc.timestampStr = timestamp;
+          }
+          posts.push(doc);
+
+        })
+        setUserPosts(posts);
       }
     })
     return unsubscribe;
@@ -165,6 +157,7 @@ const Post = {
     const postRef = getPostRef(postID);
     const userPostRef = getUserPostRef(userID, postID);
     const groupPostRef = getGroupPostRef(groupID, postID);
+    const userLikePostRef = getUserLikePostRef(userID, postID);
 
     return firestore.runTransaction(async transaction => {
       const post = await transaction.get(postRef);
@@ -177,18 +170,20 @@ const Post = {
 
       const numLikes = post.data().numLikes + 1;
 
-      transaction.update(post, { numLikes })
-      transaction.update(userPost, { numLikes })
-      transaction.update(groupPost, { numLikes })
+      transaction.update(postRef, { numLikes })
+      transaction.update(userPostRef, { numLikes })
+      transaction.update(groupPostRef, { numLikes })
+      transaction.set(userLikePostRef, { contains: true });
 
     }).catch(err => console.error(err));
   },
-  unlikePost: (userID, groupID) => {
+  unlikePost: (userID, groupID, postID) => {
     console.log('firebase:unlikePost')
     // Unlike post (public, author's, group's)
     const postRef = getPostRef(postID);
     const userPostRef = getUserPostRef(userID, postID);
     const groupPostRef = getGroupPostRef(groupID, postID);
+    const userLikePostRef = getUserLikePostRef(userID, postID);
 
     return firestore.runTransaction(async transaction => {
       const post = await transaction.get(postRef);
@@ -201,11 +196,25 @@ const Post = {
 
       const numLikes = post.data().numLikes - 1;
 
-      transaction.update(post, { numLikes })
-      transaction.update(userPost, { numLikes })
-      transaction.update(groupPost, { numLikes })
+      transaction.update(postRef, { numLikes });
+      transaction.update(userPostRef, { numLikes });
+      transaction.update(groupPostRef, { numLikes });
+      transaction.delete(userLikePostRef);
 
     }).catch(err => console.error(err));
+  },
+  checkHasLiked: (userID, postID, setHasLiked) => {
+    const userLikePostRef = getUserLikePostRef(userID, postID);
+    const unsubscribe = userLikePostRef.onSnapshot(snapshot => {
+      console.log('firebase:checkHasLiked:snapshot')
+      if (snapshot.exists) {
+        setHasLiked(true);
+      }
+      else {
+        setHasLiked(false);
+      }
+    });
+    return unsubscribe;
   },
   reportPost: (userID, groupID, postID, post) => {
     console.log('firebase:reportPost')
