@@ -20,7 +20,7 @@ function DiscoverList({ navigation, firebase, threads }) {
     return () => {
       unsubscribe();
     }
-  })
+  }, [])
  
   return(
     <SectionList 

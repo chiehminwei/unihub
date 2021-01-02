@@ -33,8 +33,7 @@ const ThreadDetailScreen = ({ threadID, firebase, route }) => {
   } = route.params.thread
 
   const { email } = creator;
-  const { groupName } = group;
-  const uri = imgs[0]; // TODO: display multiple images
+  const { groupName, uri } = group;
 
   return (
       <ScrollView style={styles.scrollView}>
@@ -75,10 +74,10 @@ const ThreadDetailScreen = ({ threadID, firebase, route }) => {
       </View>
       </TouchableOpacity>
       { ( imgs.length === 0 ) ? null: (imgs.length === 1) ? 
-        <Image  source={{uri: uri }}
+        <Image  source={{uri: imgs[0] }}
         style={{ width: screenWidth, height: screenWidth}} />
         :
-        <ImageCarousel uris={thread.imgs}/>
+        <ImageCarousel uris={imgs}/>
       }
       
       

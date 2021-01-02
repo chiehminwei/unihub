@@ -6,33 +6,27 @@ import  PublicScreen from './PublicScreen';
 import ThreadList from '../../components/lists/ThreadList';
 import { GroupContext } from '~/navigation/GroupProvider';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-// TODO pass username and profile uri to members
+import UserAvatar from 'react-native-user-avatar';
 
 
 const deviceWidth = Dimensions.get('window').width;
-
 
 function GroupContent({ isPrivate, members, isInGroup }){
   if (isPrivate) return <PrivateScreen members={members} isInGroup={isInGroup}/>
   return <PublicScreen members={members} isInGroup = {isInGroup}/>
 } 
 
-
 const GroupDetailScreen = ({ route, navigation, firebase }) => {
-
-
-
-
   const { group } = route.params;
   const { admin, description, groupID, groupName, groupType, uri, numMember, groupNotice } = group;
   const isPrivate = groupType === 'private';
   const userInfo = firebase.getCurrentUserInfo();
+  const { displayName, photoURL } = userInfo;
+  const firstName = displayName.split(' ')[0];
   const [ members, setMembers ] = useState([]);
   const [ isInGroup, setIsInGroup ] = useState(false);
   const [ isWaiting, setIsWaiting ] = useState(false);
   const [ groupPosts, setGroupPosts ] = useState([]);
-
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -165,16 +159,6 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
               :<Text style={styles.groupInfo}>{numMember} members</Text>
             }
           </View>
-          
-
-            {/* // TODO: deal with the situation when user is already in the group  */}
-          {/* <TouchableOpacity style={{marginVertical:20, alignContent:"stretch"}} onPress={() => firebase.joinGroup(userInfo, groupID)}>
-            <View style={styles.joinGroupButtonContainer}>
-              <Text style={styles.joinGroupButtonTitle}>
-                Join Group
-              </Text>
-            </View>
-          </TouchableOpacity> */}
 
             { JoinButton(buttonStatus) }
 
@@ -221,43 +205,17 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
           </View>
 
           {/* Activities */}
-             {/* !isPrivate  && (
-            <View style={{flex:1, alignSelf:'stretch'}}>
-              <Text style={styles.title}> Activities </Text>
-              <View style = {styles.textInputPromptContainer}>
-                <TouchableOpacity style={{flex:1}} onPress={() => alert('To profile') }>
-                  <Image 
-                    source={{uri: uri }} // TODO
-                    style={styles.avator}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {postThread}>
-                 { isInGroup &&
-                  <Text style={styles.textInputPrompt}>
-                    Hi Yufan, wanna share something?
-                  </Text>
-                  }
-                </TouchableOpacity>
-                
-              </View>
-              <ThreadList threads={groupPosts}/>
-            </View>
-             ) */}
-
              { isPrivate ? 
              (isInGroup ?  
             <View style={{flex:1, alignSelf:'stretch'}}>
               <Text style={styles.title}> Activities </Text>
               <View style = {styles.textInputPromptContainer}>
-                <TouchableOpacity style={{flex:1}} onPress={() => alert('To profile') }>
-                  <Image 
-                    source={{uri: uri }} // TODO
-                    style={styles.avator}
-                  />
+                <TouchableOpacity onPress={() => alert('To profile') }>
+                  <UserAvatar style={styles.avator} size={50} name={displayName} src={photoURL} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {postThread}>
                   <Text style={styles.textInputPrompt}>
-                    Hi Yufan, wanna share something?
+                    Hi {firstName}, wanna share something?
                   </Text>
                 </TouchableOpacity>
                 
@@ -270,16 +228,13 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
            <View style={{flex:1, alignSelf:'stretch'}}>
               <Text style={styles.title}> Activities </Text>
               <View style = {styles.textInputPromptContainer}>
-                <TouchableOpacity style={{flex:1}} onPress={() => alert('To profile') }>
-                  <Image 
-                    source={{uri: uri }} // TODO
-                    style={styles.avator}
-                  />
+                <TouchableOpacity onPress={() => alert('To profile') }>
+                  <UserAvatar style={styles.avator} size={50} name={displayName} src={photoURL} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{flex: 4, marginLeft:5}} onPress= {postThread}>
                  { isInGroup &&
                   <Text style={styles.textInputPrompt}>
-                    Hi Yufan, wanna share something?
+                    Hi {firstName}, wanna share something?
                   </Text>
                   }
                 </TouchableOpacity>
@@ -292,12 +247,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   );
 }
 
-
-
 export default withFirebaseHOC(GroupDetailScreen);
-
-
-
 
 
 const styles = StyleSheet.create({

@@ -110,7 +110,7 @@ const CreateEventScreen = (props, { route, firebase }) => {
   const [pickerVisible, setPickerVisible] = useState(false);
   const togglePicker = () => {
     setPickerVisible(!pickerVisible);
-  }
+  } 
   useEffect(() => {
     const eligibleGroups = ['', 'Group A', 'Group B']; // TODO: check firebase for groups which current user has access to post
     setGroups(eligibleGroups);
@@ -310,8 +310,9 @@ const CreateEventScreen = (props, { route, firebase }) => {
       
       // TODO: navigate to event screen & send success notification
       
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
+      setPostError(error.message);      
       let toast = Toast.show('Please make sure you have access to the internet :(', {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,

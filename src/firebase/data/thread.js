@@ -24,6 +24,7 @@ const getGroupComments = (groupID, postID) => firestore.collection(`groups/${gro
 
 const Post = {
   addPost: (userID, groupID, post) => {
+    console.log('firebase:addPost')
     // Create post, add post to author's post list, and group's post list
     // TODO: multiple groups?
     const postRef = getPostCollection().doc();
@@ -42,13 +43,14 @@ const Post = {
          .catch(err => console.error(err));    
   },
   getGroupPosts: (groupID, setGroupPosts) => {
+    console.log('firebase:getGroupPosts')
     const groupPostsRef = getGroupPostsRef(groupID);
     const unsubscribe = groupPostsRef.onSnapshot(snapshot => {
+      console.log('firebase:getGroupPosts:snapShot')
       if (snapshot.size) {
         const posts = [];    
         snapshot.forEach(docRef => {
           const doc = docRef.data();
-          console.log('getGroupPosts', doc)
           const timestampDate = doc.publishTime.toDate();    
           const m = moment(timestampDate);
           const publishTime = m.format('ddd, MMM D');
@@ -62,14 +64,15 @@ const Post = {
     return unsubscribe;
   },
   getPosts: (setPosts) => {
+    console.log('firebase:getPosts')
     const postsRef = getPostCollection().limit(10);
     const currentTimeStamp = firebase.firestore.FieldValue.serverTimestamp();
     const unsubscribe = postsRef.onSnapshot(snapshot => {
+      console.log('firebase:getPosts:snapShot')
       if (snapshot.size) {
         const posts = [];    
         snapshot.forEach(docRef => {
           const doc = docRef.data();
-          console.log('getPosts', doc)
           const timestampDate = doc.publishTime.toDate();    
           const m = moment(timestampDate);
           const publishTime = m.format('ddd, MMM D');
@@ -83,6 +86,7 @@ const Post = {
     return unsubscribe;
   },
   modifyPost: (userID, groupID, postID, post) => {
+    console.log('firebase:modifyPost')
     // Modify post (public, author's, group's)    
     const postRef = getPostRef(postID);
     const userPostRef = getUserPostRef(userID, postID);
@@ -96,6 +100,7 @@ const Post = {
          .catch(err => console.error(err));
   },
   removePost: (userID, groupID, postID) => {
+    console.log('firebase:removePost')
     // Delete post (public, author's, group's)
     const postRef = getPostRef(postID);
     const userPostRef = getUserPostRef(userID, postID);
@@ -109,6 +114,7 @@ const Post = {
          .catch(err => console.error(err));
   },
   likePost: (userID, groupID, postID) => {
+    console.log('firebase:likePost')
     // Like post (public, author's, group's)
     const postRef = getPostRef(postID);
     const userPostRef = getUserPostRef(userID, postID);
@@ -132,6 +138,7 @@ const Post = {
     }).catch(err => console.error(err));
   },
   unlikePost: (userID, groupID) => {
+    console.log('firebase:unlikePost')
     // Unlike post (public, author's, group's)
     const postRef = getPostRef(postID);
     const userPostRef = getUserPostRef(userID, postID);
@@ -155,6 +162,7 @@ const Post = {
     }).catch(err => console.error(err));
   },
   reportPost: (userID, groupID, postID, post) => {
+    console.log('firebase:reportPost')
     // Report a post (public, author's, group's)
     const reportRef = getReportRef(postID);
     return reportRef.set(post);

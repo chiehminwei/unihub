@@ -3,11 +3,13 @@ import * as firebase from "firebase";
 // Users
 const Users = {
   addUser: data => {
+    console.log('firebase:addUser')
     const collection = firebase.firestore().collection('users');
     const userID = firebase.auth().currentUser;
     return collection.doc(myID).add(userID);
   },
   deleteUser: userID => {
+    console.log('firebase:deleteUser')
     const collection = firebase.firestore().collection('users');
     const myID = firebase.auth().currentUser;
     if (myID != userID) {
@@ -16,6 +18,7 @@ const Users = {
     return collection.doc(myID).delete();
   },
   setUser: (data, userID) => {
+    console.log('firebase:setUser')
     const collection = firebase.firestore().collection('users');
     const myID = firebase.auth().currentUser;
     if (myID != userID) {
@@ -24,6 +27,7 @@ const Users = {
     return collection.doc(myID).set(data);
   },
   getUserPrivate: (userID, observer) => {
+    console.log('firebase:getUserPrivate')
     if (userID == firebase.auth().currentUser) {
       return firebase.firestore().doc(`users/${userID}`).onSnapshot(observer);
     } else {
@@ -32,11 +36,13 @@ const Users = {
     }
   },
   getUserPublic: (userID, observer) => {
+    console.log('firebase:getUserPublic')
     if (userID == firebase.auth().currentUser) {
       return firebase.firestore().doc(`users/${userID}`).onSnapshot(observer);
     }
   },
   getCurrentUserInfo: () => {
+    console.log('firebase:getCurrentUserInfo')
     const user = firebase.auth().currentUser;
     const userInfo = {
       displayName: user.displayName,
