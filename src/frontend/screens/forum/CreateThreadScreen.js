@@ -258,7 +258,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const [ showGroup, setShowGroup ] = useState(true)
   const [ group, setGroup ] = useState(groupPlaceHolder)
   const isGroupChosenColor = (group.groupName === groupPlaceHolder.groupName) ? 'grey' : 'black'
-  const isPostEnabled = ( group !== groupPlaceHolder && post !== '' && title !== '')
+  const isPostEnabled = ( group.groupName !== 'Choose a group here (required)' && post !== '' && title !== '')
 
   
   const [allUri, setAllUri] = useState([])
@@ -281,7 +281,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
  
   return (
     
-    <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch'}]} edges={['right','top','left']}>
+    <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch', backgroundColor:'white'}]} edges={['right','top','left']}>
       <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding"  enabled   keyboardVerticalOffset={0}>
         
         {/* header */}
@@ -293,6 +293,15 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
             <HeaderRightButton title='post' enabled= {isPostEnabled} onPress={handlePost}/> 
           </View>
         </View>
+        <View style={styles.userInputContainer}>
+            <Avatar size="small" key={group.groupID} rounded source={{uri:group.uri}} />
+              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{isShowGroupEnabled? setShowGroup(!showGroup): null ; setGroup(groupPlaceHolder)}}>
+                <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>
+                
+                { isShowGroupEnabled ? <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/> : null }
+              </TouchableOpacity>
+          </View>
+          <Divider/>
 
 
         {/* body */}
@@ -308,15 +317,6 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
               
             }}
           >
-          <View style={styles.userInputContainer}>
-            <Avatar size="small" key={group.groupID} rounded source={group.uri ? {uri:group.uri} : null} />
-              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{isShowGroupEnabled? setShowGroup(!showGroup): null}}>
-                <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>
-                
-                { isShowGroupEnabled ? <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/> : null }
-              </TouchableOpacity>
-          </View>
-          <Divider/>
 
           {/* choose group here  or user input here */}
         { showGroup ? 
@@ -389,8 +389,6 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
         }
 
 
-
-     
       
       {/* <Video
         source={{ uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4' }}
