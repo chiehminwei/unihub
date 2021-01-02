@@ -25,6 +25,7 @@ const Group = {
     const groupID = groupRef.id;
     group.groupID = groupID;
     group.numMember = 1;
+    group.timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
     const { groupName } = group;
     
@@ -127,7 +128,9 @@ const Group = {
          .catch(err => console.error(err));
   },
   getUserGroups: (userID, setGroups) => {
-    const groupCollection = firestore.collection(`users/${userID}/groups`);
+    const groupCollection = firestore.collection(`users/${userID}/groups`)
+                                     .orderBy('groupName');
+
     const unsubscribe = groupCollection.onSnapshot(snapshot => {
       console.log('firebase:getUserGroups:snapShot')
       if (snapshot.size) {
@@ -166,7 +169,10 @@ const Group = {
     return unsubscribe;
   },
   getGroups: (setGroups) => {
-    const groupCollection = getGroupCollection().limit(10);
+    const groupCollection = getGroupCollection()
+                              .orderBy('timestamp')
+                              .limit(10);
+
     const unsubscribe = groupCollection.onSnapshot(snapshot => {
       console.log('firebase:getGroups:snapShot')
       if (snapshot.size) {

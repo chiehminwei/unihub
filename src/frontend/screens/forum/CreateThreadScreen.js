@@ -25,7 +25,7 @@ import * as firebase from 'firebase';
 import { withFirebaseHOC } from "~/../firebase";
 const uuidv4 = require('random-uuid-v4');
 import Toast from 'react-native-root-toast';
-import { AuthUserContext } from '~/navigation/AuthUserProvider';
+import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 import { BackButton } from '../../components/button/BackButton';
@@ -71,7 +71,7 @@ console.disableYellowBox = true;
 function CreateThreadScreen ({ firebase, navigation, route }) {
 
   const isFocused = useIsFocused();
-  const userInfo = firebase.getCurrentUserInfo();
+  const { userInfo } = useContext(AuthUserInfoContext);
   const { uid } = userInfo;
   const [groups, setGroups] = useState([]);
 
@@ -209,7 +209,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
     };
     try {
       const result = await firebase.addPost(uid, group.groupID, postContent);      
-      navigation.goBack()
+      navigation.navigate('GroupDetail', { group });
       let toast = Toast.show('Thread successfully posted.', {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
@@ -251,7 +251,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const groupPlaceHolder = {
     groupName: 'Choose a group here (required)',
     groupID: 'dummyID',
-    uri:'',
+    uri: '',
   } 
 
   const [ isShowGroupEnabled, setIsShowGroupEnabled ] = useState(true)
@@ -309,7 +309,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
             }}
           >
           <View style={styles.userInputContainer}>
-            <Avatar size="small" key={group.groupID} rounded source={{uri:group.uri}} />
+            <Avatar size="small" key={group.groupID} rounded source={group.uri ? {uri:group.uri} : null} />
               <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{isShowGroupEnabled? setShowGroup(!showGroup): null}}>
                 <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>
                 
@@ -356,7 +356,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
                       maxHeight:0.3*screenWidth, 
                       borderRadius:15, 
                     }} 
-                    source={{ uri: item }}>
+                    source={item ? { uri: item } : null}>
                     <TouchableOpacity  style={{ margin: 4, width:30, height:30, backgroundColor:'#bad4da', borderRadius:10, alignItems:'center', justifyContent:'center'}}onPress={()=>deletePhoto(item)}>
                       <MaterialIcons name="close" size={24} color="white" />
                     </TouchableOpacity>
@@ -372,7 +372,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
                   <Avatar 
                     size="small" 
                     key={item.groupID} 
-                    rounded source={{uri:item.uri}} 
+                    rounded source={item.uri ? {uri:item.uri} : null} 
                   />
                   <TouchableOpacity 
                     style={styles.userInputTouchable} 

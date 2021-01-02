@@ -5,11 +5,13 @@ import { auth } from "~/../firebase";
 import navigationTheme from './navigationTheme';
 import AuthStack from './AuthStack';
 import AppStack from './AppStack';
-import { AuthUserContext } from './AuthUserProvider';
+import { AuthUserContext, AuthUserInfoContext } from './AuthUserProvider';
 import Spinner from '~/components/copy/Spinner';
+import { withFirebaseHOC } from "~/../firebase";
 
-export default function Routes() {
+function Routes({ firebase }) {
   const { user, setUser } = useContext(AuthUserContext);
+  const { userInfo, setUserInfo } = useContext(AuthUserInfoContext);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +19,8 @@ export default function Routes() {
     const unsubscribeAuth = auth.onAuthStateChanged(async authUser => {
       try {
         await (authUser ? setUser(authUser) : setUser(null));
+        const currentUserInfo = firebase.getCurrentUserInfo();
+        setUserInfo(currentUserInfo);
         setIsLoading(false);
       } catch (error) {
         console.log(error);
@@ -37,3 +41,5 @@ export default function Routes() {
     </NavigationContainer>
   );
 }
+
+export default withFirebaseHOC(Routes);

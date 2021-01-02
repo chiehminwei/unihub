@@ -7,6 +7,7 @@ import ThreadList from '../../components/lists/ThreadList';
 import { GroupContext } from '~/navigation/GroupProvider';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import UserAvatar from 'react-native-user-avatar';
+import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
 
 
 const deviceWidth = Dimensions.get('window').width;
@@ -20,7 +21,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   const { group } = route.params;
   const { admin, description, groupID, groupName, groupType, uri, numMember, groupNotice } = group;
   const isPrivate = groupType === 'private';
-  const userInfo = firebase.getCurrentUserInfo();
+  const { userInfo } = useContext(AuthUserInfoContext);
   const { displayName, photoURL } = userInfo;
   const firstName = displayName.split(' ')[0];
   const [ members, setMembers ] = useState([]);

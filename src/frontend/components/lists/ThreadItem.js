@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, Dimensions, Share } from 'react-native';
 import { Button, Card, Title, Divider, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -21,6 +21,12 @@ const share = (props) => {
 };
 
 
+function calculateDelta(current, past) {
+  const deltaSeconds = current.seconds - past.seconds;
+  const secondsPerDay = 24 * 60 * 60;
+  // const secondsPerHour = 60 * 
+}
+
 
 function ThreadItem ({ thread })  {
   const navigation = useNavigation()
@@ -32,8 +38,16 @@ function ThreadItem ({ thread })  {
     imgs,
     numLikes,
     numComments,
-    publishTime,
+    timestamp,
+    timestampStr,
   } = thread;
+
+  const [currentTime, setCurrentTime] = useState({});
+
+  useEffect(() => {
+    const unsubscribe = firebase.getCurrentTime(setCurrentTime);
+    return unsubscribe;
+  }, []);
  
   const { displayName } = creator;
   const { groupName, uri } = group;
@@ -57,11 +71,11 @@ function ThreadItem ({ thread })  {
           </TouchableOpacity>
         </View>
         <View>
-          <Text> 19h </Text>
+          <Text> {'timeDifference'} </Text>
         </View>
       </View>
       <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>
-        { publishTime } 
+        { timestampStr } 
       </Text>
     </View>
       <View style={{ flex: 1, marginTop:10, flexDirection: 'column', justifyContent: 'space-between'}}>

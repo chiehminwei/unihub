@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef, useEffect } from 'react';
+import React, { Component, useState, useRef, useEffect, useContext } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -34,42 +34,12 @@ import Toast from 'react-native-root-toast';
 import { useNavigation } from '@react-navigation/native';
 import { BackButton } from '../../components/button/BackButton';
 import { HeaderRightButton } from '../../components/button/HeaderRightButton';
+import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
 
 
-// Add a Toast on screen.
-let toast = Toast.show('This is a message', {
-    duration: Toast.durations.LONG,
-    position: Toast.positions.BOTTOM,
-    shadow: true,
-    animation: true,
-    hideOnPress: true,
-    delay: 0,
-    onShow: () => {
-        // calls on toast\`s appear animation start
-    },
-    onShown: () => {
-        // calls on toast\`s appear animation end.
-    },
-    onHide: () => {
-        // calls on toast\`s hide animation start.
-    },
-    onHidden: () => {
-        // calls on toast\`s hide animation end.
-    }
-});
-
-// You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
-setTimeout(function () {
-    Toast.hide(toast);
-}, 500);
-
-
-
-
-
-
-const CreateEventScreen = (props, { route, firebase }) => {
+const CreateEventScreen = ({ route, firebase }) => {
   // const setGoogleLocation = route.params
+  const { userInfo } = useContext(AuthUserInfoContext);
   const navigation = useNavigation()
   // Calendar Time Picker
   const [startCollapsed, setStartCollapse] = useState(true);
@@ -297,7 +267,7 @@ const CreateEventScreen = (props, { route, firebase }) => {
         participants: [1, 2, 3],
         filters: [1, 2, 3],
       },
-      creator: firebase.getCurrentUserInfo(),
+      creator: userInfo,
       host: {
         uid: 'group_uid',
         name: groupName,

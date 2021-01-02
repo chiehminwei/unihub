@@ -11,6 +11,7 @@ import { GroupContext } from '~/navigation/GroupProvider';
 import { withFirebaseHOC } from "~/../firebase";
 import { TwoButtonAlert } from '../../components/button/TwoButtonAlert';
 import { useNavigation } from '@react-navigation/native';
+import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
 
 
 const shownListLength = 11
@@ -77,7 +78,8 @@ function GroupInfo({ route, firebase }) {
   const [ members, setMembers ] = useState([]);
   const [ isAdmin, setIsAdmin ] = useState(false);
   const [ group, setGroup ] = useState({});
-  const userInfo = firebase.getCurrentUserInfo();
+  const { userInfo } = useContext(AuthUserInfoContext);
+
 
   const disbandGroup = () => {
     firebase.disbandGroup(groupID);
@@ -94,7 +96,6 @@ function GroupInfo({ route, firebase }) {
 
 
   useEffect(() => {
-      const userInfo = firebase.getCurrentUserInfo();
       const memberUnsubscribe = firebase.getMembers(groupID, setMembers);
       const adminUnsubscribe = firebase.userIsAdmin(userInfo.uid, groupID, setIsAdmin);
       const groupUnsubscribe = firebase.getGroup(groupID, setGroup);
@@ -104,7 +105,7 @@ function GroupInfo({ route, firebase }) {
         adminUnsubscribe();
         groupUnsubscribe();
       }
-    }, [firebase]);
+    }, []);
 
 
   const rowsOfList = members.length >=12 ?  3  :  Math.ceil((members.length+1)/4)

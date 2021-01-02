@@ -21,8 +21,45 @@ const getUserComments = (userID, postID) => firestore.collection(`users/${userID
 const getGroupComments = (groupID, postID) => firestore.collection(`groups/${groupID}/posts/${postID}/comments`);
 // const getComment = ()
 
+function calculateTimeDifference(past) {
+  const currentTimeStamp = firebase.firestore.FieldValue.serverTimestamp();
+  const timeOffsetRef = firestore.doc('/.info/serverTimeOffset');
+  timeOffsetRef.set({ timestamp: currentTimeStamp })
+  .then(() => {
+    timeOffsetRef.onSnapshot(snapshot => {
+      console.log('calculateTimeDifference')
+
+      const { timestamp } = snapshot.data();
+      if (timestamp) {
+        console.log(timestamp)
+        const pastSeconds = past.seconds;
+        const currentSeconds = timestamp.seconds;
+        const delta = currentSeconds - pastSeconds;
+
+        const deltaString = 'getDeltaString(delta)';
+        return deltaString;
+
+      }      
+    });
+  });  
+};
+
+
 
 const Post = {
+  getCurrentTime: (setCurrentTime) => {
+    const currentTimeStamp = firebase.firestore.FieldValue.serverTimestamp();
+    const timeOffsetRef = firestore.doc('/.info/serverTimeOffset');
+    timeOffsetRef.set({ timestamp: currentTimeStamp });
+
+    const unsubscribe = timeOffsetRef.onSnapshot(snapshot => {
+      const { timestamp } = snapshot.data();
+      if (timestamp) {
+        setCurrentTime(timestamp);
+      }      
+    });
+    return unsubscribe;
+  },
   addPost: (userID, groupID, post) => {
     console.log('firebase:addPost')
     // Create post, add post to author's post list, and group's post list
@@ -30,7 +67,7 @@ const Post = {
     const postRef = getPostCollection().doc();
     const postID = postRef.id;
     post.postID = postID;
-    post.publishTime = firebase.firestore.FieldValue.serverTimestamp()
+    post.timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
     const userPostRef = getUserPostRef(userID, postID);
     const groupPostRef = getGroupPostRef(groupID, postID);
@@ -44,17 +81,22 @@ const Post = {
   },
   getGroupPosts: (groupID, setGroupPosts) => {
     console.log('firebase:getGroupPosts')
-    const groupPostsRef = getGroupPostsRef(groupID);
+    const groupPostsRef = getGroupPostsRef(groupID)
+                            .orderBy('timestamp', 'desc')
+                            .limit(10);
+
     const unsubscribe = groupPostsRef.onSnapshot(snapshot => {
       console.log('firebase:getGroupPosts:snapShot')
       if (snapshot.size) {
         const posts = [];    
         snapshot.forEach(docRef => {
           const doc = docRef.data();
-          const timestampDate = doc.publishTime.toDate();    
-          const m = moment(timestampDate);
-          const publishTime = m.format('ddd, MMM D');
-          doc.publishTime = publishTime;
+          if (doc.timestamp) {
+            const timestampDate = doc.timestamp.toDate();    
+            const m = moment(timestampDate);
+            const timestamp = m.format('ddd, MMM D');
+            doc.timestampStr = timestamp;
+          }
           posts.push(doc);
 
         })
@@ -65,18 +107,22 @@ const Post = {
   },
   getPosts: (setPosts) => {
     console.log('firebase:getPosts')
-    const postsRef = getPostCollection().limit(10);
-    const currentTimeStamp = firebase.firestore.FieldValue.serverTimestamp();
+    const postsRef = getPostCollection()
+                        .orderBy('timestamp', 'desc')
+                        .limit(10);
+                        
     const unsubscribe = postsRef.onSnapshot(snapshot => {
       console.log('firebase:getPosts:snapShot')
       if (snapshot.size) {
         const posts = [];    
         snapshot.forEach(docRef => {
           const doc = docRef.data();
-          const timestampDate = doc.publishTime.toDate();    
-          const m = moment(timestampDate);
-          const publishTime = m.format('ddd, MMM D');
-          doc.publishTime = publishTime;
+          if (doc.timestamp) {
+            const timestampDate = doc.timestamp.toDate();    
+            const m = moment(timestampDate);
+            const timestamp = m.format('ddd, MMM D');
+            doc.timestampStr = timestamp;
+          }
           posts.push(doc);
 
         })

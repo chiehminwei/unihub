@@ -24,7 +24,7 @@ import * as firebase from 'firebase';
 import { withFirebaseHOC } from "~/../firebase";
 const uuidv4 = require('random-uuid-v4');
 import Toast from 'react-native-root-toast';
-import { AuthUserContext } from '~/navigation/AuthUserProvider';
+import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 
@@ -58,8 +58,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
   useStatusBar('light-content');
 
-  // const { user } = useContext(AuthUserContext);
-  const userInfo = firebase.getCurrentUserInfo();
+  const { userInfo } = useContext(AuthUserInfoContext);
   
   // Group Type
   const groupTypes = ['Public', 'Private'];
@@ -226,7 +225,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     } catch (e) {
 
       console.log(e);
-      let toast = Toast.show('Network error.', {
+      let toast = Toast.show(e.message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
           shadow: true,
