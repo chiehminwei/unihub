@@ -21,20 +21,20 @@ const screenWidth = Dimensions.get('window').width;
 
 const ThreadDetailScreen = ({ threadID, firebase, route }) => {
   const navigation = useNavigation()
-  const { 
-    creator,
-    post,
-    title,
-    group,
-    imgs,
-    numLikes,
-    numComments,
-    publishTime,
-  } = route.params.thread
+  // const { 
+  //   creator,
+  //   post,
+  //   title,
+  //   group,
+  //   imgs,
+  //   numLikes,
+  //   numComments,
+  //   publishTime,
+  // } = route.params
 
-  const { email } = creator;
-  const { groupName } = group;
-  const uri = imgs[0]; // TODO: display multiple images
+  // const {  displayName  } = route.params.thread.creator;
+  // const { groupName, uri } = route.params.thread.group;
+
 
   return (
       <ScrollView style={styles.scrollView}>
@@ -42,21 +42,20 @@ const ThreadDetailScreen = ({ threadID, firebase, route }) => {
   <Card.Content style={{paddingHorizontal:0}}>
     <TouchableOpacity>
     <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>
-      <Image  source={{uri: uri }}
+      <Image  source={{uri: route.params.thread.uri }}
                 style={{width: 50, height: 50, borderRadius: 25}} />
       <View style={{flex:1, marginLeft: 12}}>
         <View style={{ flex: 1, flexDirection: 'row'}}>
           <TouchableOpacity>
             <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color: 'black' }}>
-              { email }
-              sss
+              { route.params.thread.creator.displayName }
             </Text>
           </TouchableOpacity>
             
           <Text style={{ fontFamily:'Avenir-Book', color:'black'}}> in </Text>   
 
           <TouchableOpacity>
-            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ groupName }</Text>
+            <Text style={{ fontFamily:'Avenir-Book', fontWeight:'800', color:'black'}}>{ route.params.thread.group.groupName }</Text>
           </TouchableOpacity>
         </View>
         <View>
@@ -64,30 +63,30 @@ const ThreadDetailScreen = ({ threadID, firebase, route }) => {
         </View>
       </View>
       <Text style={{ textTransform: 'uppercase', fontSize: 10, marginRight:16 }}>
-        { publishTime.toString() } 
+        { route.params.thread.publishTime } 
       </Text>
     </View>
       <View style={{ flex: 1, marginTop:10, flexDirection: 'column', justifyContent: 'space-between'}}>
         <View>
-          <Title style={{margin:10, fontFamily:'Avenir-Book'}}>{ title }</Title>
-          <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ post }</Text>
+          <Title style={{margin:10, fontFamily:'Avenir-Book'}}>{ route.params.thread.title }</Title>
+          <Text style={{margin:10, fontFamily:'Avenir-Book'}}>{ route.params.thread.post }</Text>
         </View>
       </View>
       </TouchableOpacity>
-      { ( imgs.length === 0 ) ? null: (imgs.length === 1) ? 
-        <Image  source={{uri: uri }}
+      { ( route.params.thread.imgs.length === 0 ) ? null: (route.params.thread.imgs.length === 1) ? 
+        <Image  source={{uri: route.params.thread.uri }}
         style={{ width: screenWidth, height: screenWidth}} />
         :
-        <ImageCarousel uris={thread.imgs}/>
+        <ImageCarousel uris={route.params.thread.imgs}/>
       }
       
       
   </Card.Content>
   <Divider/>
   <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ numLikes }</Button>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ numComments }</Button>
-    <Button onPress={ () => share(thread) } icon="share" color='grey'></Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="thumb-up" color='grey'>{ route.params.thread.numLikes }</Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ route.params.thread.numComments }</Button>
+    <Button onPress={ () => share(route.params.thread) } icon="share" color='grey'></Button>
   </Card.Actions>
 </Card>
 
