@@ -11,6 +11,7 @@ import {
   Dimensions,
   Text,
   Pressable,
+  Animated,
 } from 'react-native';
 import { Image, ButtonGroup, Button } from 'react-native-elements';
 import { List, Divider } from 'react-native-paper';
@@ -19,7 +20,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Fumi } from 'react-native-textinput-effects';
 import MultiLine from '~/components/input/MultiLine';
 import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated'
+// import Animated from 'react-native-reanimated'
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
@@ -105,34 +106,9 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   const screenHeight = Math.round(screenWindow.height);
   const screenWidth = Math.round(screenWindow.width);
   const [ uri, setURI ] = useState(EMPTY_URI); 
-  const [ snapPoints, setSnapPoints ] = useState([0, 0.45*screenHeight, 0]);
   const [ sheetIsOpen, setSheetIsOpen ] = useState(false);
   const [ opacity, setOpacity ] = useState(new Animated.Value(0));
   const sheetRef = useRef(null);
-  
-  const onClose = () => {
-    console.log('onClose')
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 350,
-      useNativeDriver: true,
-    }).start();
-    // sheetRef.current.snapTo(0);
-    setTimeout(() => {
-      setSheetIsOpen(false);
-    }, 50);
-  };
-
-  const onOpen = () => {
-    console.log('onOpen')
-    setSheetIsOpen(true);
-    // sheetRef.current.snapTo(2);
-    Animated.timing(opacity, {
-      toValue: 0.7,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
 
   const renderBottomSheet = () => (
     <View
@@ -161,7 +137,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
       }
       <Divider style={{ height: 5 }}/>
       <List.Item
-        onPress={cancelPhoto}
+        onPress={onClose}
         title="Cancel"
         titleStyle={{ textAlign: 'center' }}
       />
@@ -191,46 +167,30 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     </Animated.View>
   );
 
-  let fall = new Animated.Value(1)    
-  const renderShadow = () => {
-    const animatedShadowOpacity = Animated.interpolate(fall, {
-      inputRange: [0, 1],
-      outputRange: [0.5, 0],
-    })
-    const AnimatedView = Animated.View;
+  const onOpen = () => {
+    setSheetIsOpen(true);
+    sheetRef.current.snapTo(2);
+    Animated.timing(opacity, {
+      toValue: 0.7,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
 
-    return (
-      <TouchableOpacity onPress={cancelPhoto}>
-        <AnimatedView
-          pointerEvents={"none"}
-          style={[
-            styles.shadowContainer,
-            {
-              opacity: animatedShadowOpacity,
-            },
-          ]}
-        >
-          <TouchableOpacity
-            style={{
-              width: this.window.width,
-              height: this.window.height,
-              backgroundColor: 'transparent',
-            }}
-            activeOpacity={1}
-            onPress={this.onClose}
-          />
-        </AnimatedView>
-      </TouchableOpacity>
-    )
-  }
-
-  const openBottomSheet = () => {
-    // setBottomSheetOpen(true);
-    sheetRef.current.snapTo(1);
-  }
+  const onClose = () => {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 350,
+      useNativeDriver: true,
+    }).start();
+    sheetRef.current.snapTo(0);
+    setTimeout(() => {
+      setSheetIsOpen(false);
+    }, 50);
+  };
 
   const takePhoto = async () => {
-    sheetRef.current.snapTo(2);
+    onClose();
     await Permissions.askAsync(Permissions.CAMERA);
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -241,7 +201,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   }
 
   const chooseFromAlbum = async () => {
-    sheetRef.current.snapTo(2);
+    onClose();
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
     let pickerResult = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -251,23 +211,15 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     handleImagePicked(pickerResult);
   }
 
-  const cancelPhoto = () => {
-    sheetRef.current.snapTo(2);
-    // setBottomSheetOpen(false);
-  }
-
   const deletePhoto = () => {
-    sheetRef.current.snapTo(2);
+    onClose();
     setURI(EMPTY_URI);
-    setSnapPoints([0, 0.45*screenHeight, 0]);
-    // setBottomSheetOpen(false);
   }
 
   const handleImagePicked = pickerResult => {
+    onClose();
     if (!pickerResult.cancelled) {
         setURI(pickerResult.uri);
-        setSnapPoints([0, 0.45*screenHeight, 0]);
-        // setBottomSheetOpen(false);
     }
   };
 
@@ -336,7 +288,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
             }}
           >
-          <TouchableOpacity onPress={openBottomSheet}>
+          <TouchableOpacity onPress={onOpen}>
               { uri === EMPTY_URI ? 
                 <View style={{ justifyContent: 'center', alignItems: 'center',
                   width: screenWidth, height: 300, maxHeight:300, backgroundColor: '#bdbdbd' }} > 
@@ -379,14 +331,19 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
               />
               </View> 
         </ScrollView>
-        { renderShadow() }
+        { sheetIsOpen && renderBackDrop() }
         <BottomSheet
           ref={sheetRef}
-          snapPoints={snapPoints}
+          snapPoints={[
+            '-10%',
+            screenHeight * 0.15,
+            screenHeight * 0.45
+          ]}
+          initialSnap={0}
           borderRadius={10}
           renderContent={renderBottomSheet}
-          callbackNode={fall}
-          enabledInnerScrolling={true}
+          onCloseEnd={onClose}
+          enabledInnerScrolling={false}
         />
         
       </KeyboardAvoidingView>
