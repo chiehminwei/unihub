@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { Text, View, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Category from '../../components/Category.js';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'

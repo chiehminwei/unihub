@@ -27,7 +27,6 @@ import { withFirebaseHOC } from "~/../firebase";
 const uuidv4 = require('random-uuid-v4');
 import Toast from 'react-native-root-toast';
 import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
 
 import * as Yup from 'yup';
