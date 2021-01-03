@@ -79,9 +79,9 @@ const HomeScreen = ({ firebase, navigation }) => {
             {/* CONTENT */}
       <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6 }}>
           { isMap ? 
-              <MapContent events={events} keyevents={events} navigation={navigation}/> 
+              <MapContent events={events} keyEvents={events} navigation={navigation}/> 
                 : 
-              <EventList events={events} keyevents={events} navigation={navigation}/> }
+              <EventList events={events} keyEvents={events} navigation={navigation}/> }
       </View>
         
       </View>

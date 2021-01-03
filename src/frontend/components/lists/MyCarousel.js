@@ -37,19 +37,19 @@ export default class MyCarousel extends Component {
 
     render () {
       const { navigation } = this.props;
-        return (
-            <View>
-                <Carousel
-                  layout={"default"}
-                  sliderWidth= {windowWidth}
-                  itemWidth={windowWidth}
-                  containerCustomStyle ={{ paddingBottom: 20}} 
-                  data={this.state.entries}
-                  renderItem={({item, index}) => <KeyEventItem navigation={ navigation } event={item}/>}
-                  onSnapToItem={(index) => this.setState({ activeSlide: index }) }
-                />
-                { this.pagination }
-            </View>
-        );
+      return (
+        <View>
+          <Carousel
+            layout={"default"}
+            sliderWidth= {windowWidth}
+            itemWidth={windowWidth}
+            containerCustomStyle ={{ paddingBottom: 20}} 
+            data={this.state.entries}
+            renderItem={({item, index}) => <KeyEventItem navigation={ navigation } event={item}/>}
+            onSnapToItem={(index) => this.setState({ activeSlide: index }) }
+          />
+          { this.pagination }
+        </View>
+      );
     }
 }

@@ -35,13 +35,13 @@ const keyevents = [
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function EventList({ events, keyevents, navigation, scrollEnabled }) {
+export default function EventList({ events, keyEvents, navigation, scrollEnabled }) {
 
   return(
     <View style={{flex : 1 , alignContent:'center', alignItems:'stretch', width: windowWidth }}>
       <ScrollView style={{flex: 8, alignContent:'center',width: windowWidth} }>
         <View style = {{flex:1, width:windowWidth}}>
-          <MyCarousel events={keyevents} /> 
+          <MyCarousel events={keyEvents} /> 
         </View>
         <View style={{flexDirection:'row', alignContent: 'center', alignItems:'center', justifyContent:'space-between'}}>
           <Text style={{marginLeft:16, fontFamily:'Avenir-Light', fontSize: 20, fontWeight: 'bold'}}>Recommended</Text>
