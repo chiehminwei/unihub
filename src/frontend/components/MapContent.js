@@ -6,65 +6,10 @@ import EventItem from '~/components/lists/EventItem';
 import Carousel from 'react-native-snap-carousel';
 
 
-const events = [
-  {
-    eventName: 'Thon club fundraising',
-    groupName: 'Group THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: 'Online',
-    eventID: 'U123',
-    eventDate: 'Monday July 3',
-    latlng: { latitude: 37.78925, longitude: -122.4364 },
-    description: 'WTF!',
-    uri: 'https://picsum.photos/700',
-  },
-  {
-    eventName: 'GoGOGO',
-    groupName: 'Group THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: "Tim's House",
-    eventID: 'U234',
-    eventDate: 'MONDAY JULY 3',
-    latlng: { latitude: 37.78825, longitude: -122.4324 },
-    description: 'ftw!',
-    uri: 'https://picsum.photos/700',
-  },
-  {
-    eventName: 'HIHIHI',
-    groupName: 'Group THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: "Tim's House",
-    eventID: 'U234',
-    eventDate: 'MONDAY JULY 3',
-    latlng: { latitude: 37.78325, longitude: -122.4314 },
-    description: 'ftw!',
-    uri: 'https://picsum.photos/700',
-  },
-  {
-    eventName: 'XIXIXIXI',
-    groupName: 'Group THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: "Tim's House",
-    eventID: 'U234',
-    eventDate: 'MONDAY JULY 3',
-    latlng: { latitude: 37.78525, longitude: -122.4384 },
-    description: 'ftw!',
-    uri: 'https://picsum.photos/700',
-  },
-];
-
 export default class MapContent extends Component {
   
   state = {
-    events: [ ...events ],
+    events: this.props.events,
     region: {
       latitude: 37.78825,
       longitude: -122.4324,
