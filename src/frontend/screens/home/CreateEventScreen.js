@@ -36,6 +36,7 @@ import { useNavigation } from '@react-navigation/native';
 import { BackButton } from '../../components/button/BackButton';
 import { HeaderRightButton } from '../../components/button/HeaderRightButton';
 import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
+import { UserGroupsContext } from '~/navigation/UserGroupsProvider';
 
 
 const CreateEventScreen = ({ route, firebase }) => {
@@ -79,15 +80,11 @@ const CreateEventScreen = ({ route, firebase }) => {
   // Group Name
   const [ group, setGroup ] = useState({});
   const { groupName, groupID } = group;
-  const [groups, setGroups] = useState([]);
+  const { userGroups } = useContext(UserGroupsContext);
   const [pickerVisible, setPickerVisible] = useState(false);
   const togglePicker = () => {
     setPickerVisible(!pickerVisible);
   } 
-  useEffect(() => {
-    const unsubscribe = firebase.getUserGroups(userInfo.uid, setGroups);
-    return unsubscribe;
-  }, []);
 
 
   // Text Input
@@ -372,9 +369,9 @@ const CreateEventScreen = ({ route, firebase }) => {
           <Picker
             selectedValue={groupName}
             onValueChange={(groupName, index) => {
-              setGroup(groups[index]);
+              setGroup(userGroups[index]);
             }}>
-            { groups.map(({groupID, groupName}, index) => <Picker.Item key={groupID} label={groupName} value={groupName} />) }
+            { userGroups.map(({groupID, groupName}, index) => <Picker.Item key={groupID} label={groupName} value={groupName} />) }
           </Picker>
         </Collapsible>
         { EventNameInput }

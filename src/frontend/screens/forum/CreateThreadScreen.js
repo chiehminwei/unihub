@@ -33,6 +33,7 @@ import { BackButton } from '../../components/button/BackButton';
 import { HeaderRightButton } from '../../components/button/HeaderRightButton';
 import { TextInput } from 'react-native-paper';
 import { Video } from 'expo-av';
+import { UserGroupsContext } from '~/navigation/UserGroupsProvider';
 
 
 const screenHeight = Math.round(Dimensions.get('window').height)
@@ -74,21 +75,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const isFocused = useIsFocused();
   const { userInfo } = useContext(AuthUserInfoContext);
   const { uid } = userInfo;
-  const [groups, setGroups] = useState([]);
-
-  useEffect(() => {
-    const   { newgroup }   = route.params || [];
-    if (!newgroup) {
-      // Go to firebase and get available
-      const unsubscribe = firebase.getUserGroups(uid, setGroups);
-      return unsubscribe;
-    }
-    else {
-      // setGroups([ newgroup ]);
-      setGroup(newgroup)
-      setIsShowGroupEnabled(false)
-    }
-  }, []);
+  const { userGroups } = useContext(UserGroupsContext);
 
   
   // const [uri, setURI] = useState(EMPTY_URI); 
@@ -259,7 +246,6 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
     uri: '',
   } 
 
-  const [ isShowGroupEnabled, setIsShowGroupEnabled ] = useState(true)
   const [ showGroup, setShowGroup ] = useState(true)
   const [ group, setGroup ] = useState(groupPlaceHolder)
   const isGroupChosenColor = (group.groupName === groupPlaceHolder.groupName) ? 'grey' : 'black'
@@ -300,10 +286,9 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
         </View>
         <View style={styles.userInputContainer}>
             <Avatar size="small" key={group.groupID} rounded source={{uri:group.uri}} />
-              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{isShowGroupEnabled? setShowGroup(!showGroup): null ; setGroup(groupPlaceHolder)}}>
-                <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>
-                
-                { isShowGroupEnabled ? <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/> : null }
+              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{ setShowGroup(!showGroup);}}>
+                <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>                
+                <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/>
               </TouchableOpacity>
           </View>
           <Divider/>
@@ -372,7 +357,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
           :
           <View>
             {
-              groups.map(item => 
+              userGroups.map(item => 
                 <View style={styles.userInputContainer}>
                   <Avatar 
                     size="small" 

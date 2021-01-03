@@ -2,23 +2,17 @@ import React, {Component, useEffect, useState, useContext} from 'react';
 import { Text, View } from 'react-native';
 import GroupList from '~/components/lists/GroupList';
 import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
+import { UserGroupsContext } from '~/navigation/UserGroupsProvider';
 import { withFirebaseHOC } from "~/../firebase";
 
 
 const GroupScreen = ({ firebase, navigation }) => {
-    const [ groups, setGroups ] = useState([]);
     const { userInfo } = useContext(AuthUserInfoContext);
-
-    useEffect(() => {
-      const unsubscribe = firebase.getUserGroups(userInfo.uid, setGroups);
-      return () => {
-        unsubscribe();
-      }
-    }, []);
+    const { userGroups } = useContext(UserGroupsContext);
 
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' ,backgroundColor:'white'}}>
-        <GroupList groups={groups} navigation={navigation}/>
+        <GroupList groups={userGroups} navigation={navigation}/>
       </View>
     )       
 };
