@@ -20,7 +20,8 @@ function GroupContent({ isPrivate, members, isInGroup }){
 const GroupDetailScreen = ({ route, navigation, firebase }) => {
   const { group } = route.params;
   const { admin, description, groupID, groupName, groupType, uri, numMember, groupNotice } = group;
-  const isPrivate = groupType === 'private';
+  const isPrivate = groupType === 'Private';
+  console.log(groupType)
   const { userInfo } = useContext(AuthUserInfoContext);
   const { displayName, photoURL } = userInfo;
   const firstName = displayName.split(' ')[0];
@@ -207,7 +208,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
 
           {/* Activities */}
              { isPrivate ? 
-             (isInGroup ?  
+                (isInGroup ?  
             <View style={{flex:1, alignSelf:'stretch'}}>
               <Text style={styles.title}> Activities </Text>
               <View style = {styles.textInputPromptContainer}>
@@ -224,7 +225,9 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
               <ThreadList threads={groupPosts}/>
             </View>
            : 
-           <Text>This is a private group </Text>) 
+           <View style={{flex:1, alignSelf:'stretch',paddingHorizontal:16}}>
+            <Text style={{textAlign:'left'}}>This is a private group, join in to view the content </Text>
+           </View>)
            : 
            <View style={{flex:1, alignSelf:'stretch'}}>
               <Text style={styles.title}> Activities </Text>
@@ -243,6 +246,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
               </View>
               <ThreadList threads={groupPosts}/>
             </View> }
+
         </View>
       </ScrollView>
   );

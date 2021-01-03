@@ -77,6 +77,9 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const { uid } = userInfo;
   const { userGroups } = useContext(UserGroupsContext);
 
+
+
+
   
   // const [uri, setURI] = useState(EMPTY_URI); 
   const [snapPoints, setSnapPoints] = useState([0, 0.45*screenHeight, 0]);
@@ -251,6 +254,11 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   const isGroupChosenColor = (group.groupName === groupPlaceHolder.groupName) ? 'grey' : 'black'
   const isPostEnabled = ( group.groupName !== 'Choose a group here (required)' && post !== '' && title !== '')
 
+  useEffect(() => {
+    const  newgroup  = route.params.newgroup || [];
+    if (newgroup !== [])
+    setGroup(newgroup);
+  }, []);
   
   const [allUri, setAllUri] = useState([])
   const numSelectedImage = allUri.length
@@ -286,9 +294,9 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
         </View>
         <View style={styles.userInputContainer}>
             <Avatar size="small" key={group.groupID} rounded source={{uri:group.uri}} />
-              <TouchableOpacity style={styles.userInputTouchable} onPress={()=>{ setShowGroup(!showGroup);}}>
+              <TouchableOpacity style={styles.userInputTouchable} onPress={ route.params.newgroup === [] ? ()=>{ setShowGroup(!showGroup);} : null }>
                 <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>                
-                <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/>
+                { route.params.newgroup === [] ?  <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/> : null}
               </TouchableOpacity>
           </View>
           <Divider/>
