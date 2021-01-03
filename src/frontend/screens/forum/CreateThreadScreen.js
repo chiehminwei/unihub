@@ -338,8 +338,9 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
               </TouchableOpacity>
 
               {/* image list */}
-              { allUri !== undefined && (allUri.map( item =>  
+              { allUri !== undefined && (allUri.map( (item, index) =>  
                   <ImageBackground 
+                    key={index}
                     style={ styles.image }
                     imageStyle={{ width: 0.3*screenWidth, 
                       height: 0.3*screenWidth, 
@@ -358,10 +359,9 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
           <View>
             {
               userGroups.map(item => 
-                <View style={styles.userInputContainer}>
+                <View key={item.groupID} style={styles.userInputContainer}>
                   <Avatar 
                     size="small" 
-                    key={item.groupID} 
                     rounded source={item.uri ? {uri:item.uri} : null} 
                   />
                   <TouchableOpacity 
