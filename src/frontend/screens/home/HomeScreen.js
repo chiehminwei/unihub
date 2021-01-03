@@ -16,6 +16,7 @@ const HomeScreen = ({ firebase, navigation }) => {
   const [ isMap, setIsMap ] = useState(false);
   const [ iconName, setIconName ] = useState('navigation');
   const [ events, setEvents ] = useState([]);
+  const latLngEvents = events.map((event, i) => ({...event, latlng: { latitude: 37.78925 + i * 0.05, longitude: -122.4364 + i * 0.1 }}));
 
   useEffect(() => {
     // TODO: keyevents
@@ -79,7 +80,7 @@ const HomeScreen = ({ firebase, navigation }) => {
             {/* CONTENT */}
       <View style={{backgroundColor :'white', alignSelf: 'stretch', flex:6 }}>
           { isMap ? 
-              <MapContent events={events} keyEvents={events} navigation={navigation}/> 
+              <MapContent events={latLngEvents} navigation={navigation}/> 
                 : 
               <EventList events={events} keyEvents={events} navigation={navigation}/> }
       </View>
