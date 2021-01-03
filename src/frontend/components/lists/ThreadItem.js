@@ -141,7 +141,7 @@ function ThreadItem ({ thread, firebase })  {
             color={hasLiked ? 'green' : 'grey'}>
       { numLikes }
     </Button>
-    <Button onPress={ () => navigation.navigate('ThreadDetail') } icon="message-processing" color='grey'>{ numComments }</Button>
+    <Button onPress={ () => navigation.navigate('ThreadDetail', {thread, timeDifference}) } icon="message-processing" color='grey'>{ numComments }</Button>
     <Button onPress={ () => share(thread) } icon="share" color='grey'></Button>
   </Card.Actions>
 </Card>

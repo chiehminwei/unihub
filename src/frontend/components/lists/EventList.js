@@ -32,76 +32,16 @@ const keyevents = [
     description: 'Cool event no no no',
   },
 ]
-const events = [
-  {
-    eventName: 'Hi',
-    groupName: 'EROooo',
-    tags: [ '#Billiards', '#Hub' ],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: 'WTF',
-    eventID: 'U345',
-    eventDate: 'Friday JULY 3',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool event no no no',
-  },
-  {
-    eventName: 'NO GOOD',
-    groupName: 'ACE',
-    tags: [ '#Sports', '#Hub' ],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: "Tim's House",
-    eventID: 'U456',
-    eventDate: 'Friday JULY 3',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool event no no no',
-  },
-  {
-    eventName: 'Have Fun',
-    groupName: 'CSSA',
-    tags: [ '#Billiards', '#Hub' ],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: "Hub",
-    eventID: 'U567',
-    eventDate: 'Friday JULY 3',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool event no no no',
-  },
-  {
-    eventName: 'Hi',
-    groupName: 'EROooo',
-    tags: [ '#Billiards', '#Hub' ],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: 'WTF',
-    eventID: 'U3456',
-    eventDate: 'Friday JULY 3',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool event no no no',
-  },
-];
+
 const windowWidth = Dimensions.get('window').width;
 
-export default function EventList({ navigation, scrollEnabled }) {
+export default function EventList({ events, keyevents, navigation, scrollEnabled }) {
 
   return(
     <View style={{flex : 1 , alignContent:'center', alignItems:'stretch', width: windowWidth }}>
       <ScrollView style={{flex: 8, alignContent:'center',width: windowWidth} }>
         <View style = {{flex:1, width:windowWidth}}>
-          <MyCarousel
-                    // layout={"default"}
-                    // data={entries}
-                    // // item={item}
-                    // sliderWidth= {windowWidth}
-                    // itemWidth={windowWidth}
-                    // containerCustomStyle ={{ paddingBottom: 20}} 
-                    // renderItem={({item}) => 
-                    //   <KeyEventItem navigation={ navigation } event={item}/>}
-                    // onSnapToItem={(index) => this.setState({ activeSlide: index }) }
-
-                  /> 
+          <MyCarousel events={keyevents} /> 
         </View>
         <View style={{flexDirection:'row', alignContent: 'center', alignItems:'center', justifyContent:'space-between'}}>
           <Text style={{marginLeft:16, fontFamily:'Avenir-Light', fontSize: 20, fontWeight: 'bold'}}>Recommended</Text>

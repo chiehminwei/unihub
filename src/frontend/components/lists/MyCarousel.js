@@ -3,51 +3,13 @@ import { View , Dimensions } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import KeyEventItem from './KeyEventItem'
 
+
 const windowWidth = Dimensions.get('window').width;
-const events = [
-  {
-    eventName: 'Hi',
-    groupName: 'EROooo',
-    tags: [ '#Billiards', '#Hub' ],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: 'WTF',
-    eventID: 'U345',
-    eventDate: 'Friday JULY 3',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool event no no no',
-  },
-  {
-    eventName: 'NO GOOD',
-    groupName: 'ACE',
-    tags: [ '#Sports', '#Hub' ],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: "Tim's House",
-    eventID: 'U456',
-    eventDate: 'Friday JULY 3',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool event no no no',
-  },
-  {
-    eventName: 'Have Fun',
-    groupName: 'CSSA',
-    tags: [ '#Billiards', '#Hub' ],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: "Hub",
-    eventID: 'U567',
-    eventDate: 'Friday JULY 3',
-    uri: 'https://picsum.photos/700',
-    description: 'Cool event no no no',
-  },
-];
 const initialSlide = 0
+
 export default class MyCarousel extends Component {
-
-
     state = {
-      entries: events,
+      entries: this.props.events,
       activeSlide: initialSlide
     }
     get pagination () {

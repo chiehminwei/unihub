@@ -23,88 +23,63 @@ const share = (event) => {
 
 
 
-const EventItem = ({ event, navigation }) => (
-  // <Card style={{borderRadius: 20, margin:10, maxWidth:'95%',flex:1 }} onPress={ () => navigation.navigate('EventDetail', { name: event.groupName }) }>
-  //   <Card.Content style={{paddingVertical:0, paddingHorizontal:0}}>
-  //     <View style={{flexDirection:'row', flex:1}}>
-  //         <Image source={{uri: event.uri }}
-  //           style={{
-  //                   flex:1, 
-  //                   maxWidth: 120,
-  //                   height: 120,
-  //                   borderTopLeftRadius:20, 
-  //                   borderBottomLeftRadius:20,}}/>
-  //       <View style={{marginLeft:10, marginTop: 5 , alignContent:'flex-start'}}> 
-  //         <View style={{ flex: 1, flexDirection: 'row' }}>
-  //           <Text style={{ textTransform: 'uppercase', fontFamily:'Avenir-Light', fontSize: 12 }}>{ event.eventDate }</Text>
-  //           <Text style={{ marginLeft: 10, color:'#1c7085', fontFamily:'Avenir-Light', fontSize: 12, fontWeight:'800' }}>{ event.eventLocation }</Text>
-  //         </View>
-  //         <View style={{ flex: 1 }}>
-  //             <Text >{ event.eventName }</Text>
-  //             <View
-  //               style={{
-  //                 flex:1,
-  //                 flexDirection: 'row',
-  //               }}>
-  //               <AntIcon style={{ marginTop: 1.5 }} color={grey} name="caretright" size={14}/>
-  //               <Text style={{ color: grey }}>{ event.groupName }</Text>
-  //             </View>
-  //             <View style={{ flex: 1, flexDirection: 'row'}}>
-  //               { event.tags.map(tag => <Tag key={tag} text={tag}/>)}
-  //             </View>
-  //           </View>
-  //       </View>
-  //     </View>
-  //   </Card.Content>
-  //   {/* <Divider style={{ marginTop: 15 }}/> */}
-  //   {/* <Card.Actions style={{ flex:1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-  //     <Button onPress={ () => navigation.navigate('EventDetail') } icon="message-processing">{ event.numMessages}</Button>
-  //     <Button onPress={ () => navigation.navigate('EventDetail') } icon="run">{ event.numGoing}</Button>
-  //     <Button onPress={ () => share(event) } icon="share"/>
-  //   </Card.Actions> */}
-  // </Card>
 
 
+const EventItem = ({ event, navigation }) => {
+  const {
+    eventName,
+    description,
+    tags,
+    location,
+    time,
+    contact,
+    uri,
+    participants,
+    filters,
+    creator,
+    host,
+  } = event;
+  const { groupName } = host;
+  const { startDate, endDate } = time;
+  const startDateStr = startDate.toDate().toLocaleDateString("en-US")
 
-
-  
-  <View style={{ margin:10, maxWidth:'95%', flex:1 , backgroundColor:'white', shadowOffset:{height:10, width:1}, shadowColor:'grey', shadowOpacity: 0.2,shadowRadius:10, elevation: 3}}> 
-    <TouchableOpacity style={{flex:1}} onPress={ () => navigation.navigate('EventDetail', { event: event }) }>
-      <View style={{flexDirection:'row', flex:1}}>
-        <Image source={{uri: event.uri }}
-                style={{
-                        flex:1, 
-                        maxWidth: 120,
-                        height: 120,
-                        }}/>
-          <View style={{flex:1, marginLeft: 20, marginTop: 5}}>
-            <View style={{ alignContent:'flex-end', flexDirection: 'row'}}> 
-              <View style={{flex:1}}>
-                <Text style={{ textTransform: 'uppercase', fontFamily:'Avenir-Light', fontSize: 10 }}>{ event.eventDate }</Text>
+  return (
+    <View style={{ margin:10, maxWidth:'95%', flex:1 , backgroundColor:'white', shadowOffset:{height:10, width:1}, shadowColor:'grey', shadowOpacity: 0.2,shadowRadius:10, elevation: 3}}> 
+      <TouchableOpacity style={{flex:1}} onPress={ () => navigation.navigate('EventDetail', { event: event }) }>
+        <View style={{flexDirection:'row', flex:1}}>
+          <Image source={{uri: uri }}
+                  style={{
+                          flex:1, 
+                          maxWidth: 120,
+                          height: 120,
+                          }}/>
+            <View style={{flex:1, marginLeft: 20, marginTop: 5}}>
+              <View style={{ alignContent:'flex-end', flexDirection: 'row'}}> 
+                <View style={{flex:1}}>
+                  <Text style={{ textTransform: 'uppercase', fontFamily:'Avenir-Light', fontSize: 10 }}>{ startDateStr }</Text>
+                </View>
+                <View style={{flex:1, alignItems:'flex-end',marginEnd:16}}>
+                  <Text style={{ color:'#1c7085', fontFamily:'Avenir-Light', fontSize: 10, fontWeight:'800' }}>{ location }</Text>
+                </View>
+              </View>  
+              <View style={{marginTop: 10}}>
+                <Text style={{fontSize:18, fontFamily:'Avenir-Light', fontWeight:'800'}}>{ eventName }</Text>
               </View>
-              <View style={{flex:1, alignItems:'flex-end',marginEnd:16}}>
-                <Text style={{ color:'#1c7085', fontFamily:'Avenir-Light', fontSize: 10, fontWeight:'800' }}>{ event.eventLocation }</Text>
+              <View style={{
+                        flex:1,
+                        flexDirection: 'row',
+                    }}>
+                <AntIcon style={{ marginTop: 1.5, marginRight:1 }} color={grey} name="caretright" size={14}/>
+                <Text style={{ color: grey , fontFamily:'Avenir-Light', fontSize:14 }}>{ groupName }</Text>
               </View>
-            </View>  
-            <View style={{marginTop: 10}}>
-              <Text style={{fontSize:18, fontFamily:'Avenir-Light', fontWeight:'800'}}>{ event.eventName }</Text>
-            </View>
-            <View style={{
-                      flex:1,
-                      flexDirection: 'row',
-                  }}>
-              <AntIcon style={{ marginTop: 1.5, marginRight:1 }} color={grey} name="caretright" size={14}/>
-              <Text style={{ color: grey , fontFamily:'Avenir-Light', fontSize:14 }}>{ event.groupName }</Text>
-            </View>
-            <View style={{ flex: 1, flexDirection: 'row', marginTop: 10}}>
-                    { event.tags.map(tag => <Tag key={tag} text={tag}/>)}
+              <View style={{ flex: 1, flexDirection: 'row', marginTop: 10}}>
+                      { tags.map(tag => <Tag key={tag} text={tag}/>)}
+              </View>
             </View>
           </View>
-        </View>
-      </TouchableOpacity>
-</View>
-          
-
-);
+        </TouchableOpacity>
+    </View>
+  );
+};
 
 export default EventItem;

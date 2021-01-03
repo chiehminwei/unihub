@@ -1,14 +1,16 @@
-import React, { Component, useState, useRef, useEffect, useContext } from 'react';
+import React, { Component, useState, useRef, useContext } from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
   View,
+  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
   TouchableOpacity,
   Dimensions,
   Text,
+  Pressable,
 } from 'react-native';
 import { Image, ButtonGroup, Button } from 'react-native-elements';
 import { List, Divider } from 'react-native-paper';
@@ -73,6 +75,10 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
   // Error Message
   const [postError, setPostError] = useState('');
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  }
   
 
   const fumiInput = ({ label, iconName, iconClass, onChangeText }) => (
@@ -96,11 +102,39 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   );
 
   // Image
-  const screenHeight = Math.round(Dimensions.get('window').height)
-  const [uri, setURI] = useState(EMPTY_URI); 
-  const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
-  
+  const screenWindow = Dimensions.get('window');
+  const screenHeight = Math.round(screenWindow.height);
+  const screenWidth = Math.round(screenWindow.width);
+  const [ uri, setURI ] = useState(EMPTY_URI); 
+  const [ snapPoints, setSnapPoints ] = useState([0, 0.45*screenHeight, 0]);
+  const [ sheetIsOpen, setSheetIsOpen ] = useState(false);
+  const [ opacity, setOpacity ] = useState(new Animated.Value(0));
   const sheetRef = useRef(null);
+  
+  const onClose = () => {
+    console.log('onClose')
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 350,
+      useNativeDriver: true,
+    }).start();
+    // sheetRef.current.snapTo(0);
+    setTimeout(() => {
+      setSheetIsOpen(false);
+    }, 50);
+  };
+
+  const onOpen = () => {
+    console.log('onOpen')
+    setSheetIsOpen(true);
+    // sheetRef.current.snapTo(2);
+    Animated.timing(opacity, {
+      toValue: 0.7,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const renderBottomSheet = () => (
     <View
       style={{
@@ -128,11 +162,34 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
       }
       <Divider style={{ height: 5 }}/>
       <List.Item
-        onPress={() => sheetRef.current.snapTo(2)}
+        onPress={cancelPhoto}
         title="Cancel"
         titleStyle={{ textAlign: 'center' }}
       />
     </View>
+  );
+
+  const renderBackDrop = () => (
+    <Animated.View
+      style={{
+        opacity: opacity,
+        backgroundColor: '#000',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}>
+      <TouchableOpacity
+        style={{
+          width: screenWidth,
+          height: screenHeight,
+          backgroundColor: 'transparent',
+        }}
+        activeOpacity={1}
+        onPress={onClose}
+      />
+    </Animated.View>
   );
 
   let fall = new Animated.Value(1)    
@@ -144,16 +201,33 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     const AnimatedView = Animated.View;
 
     return (
-      <AnimatedView
-        pointerEvents="none"
-        style={[
-          styles.shadowContainer,
-          {
-            opacity: animatedShadowOpacity,
-          },
-        ]}
-      />
+      <TouchableOpacity onPress={cancelPhoto}>
+        <AnimatedView
+          pointerEvents={"none"}
+          style={[
+            styles.shadowContainer,
+            {
+              opacity: animatedShadowOpacity,
+            },
+          ]}
+        >
+          <TouchableOpacity
+            style={{
+              width: this.window.width,
+              height: this.window.height,
+              backgroundColor: 'transparent',
+            }}
+            activeOpacity={1}
+            onPress={this.onClose}
+          />
+        </AnimatedView>
+      </TouchableOpacity>
     )
+  }
+
+  const openBottomSheet = () => {
+    // setBottomSheetOpen(true);
+    sheetRef.current.snapTo(1);
   }
 
   const takePhoto = async () => {
@@ -178,16 +252,23 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     handleImagePicked(pickerResult);
   }
 
+  const cancelPhoto = () => {
+    sheetRef.current.snapTo(2);
+    // setBottomSheetOpen(false);
+  }
+
   const deletePhoto = () => {
     sheetRef.current.snapTo(2);
     setURI(EMPTY_URI);
-    setSnapPoints([0, 0.47*screenHeight, 0]);
+    setSnapPoints([0, 0.45*screenHeight, 0]);
+    // setBottomSheetOpen(false);
   }
 
   const handleImagePicked = pickerResult => {
     if (!pickerResult.cancelled) {
         setURI(pickerResult.uri);
-        setSnapPoints([0, 0.52*screenHeight, 0]);
+        setSnapPoints([0, 0.45*screenHeight, 0]);
+        // setBottomSheetOpen(false);
     }
   };
 
@@ -241,11 +322,13 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
     }
 
   }
-  const screenWidth = Math.round(Dimensions.get('window').width)
+  const keyboardVerticalOffset = Platform.OS === 'ios' ? 100 : 0;
   return (
-    <SafeAreaView style={screenStyles.safeArea} edges={['right','top','left']}>
-      <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
-        <ScrollView keyboardShouldPersistTaps="never" style={{backgroundColor:'white'}}>
+      <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} 
+        behavior="padding" 
+        enabled   
+        keyboardVerticalOffset={keyboardVerticalOffset}>
+        <ScrollView onScrollBeginDrag={dismissKeyboard} keyboardShouldPersistTaps="never" style={{backgroundColor:'white'}}>
           <View
             style={{
               flex: 1,
@@ -254,7 +337,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
             }}
           >
-          <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
+          <TouchableOpacity onPress={onOpen}>
               { uri === EMPTY_URI ? 
                 <View style={{ justifyContent: 'center', alignItems: 'center',
                   width: screenWidth, height: 300, maxHeight:300, backgroundColor: '#bdbdbd' }} > 
@@ -297,7 +380,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
               />
               </View> 
         </ScrollView>
-        
+        { sheetIsOpen && renderBackDrop() }
         <BottomSheet
           ref={sheetRef}
           snapPoints={snapPoints}
@@ -306,9 +389,8 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
           callbackNode={fall}
           enabledInnerScrolling={true}
         />
-        { renderShadow() }
+        
       </KeyboardAvoidingView>
-    </SafeAreaView>
   );
 }
 

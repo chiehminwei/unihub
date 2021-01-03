@@ -1,5 +1,7 @@
 import * as firebase from "firebase";
 import firebaseConfig from "../firebaseConfig";
+import moment from 'moment';
+
 
 // Initialize Firebase
 if (!firebase.apps.length) {
@@ -19,6 +21,8 @@ const Event = {
     // Create event, add post to author's event list
     const eventRef = getEventCollection().doc();
     const eventID = eventRef.id;
+    event.timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    event.eventID = eventID;
 
     const userEventRef = getUserEventRef(userID, eventID);
     const groupEventRef = getGroupEventRef(groupID, eventID);
@@ -67,12 +71,38 @@ const Event = {
   quitEvent: (eventID) => {
     return -1;
   },
+  getEvents: (setEvents) => {
+    console.log('firebase:getEvents')
+    const eventsRef = getEventCollection()
+                        .orderBy('timestamp', 'desc')
+                        .limit(10);
+                        
+    const unsubscribe = eventsRef.onSnapshot(snapshot => {
+      console.log('firebase:getEvents:snapShot')
+      if (snapshot.size) {
+        const events = [];    
+        snapshot.forEach(docRef => {
+          const doc = docRef.data();
+          if (doc.timestamp) {
+            const timestampDate = doc.timestamp.toDate();    
+            const m = moment(timestampDate);
+            const timestamp = m.format('ddd, MMM D');
+            doc.timestampStr = timestamp;
+          }
+          events.push(doc);
+
+        })
+        setEvents(events);
+      }
+    })
+    return unsubscribe;
+  },
   // TODO: comments
   
   // TODO: turn off comments
   
   // TODO: pagination, sort by time?
-  getEvents: (eventID) => {
+  getEvent: (eventID) => {
     let query = firebase.firestore().collection("events").where("userID", "==", userID);
     query.get()
         .then(function(querySnapshot) {

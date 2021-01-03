@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   View,
+  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
@@ -40,6 +41,7 @@ import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
 const CreateEventScreen = ({ route, firebase }) => {
   // const setGoogleLocation = route.params
   const { userInfo } = useContext(AuthUserInfoContext);
+  const userID = userInfo.uid;
   const navigation = useNavigation()
   // Calendar Time Picker
   const [startCollapsed, setStartCollapse] = useState(true);
@@ -75,16 +77,18 @@ const CreateEventScreen = ({ route, firebase }) => {
   };
 
   // Group Name
-  const [groupName, setGroupName] = useState('');
+  const [ group, setGroup ] = useState({});
+  const { groupName, groupID } = group;
   const [groups, setGroups] = useState([]);
   const [pickerVisible, setPickerVisible] = useState(false);
   const togglePicker = () => {
     setPickerVisible(!pickerVisible);
   } 
   useEffect(() => {
-    const eligibleGroups = ['', 'Group A', 'Group B']; // TODO: check firebase for groups which current user has access to post
-    setGroups(eligibleGroups);
+    const unsubscribe = firebase.getUserGroups(userInfo.uid, setGroups);
+    return unsubscribe;
   }, []);
+
 
   // Text Input
   const [eventName, setEventName] = useState('');
@@ -124,7 +128,7 @@ const CreateEventScreen = ({ route, firebase }) => {
       label: 'Add location',
       iconName: 'map-marker',
       iconClass: MaterialCommunityIcons,
-      // onChangeText: setLocation, 
+      onChangeText: setLocation, 
     }
   );
   const OnlineLocationInput = fumiInput({
@@ -197,6 +201,10 @@ const CreateEventScreen = ({ route, firebase }) => {
     )
   }
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   const takePhoto = async () => {
     sheetRef.current.snapTo(2);
     await Permissions.askAsync(Permissions.CAMERA);
@@ -206,7 +214,7 @@ const CreateEventScreen = ({ route, firebase }) => {
     });
 
     handleImagePicked(pickerResult);
-  }
+  };
 
   const chooseFromAlbum = async () => {
     sheetRef.current.snapTo(2);
@@ -235,11 +243,13 @@ const CreateEventScreen = ({ route, firebase }) => {
   const handlePost = async () => {
     // Upload image to Firebase Storage
     try {
-       const uploadUrl = await uploadImageAsync(uri);
-       setURI(uploadUrl);
+      if (uri !== EMPTY_URI) {
+        const uploadUrl = await uploadImageAsync(uri);
+        setURI(uploadUrl);
+      }
     } catch (e) {
       console.log(e);
-      let toast = Toast.show('Please make sure you have access to the internet :(', {
+      let toast = Toast.show('Image upload failed.', {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
         shadow: true,
@@ -252,38 +262,42 @@ const CreateEventScreen = ({ route, firebase }) => {
     
     // Push event to firestore
     const event = {
-      content: {
-        name: eventName,
-        description,
-        tags: ['TAG1', 'TAG2'], // TODO
-        location: 'LOCATION',  // TODO
-        time: {
-          startDate,
-          endDate,
-        },
-        contact,
-        eventType: eventTypes[selectedIndex],
-        uri: uri,
-        participants: [1, 2, 3],
-        filters: [1, 2, 3],
+      eventName,
+      description,
+      tags: ['TAG1', 'TAG2'], // TODO
+      location,  // TODO
+      time: {
+        startDate,
+        endDate,
       },
+      contact,
+      eventType: eventTypes[selectedIndex],
+      uri: uri,
+      participants: [1, 2, 3],
+      filters: [1, 2, 3],
       creator: userInfo,
-      host: {
-        uid: 'group_uid',
-        name: groupName,
-        avatar_uri: 'ASDASD',
-      },
+      host: group,
     };
     try {
-      // TODO: firebase (remember to check group name rights)            
-      const result = await firebase.createEvent(event);
-      
-      // TODO: navigate to event screen & send success notification
+      const result = await firebase.createEvent(userID, groupID, event);
+      navigation.navigate('EventDetail', { event });
+      let toast = Toast.show('Event successfully posted.', {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+      });
+
+      setTimeout(function () {
+          Toast.hide(toast);
+      }, 2000);
       
     } catch (error) {
       console.log(error);
       setPostError(error.message);      
-      let toast = Toast.show('Please make sure you have access to the internet :(', {
+      let toast = Toast.show('Event posting failed.', {
         duration: Toast.durations.LONG,
         position: Toast.positions.BOTTOM,
         shadow: true,
@@ -291,7 +305,6 @@ const CreateEventScreen = ({ route, firebase }) => {
         hideOnPress: true,
         delay: 0,
       })
-      return;
     }
 
   }
@@ -310,7 +323,7 @@ const CreateEventScreen = ({ route, firebase }) => {
         </View>
       </View>
       
-      <ScrollView keyboardShouldPersistTaps="never" showsVerticalScrollIndicator={false}>
+      <ScrollView onScrollBeginDrag={dismissKeyboard} keyboardShouldPersistTaps="never" showsVerticalScrollIndicator={false}>
         <View
           style={{
             flex: 1,
@@ -358,10 +371,10 @@ const CreateEventScreen = ({ route, firebase }) => {
         >
           <Picker
             selectedValue={groupName}
-            onValueChange={(itemValue, itemIndex) => {
-              setGroupName(itemValue);
+            onValueChange={(groupName, index) => {
+              setGroup(groups[index]);
             }}>
-            { groups.map(name => <Picker.Item key={name} label={name} value={name} />) }
+            { groups.map(({groupID, groupName}, index) => <Picker.Item key={groupID} label={groupName} value={groupName} />) }
           </Picker>
         </Collapsible>
         { EventNameInput }

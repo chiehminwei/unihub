@@ -85,40 +85,37 @@ function ResizeImage (uri)  {
 
 const long_text = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.`
 
-const event = {
-  	authorName: 'TIM WANG',
-    eventName: 'Thon club fundraising',
-    groupName: 'THON 2020',
-    tags: [ '#thon', '#FTK', '#fundraising'],
-    numMessages: 10,
-    numGoing: 10,
-    eventLocation: 'Online',
-    eventID: 'U123',
-    eventDate: 'Monday July 3',
-    uri: 'https://picsum.photos/700',
-    description: long_text,
-    comments: ''
-};
 function LocationLogo({location}){
   if (location === 'Online') return <MaterialIcons name='language'  size={25} color='grey'/>
   return <MaterialIcons name='location-on'  size={25} color='grey' />
 } 
 
 
-const EventDetailScreen = ({ eventID, navigation, firebase }) => {
-  // const event = firebase(eventID)
-
+const EventDetailScreen = ({ route, navigation, firebase }) => {
+  const { event } = route.params;
   const {
-  	authorName,
-  	eventName,
-  	groupName,
-  	numMessages,
-  	numGoing,
-  	eventLocation,
-  	eventDate,
-  	uri,
-  	description,
+    eventName,
+    description,
+    tags,
+    location,
+    time,
+    contact,
+    uri,
+    participants,
+    filters,
+    creator,
+    host,
   } = event;
+
+  const { groupName } = host;
+  const { startDate, endDate } = time;
+  let startDateStr; 
+  try {
+    startDateStr = startDate.toDate().toLocaleDateString("en-US");
+  }
+  catch (e) {
+    startDateStr = startDate.toLocaleDateString("en-US");
+  }
 
   const [isAddtoCalendar, setCalendar] = React.useState(false)
   const  onSetCalendar = () => setCalendar(!isAddtoCalendar);
@@ -146,7 +143,7 @@ const EventDetailScreen = ({ eventID, navigation, firebase }) => {
 
             </View> 
             <Text style={styles.authorName}>
-              by{'  '}{ groupName }{'  '}{ authorName }
+              by{'  '}{ groupName }{'  '}{ creator.displayName }
             </Text>
           </View>
 
@@ -162,13 +159,13 @@ const EventDetailScreen = ({ eventID, navigation, firebase }) => {
                   fontFamily:'Avenir-Light',
                   fontSize:18,
                   marginLeft:30}}>
-                { eventDate }
+                { startDateStr }
               </Text>
             </View>
             <View style={{margin:5, flexDirection:'row', alignContent:'center', alignItems:'center'}}>
-              <LocationLogo location = { eventLocation }/>
+              <LocationLogo location = { location }/>
               <Text style={styles.eventInfo}>
-                { eventLocation }
+                { location }
               </Text>
             </View>
             <Text style={styles.description}>

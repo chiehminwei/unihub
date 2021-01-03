@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   View,
+  Keyboard,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
@@ -186,6 +187,10 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
     }
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  }
+
   const handlePost = async () => {
     // Upload images to Firebase Storage
     const imgs = [];
@@ -305,7 +310,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
 
 
         {/* body */}
-        <ScrollView style={{backgroundColor:'white'}}>
+        <ScrollView onScrollBeginDrag={dismissKeyboard} style={{backgroundColor:'white'}}>
           
 
           {/* choose a group */}
