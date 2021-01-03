@@ -10,6 +10,7 @@ if (!firebase.apps.length) {
 const firestore = firebase.firestore();
 
 const getUserEventRef = (userID, eventID) => firestore.doc(`users/${userID}/events/${eventID}`);
+const getUserEventsRef = (userID) => firestore.collection(`users/${userID}/events`);
 const getGroupEventRef = (groupID, eventID) => firestore.doc(`groups/${groupID}/events/${eventID}`);
 const getReportRef = (eventID) => firestore.doc(`reported/events/${eventID}`)
 const getEventCollection = () => firestore.collection('events');
@@ -79,6 +80,32 @@ const Event = {
                         
     const unsubscribe = eventsRef.onSnapshot(snapshot => {
       console.log('firebase:getEvents:snapShot')
+      if (snapshot.size) {
+        const events = [];    
+        snapshot.forEach(docRef => {
+          const doc = docRef.data();
+          if (doc.timestamp) {
+            const timestampDate = doc.timestamp.toDate();    
+            const m = moment(timestampDate);
+            const timestamp = m.format('ddd, MMM D');
+            doc.timestampStr = timestamp;
+          }
+          events.push(doc);
+
+        })
+        setEvents(events);
+      }
+    })
+    return unsubscribe;
+  },
+  getUserEvents: (userID, setEvents) => {
+    console.log('firebase:getUserEvents')
+    const eventsRef = getUserEventsRef(userID)
+                        .orderBy('timestamp', 'desc')
+                        .limit(10);
+                        
+    const unsubscribe = eventsRef.onSnapshot(snapshot => {
+      console.log('firebase:getUserEvents:snapShot')
       if (snapshot.size) {
         const events = [];    
         snapshot.forEach(docRef => {

@@ -337,7 +337,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
 
             }}
           >
-          <TouchableOpacity onPress={onOpen}>
+          <TouchableOpacity onPress={openBottomSheet}>
               { uri === EMPTY_URI ? 
                 <View style={{ justifyContent: 'center', alignItems: 'center',
                   width: screenWidth, height: 300, maxHeight:300, backgroundColor: '#bdbdbd' }} > 
@@ -380,7 +380,7 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
               />
               </View> 
         </ScrollView>
-        { sheetIsOpen && renderBackDrop() }
+        { renderShadow() }
         <BottomSheet
           ref={sheetRef}
           snapPoints={snapPoints}
