@@ -250,7 +250,7 @@ function RegisterScreen({ navigation, firebase }) {
               name="name"
               leftIcon="account"
               placeholder="Enter name"
-              autoFocus={true}
+              autoFocus={false}
             />
             <FormField
               name="email"
