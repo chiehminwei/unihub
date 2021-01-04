@@ -8,7 +8,8 @@ import {
   ScrollView,
   Platform,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Animated,
 } from 'react-native';
 import { Image, ButtonGroup, Button } from 'react-native-elements';
 import { List, Divider, FAB } from 'react-native-paper';
@@ -25,7 +26,6 @@ import MultiLine from '~/components/input/MultiLine';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { screenStyles } from '~/stylesheets/screenStyles';
-import Animated from 'react-native-reanimated'
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
@@ -40,10 +40,16 @@ import { UserGroupsContext } from '~/navigation/UserGroupsProvider';
 
 
 const CreateEventScreen = ({ route, firebase }) => {
+
+  const screenWindow = Dimensions.get('window');
+  const screenHeight = Math.round(screenWindow.height);
+  const screenWidth = Math.round(screenWindow.width);
+
   // const setGoogleLocation = route.params
   const { userInfo } = useContext(AuthUserInfoContext);
   const userID = userInfo.uid;
   const navigation = useNavigation()
+
   // Calendar Time Picker
   const [startCollapsed, setStartCollapse] = useState(true);
   const [startDate, setStartDate] = useState(new Date());
@@ -85,7 +91,6 @@ const CreateEventScreen = ({ route, firebase }) => {
   const togglePicker = () => {
     setPickerVisible(!pickerVisible);
   } 
-
 
   // Text Input
   const [eventName, setEventName] = useState('');
@@ -138,11 +143,13 @@ const CreateEventScreen = ({ route, firebase }) => {
 
   // Image
   const EMPTY_URI = 'data:img';
-  const screenHeight = Math.round(Dimensions.get('window').height)
   const [uri, setURI] = useState('data:img'); 
-  const [snapPoints, setSnapPoints] = useState([0, 0.47*screenHeight, 0]);
-  
+
+  // Bottom sheet
+  const [ sheetIsOpen, setSheetIsOpen ] = useState(false);
+  const [ opacity, setOpacity ] = useState(new Animated.Value(0));
   const sheetRef = useRef(null);
+
   const renderBottomSheet = () => (
     <View
       style={{
@@ -161,49 +168,63 @@ const CreateEventScreen = ({ route, firebase }) => {
         title="Choose from Album"
         titleStyle={{ textAlign: 'center' }}
       />
-      {uri !== EMPTY_URI && (
-        <List.Item
-          onPress={deletePhoto}
-          title="Delete Photo"
-          titleStyle={{ textAlign: 'center', color: 'red' }}
-        />)
-      }
       <Divider style={{ height: 5 }}/>
       <List.Item
-        onPress={() => sheetRef.current.snapTo(2)}
+        onPress={onClose}
         title="Cancel"
         titleStyle={{ textAlign: 'center' }}
       />
     </View>
   );
 
-  let fall = new Animated.Value(1)    
-  const renderShadow = () => {
-    const animatedShadowOpacity = Animated.interpolate(fall, {
-      inputRange: [0, 1],
-      outputRange: [0.5, 0],
-    })
-    const AnimatedView = Animated.View;
-
-    return (
-      <AnimatedView
-        pointerEvents="none"
-        style={[
-          styles.shadowContainer,
-          {
-            opacity: animatedShadowOpacity,
-          },
-        ]}
+  const renderBackDrop = () => (
+    <Animated.View
+      style={{
+        opacity: opacity,
+        backgroundColor: '#000',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}>
+      <TouchableOpacity
+        style={{
+          width: screenWidth,
+          height: screenHeight,
+          backgroundColor: 'transparent',
+        }}
+        activeOpacity={1}
+        onPress={onClose}
       />
-    )
-  }
+    </Animated.View>
+  );
 
-  const dismissKeyboard = () => {
-    Keyboard.dismiss();
+  const onOpen = () => {
+    setSheetIsOpen(true);
+    sheetRef.current.snapTo(2);
+    Animated.timing(opacity, {
+      toValue: 0.7,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
   };
 
+  const onClose = () => {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 350,
+      useNativeDriver: true,
+    }).start();
+    sheetRef.current.snapTo(0);
+    setTimeout(() => {
+      setSheetIsOpen(false);
+    }, 50);
+  };
+
+
   const takePhoto = async () => {
-    sheetRef.current.snapTo(2);
+    onClose();
     await Permissions.askAsync(Permissions.CAMERA);
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -211,32 +232,28 @@ const CreateEventScreen = ({ route, firebase }) => {
     });
 
     handleImagePicked(pickerResult);
-  };
+  }
 
   const chooseFromAlbum = async () => {
-    sheetRef.current.snapTo(2);
+    onClose();
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
-    let pickerResult = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [2, 3],
-    });
-
-    handleImagePicked(pickerResult);
+    navigation.navigate('ImageSelector', {numSelectedImage})
   }
+
+  const handleImagePicked = pickerResult => {
+    onClose();
+    if (!pickerResult.cancelled) {
+        setURI(pickerResult.uri);
+    }
+  };
 
   const deletePhoto = () => {
     sheetRef.current.snapTo(2);
     setURI(EMPTY_URI);
-    setSnapPoints([0, 0.47*screenHeight, 0]);
   }
 
-  const handleImagePicked = pickerResult => {
-    if (!pickerResult.cancelled) {
-        setURI(pickerResult.uri);
-        setSnapPoints([0, 0.52*screenHeight, 0]);
-    }
-  };
 
+  // Post
   const handlePost = async () => {
     // Upload image to Firebase Storage
     try {
@@ -305,7 +322,11 @@ const CreateEventScreen = ({ route, firebase }) => {
     }
 
   }
-  const screenWidth = Math.round(Dimensions.get('window').width)
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
   <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch'}]} edges={['right','top','left']}>
     <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
@@ -329,7 +350,7 @@ const CreateEventScreen = ({ route, firebase }) => {
             padding: 0,
           }}
         >
-         <TouchableOpacity onPress={() => sheetRef.current.snapTo(1)}>
+         <TouchableOpacity onPress={onOpen}>
               { uri === EMPTY_URI ? 
                 <View style={{ justifyContent: 'center', alignItems: 'center',
                   width: screenWidth, height: 300, maxHeight:300, backgroundColor: '#bdbdbd' }} > 
@@ -406,16 +427,20 @@ const CreateEventScreen = ({ route, firebase }) => {
         />
        </ScrollView>
 
-
-      <BottomSheet
-        ref={sheetRef}
-        snapPoints={snapPoints}
-        borderRadius={10}
-        renderContent={renderBottomSheet}
-        callbackNode={fall}
-        enabledInnerScrolling={true}
-      />
-      { renderShadow() }
+      { sheetIsOpen && renderBackDrop() }
+        <BottomSheet
+          ref={sheetRef}
+          snapPoints={[
+            '-10%',
+            screenHeight * 0.15,
+            screenHeight * 0.45
+          ]}
+          initialSnap={0}
+          borderRadius={10}
+          renderContent={renderBottomSheet}
+          onCloseEnd={onClose}
+          enabledInnerScrolling={false}
+        />        
       
     </KeyboardAvoidingView>
   </SafeAreaView>
