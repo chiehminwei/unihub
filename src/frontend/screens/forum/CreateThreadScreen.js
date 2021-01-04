@@ -12,14 +12,14 @@ import {
   Dimensions,
   Text,
   Image,
-  ImageBackground
+  ImageBackground,
+  Animated
 } from 'react-native';
 import { TextInput as NativeTextInput } from 'react-native';
 import {  ButtonGroup, Button, Avatar } from 'react-native-elements';
 import { List, Divider } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BottomSheet from 'reanimated-bottom-sheet';
-import Animated from 'react-native-reanimated'
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
@@ -36,11 +36,7 @@ import { Video } from 'expo-av';
 import { UserGroupsContext } from '~/navigation/UserGroupsProvider';
 
 
-const screenHeight = Math.round(Dimensions.get('window').height)
-
-const UserInput = (props) => {
-  
-  return (
+const UserInput = (props) => (
     <TextInput
       // {...props}
       style={{height:props.height}}
@@ -63,33 +59,77 @@ const UserInput = (props) => {
         />
       )}
     />
-  );
-};
+);
   
-const EMPTY_URI = 'data:img';
- 
-console.disableYellowBox = true;
 
 function CreateThreadScreen ({ firebase, navigation, route }) {
 
-  const isFocused = useIsFocused();
   const { userInfo } = useContext(AuthUserInfoContext);
   const { uid } = userInfo;
   const { userGroups } = useContext(UserGroupsContext);
 
+  const screenWindow = Dimensions.get('window');
+  const screenHeight = Math.round(screenWindow.height);
+  const screenWidth = Math.round(screenWindow.width);
 
+  // User Input
+  const [post, onChangePost] = useState('');
+  const [title, onChangeTitle] = useState('');
 
+  // Group
+  const groupPlaceHolder = {
+    groupName: 'Choose a group here (required)',
+    groupID: 'dummyID',
+    uri: '',
+  } 
+  const [ group, setGroup ] = useState(groupPlaceHolder)
+  const [ groups, setGroups ] = useState(userGroups);
+  const isGroupChosenColor = (group.groupID === groupPlaceHolder.groupID) ? 'grey' : 'black';
+  const [ showGroup, setShowGroup ] = useState(false)
 
-  
-  // const [uri, setURI] = useState(EMPTY_URI); 
-  const [snapPoints, setSnapPoints] = useState([0, 0.45*screenHeight, 0]);
-  
+  // Handling Group from route.params (GroupDetailScreen)
+  useEffect(() => {    
+    if (route.params && route.params.group) {
+      const { group }  = route.params;
+      setGroup(group);
+      setGroups([group]);
+    }
+  }, []);
+
+  // Post (form validation)
+  const isPostEnabled = ( group.groupName !== 'Choose a group here (required)' && post !== '' && title !== '')
+
+  // Images
+  const [allUri, setAllUri] = useState([]);
+  const [photos, setPhotos] = useState([]);
+  const numSelectedImage = allUri.length;
+
+  // Handling images from route.params
+  const isFocused = useIsFocused();  
+  useEffect(() => {
+    if (route.params && route.params.photos) {
+      const newPhotos  = route.params.photos;
+      let newAllUri = [...allUri];      
+      newPhotos.forEach(item =>{
+        if (!newAllUri.includes(item.uri)) {
+          newAllUri.push(item.uri);
+        }
+      })
+      setPhotos(newPhotos);
+      setAllUri(newAllUri);
+    }    
+  }, [isFocused]);
+
+  // Bottom sheet
+  const [ sheetIsOpen, setSheetIsOpen ] = useState(false);
+  const [ opacity, setOpacity ] = useState(new Animated.Value(0));
   const sheetRef = useRef(null);
+
   const renderBottomSheet = () => (
     <View
       style={{
         backgroundColor: 'white',
-        height: 0.45*screenHeight,
+        height: 0.47*screenHeight,
       }}
     >
       <List.Item
@@ -103,45 +143,63 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
         title="Choose from Album"
         titleStyle={{ textAlign: 'center' }}
       />
-      {/* {uri !== EMPTY_URI && (
-        <List.Item
-          onPress={deletePhoto}
-          title="Delete Photo"
-          titleStyle={{ textAlign: 'center', color: 'red' }}
-        />)
-      } */}
       <Divider style={{ height: 5 }}/>
       <List.Item
-        onPress={() => sheetRef.current.snapTo(2)}
+        onPress={onClose}
         title="Cancel"
         titleStyle={{ textAlign: 'center' }}
       />
     </View>
   );
 
-  let fall = new Animated.Value(1)    
-  const renderShadow = () => {
-    const animatedShadowOpacity = Animated.interpolate(fall, {
-      inputRange: [0, 1],
-      outputRange: [0.5, 0],
-    })
-    const AnimatedView = Animated.View;
-
-    return (
-      <AnimatedView
-        pointerEvents="none"
-        style={[
-          styles.shadowContainer,
-          {
-            opacity: animatedShadowOpacity,
-          },
-        ]}
+  const renderBackDrop = () => (
+    <Animated.View
+      style={{
+        opacity: opacity,
+        backgroundColor: '#000',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}>
+      <TouchableOpacity
+        style={{
+          width: screenWidth,
+          height: screenHeight,
+          backgroundColor: 'transparent',
+        }}
+        activeOpacity={1}
+        onPress={onClose}
       />
-    )
-  }
+    </Animated.View>
+  );
+
+  const onOpen = () => {
+    setSheetIsOpen(true);
+    sheetRef.current.snapTo(2);
+    Animated.timing(opacity, {
+      toValue: 0.7,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const onClose = () => {
+    Animated.timing(opacity, {
+      toValue: 0,
+      duration: 350,
+      useNativeDriver: true,
+    }).start();
+    sheetRef.current.snapTo(0);
+    setTimeout(() => {
+      setSheetIsOpen(false);
+    }, 50);
+  };
+
 
   const takePhoto = async () => {
-    sheetRef.current.snapTo(2);
+    onClose();
     await Permissions.askAsync(Permissions.CAMERA);
     let pickerResult = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
@@ -152,28 +210,23 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
   }
 
   const chooseFromAlbum = async () => {
-    sheetRef.current.snapTo(2);
+    onClose();
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
     navigation.navigate('ImageSelector', {numSelectedImage})
-
-    // handleImagePicked(pickerResult);
   }
 
-  const  deletePhoto =( uri ) => {
-    // sheetRef.current.snapTo(2);
+  const deletePhoto =( uri ) => {
     const currentUri  = uri 
     const filteredAlluri = allUri.filter(item => item !== currentUri);
     const newPhotos = photos.filter( item => item.uri !== currentUri);
-    route.params.photos = photos.filter( item => item.uri !== currentUri )
     setPhotos(newPhotos);
     setAllUri(filteredAlluri);
   }
 
   const handleImagePicked = pickerResult => {
+    onClose();
     if (!pickerResult.cancelled) {
-        // setURI(pickerResult.uri);
         setAllUri([...allUri, pickerResult.uri])
-        setSnapPoints([0, 0.45*screenHeight, 0]);
     }
   };
 
@@ -214,14 +267,12 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
           delay: 0,
       });
 
-      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
       setTimeout(function () {
           Toast.hide(toast);
       }, 2000);
-
     } catch (e) {
       console.log(e);
-      let toast = Toast.show('Network error.', {
+      let toast = Toast.show(e.message, {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
           shadow: true,
@@ -230,53 +281,11 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
           delay: 0,
       });
 
-      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
       setTimeout(function () {
           Toast.hide(toast);
       }, 2000);
     }
   }
-
-
-  // user input
-  const [post, onChangePost] = useState('');
-  const [title, onChangeTitle] = useState('');
-
-
-  const groupPlaceHolder = {
-    groupName: 'Choose a group here (required)',
-    groupID: 'dummyID',
-    uri: '',
-  } 
-
-  const [ showGroup, setShowGroup ] = useState(true)
-  const [ group, setGroup ] = useState(groupPlaceHolder)
-  const isGroupChosenColor = (group.groupName === groupPlaceHolder.groupName) ? 'grey' : 'black'
-  const isPostEnabled = ( group.groupName !== 'Choose a group here (required)' && post !== '' && title !== '')
-
-  useEffect(() => {
-    const  newgroup  = route.params.newgroup || [];
-    if (newgroup !== [])
-    setGroup(newgroup);
-  }, []);
-  
-  const [allUri, setAllUri] = useState([])
-  const numSelectedImage = allUri.length
-
-  const [photos, setPhotos] = useState([]);
-
-  useEffect(() => {
-    const  newPhotos  = route.params.photos || [];
-    let newAllUri = [...allUri];      
-    newPhotos.forEach(item =>{
-      if (!newAllUri.includes(item.uri)) {
-        newAllUri.push(item.uri);
-      }
-    })
-    setPhotos(newPhotos);
-    setAllUri(newAllUri);
-  }, [isFocused]);
-
  
   return (
     
@@ -294,9 +303,9 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
         </View>
         <View style={styles.userInputContainer}>
             <Avatar size="small" key={group.groupID} rounded source={{uri:group.uri}} />
-              <TouchableOpacity style={styles.userInputTouchable} onPress={ route.params.newgroup === [] ? ()=>{ setShowGroup(!showGroup);} : null }>
+              <TouchableOpacity disabled={groups.length < 2} style={styles.userInputTouchable} onPress={ ()=> setShowGroup(!showGroup) }>
                 <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>                
-                { route.params.newgroup === [] ?  <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/> : null}
+                { <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/> }
               </TouchableOpacity>
           </View>
           <Divider/>
@@ -317,7 +326,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
           >
 
           {/* choose group here  or user input here */}
-        { showGroup ? 
+        { !showGroup ? 
           <View>
             <View style={{flex:1, marginVertical:10, marginHorizontal:16}}>
               <UserInput  
@@ -339,7 +348,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
 
 
               {/* Choose Image */}
-              <TouchableOpacity style ={styles.image} onPress={() => sheetRef.current.snapTo(1)}>
+              <TouchableOpacity style ={styles.image} onPress={onOpen}>
                   <View style={styles.imagePlaceHolder} > 
                     <MaterialIcons name="photo-size-select-actual" size={80} color="grey"/>
                   </View>   
@@ -356,7 +365,10 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
                       borderRadius:15, 
                     }} 
                     source={item ? { uri: item } : null}>
-                    <TouchableOpacity  style={{ margin: 4, width:30, height:30, backgroundColor:'#bad4da', borderRadius:10, alignItems:'center', justifyContent:'center'}}onPress={()=>deletePhoto(item)}>
+                    <TouchableOpacity
+                      style={{ margin: 4, width:30, height:30, backgroundColor:'#bad4da', borderRadius:10, alignItems:'center', justifyContent:'center'}}
+                      onPress={() => deletePhoto(item)}
+                    >
                       <MaterialIcons name="close" size={24} color="white" />
                     </TouchableOpacity>
                   </ImageBackground>
@@ -366,7 +378,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
           :
           <View>
             {
-              userGroups.map(item => 
+              groups.map(item => 
                 <View key={item.groupID} style={styles.userInputContainer}>
                   <Avatar 
                     size="small" 
@@ -402,16 +414,20 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
 
           </View> 
         </ScrollView>
-        
+        { sheetIsOpen && renderBackDrop() }
         <BottomSheet
           ref={sheetRef}
-          snapPoints={snapPoints}
+          snapPoints={[
+            '-10%',
+            screenHeight * 0.15,
+            screenHeight * 0.45
+          ]}
+          initialSnap={0}
           borderRadius={10}
           renderContent={renderBottomSheet}
-          callbackNode={fall}
+          onCloseEnd={onClose}
           enabledInnerScrolling={false}
-        />
-        { renderShadow() }
+        />        
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

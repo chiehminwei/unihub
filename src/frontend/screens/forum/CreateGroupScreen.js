@@ -106,6 +106,9 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
   const screenHeight = Math.round(screenWindow.height);
   const screenWidth = Math.round(screenWindow.width);
   const [ uri, setURI ] = useState(EMPTY_URI); 
+  
+
+  // Bottom sheet
   const [ sheetIsOpen, setSheetIsOpen ] = useState(false);
   const [ opacity, setOpacity ] = useState(new Animated.Value(0));
   const sheetRef = useRef(null);
@@ -250,12 +253,10 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
           delay: 0,
       });
 
-      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
       setTimeout(function () {
           Toast.hide(toast);
       }, 2000);
     } catch (e) {
-
       console.log(e);
       let toast = Toast.show(e.message, {
           duration: Toast.durations.LONG,
@@ -266,7 +267,6 @@ const CreateGroupScreen = ({ firebase, navigation }) => {
           delay: 0,
       });
 
-      // You can manually hide the Toast, or it will automatically disappear after a `duration` ms timeout.
       setTimeout(function () {
           Toast.hide(toast);
       }, 2000);

@@ -38,7 +38,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
         </TouchableOpacity>
       ) : []
     });
-  }, [navigation,isInGroup]);
+  }, [navigation, isInGroup]);
 
   
   const { contextGroupID, setContextGroupID } = useContext(GroupContext);
@@ -133,7 +133,7 @@ const GroupDetailScreen = ({ route, navigation, firebase }) => {
   }, [])
 
   const postThread = () => {
-    navigation.navigate('CreateThread', { newgroup: group });
+    navigation.navigate('CreateThread', { group });
   }
 
 

@@ -24,8 +24,6 @@ class ForumCreateMenu extends React.PureComponent {
   };
 
   render() {
-    const group = [];
-    const photos = []
     const { navigation } = this.props;
     return (
       <View style={{ flex: 0.2, alignItems: 'flex-end', justifyContent: 'center' }}>
@@ -39,7 +37,7 @@ class ForumCreateMenu extends React.PureComponent {
                     iconFamily={'material'}
                     />}
         >
-          <MenuItem onPress={() => { this._menu.hide();  navigation.navigate('CreateThread',{ group, photos })}}>Create thread</MenuItem>
+          <MenuItem onPress={() => { this._menu.hide();  navigation.navigate('CreateThread')}}>Create thread</MenuItem>
           <MenuItem onPress={() => { this._menu.hide();  navigation.navigate('CreateGroup')}}>Create group</MenuItem>
         </Menu>
       </View>
