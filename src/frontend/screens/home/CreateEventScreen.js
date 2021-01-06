@@ -10,8 +10,10 @@ import {
   TouchableOpacity,
   Dimensions,
   Animated,
+  Text,
 } from 'react-native';
-import { Image, ButtonGroup, Button } from 'react-native-elements';
+import { useIsFocused } from "@react-navigation/native";
+import { Image, ButtonGroup, Button, Avatar } from 'react-native-elements';
 import { List, Divider, FAB } from 'react-native-paper';
 import { Picker } from '@react-native-community/picker';
 import CalendarTimePicker from '~/components/CalendarTimePicker';
@@ -37,9 +39,17 @@ import { BackButton } from '../../components/button/BackButton';
 import { HeaderRightButton } from '../../components/button/HeaderRightButton';
 import { AuthUserInfoContext } from '~/navigation/AuthUserProvider';
 import { UserGroupsContext } from '~/navigation/UserGroupsProvider';
+import FumiMap from '~/components/input/FumiMap';
 
+
+function findHashtags(searchText) {
+  const regexp = /\B\#\w\w+\b/g
+  return searchText.match(regexp);
+}
 
 const CreateEventScreen = ({ route, firebase }) => {
+
+  const [isPostEnabled, setIsPostEnabled ] = useState(false);
 
   const screenWindow = Dimensions.get('window');
   const screenHeight = Math.round(screenWindow.height);
@@ -48,6 +58,8 @@ const CreateEventScreen = ({ route, firebase }) => {
   // const setGoogleLocation = route.params
   const { userInfo } = useContext(AuthUserInfoContext);
   const userID = userInfo.uid;
+  const { userGroups } = useContext(UserGroupsContext);
+
   const navigation = useNavigation()
 
   // Calendar Time Picker
@@ -83,20 +95,27 @@ const CreateEventScreen = ({ route, firebase }) => {
     setIndex(index);
   };
 
-  // Group Name
-  const [ group, setGroup ] = useState({});
-  const { groupName, groupID } = group;
-  const { userGroups } = useContext(UserGroupsContext);
-  const [pickerVisible, setPickerVisible] = useState(false);
-  const togglePicker = () => {
-    setPickerVisible(!pickerVisible);
+  // Group
+  const groupPlaceHolder = {
+    groupName: 'Choose a group here (required)',
+    groupID: 'dummyID',
+    uri: '',
   } 
+  const [ group, setGroup ] = useState(groupPlaceHolder)
+  const [ groups, setGroups ] = useState(userGroups);
+  const isGroupChosenColor = (group.groupID === groupPlaceHolder.groupID) ? 'grey' : 'black';
+  const [ showGroup, setShowGroup ] = useState(false)
 
   // Text Input
   const [eventName, setEventName] = useState('');
   const [description, setDescription] = useState('');
   const [contact, setContact] = useState('');
-  const [location, setLocation] = useState('');
+  const [tags, setTags] = useState(null);
+
+  // useEffect(() => {
+  //   console.log(HASHTAG_FORMATTER(description))
+  //   // setTags(findHashtags(description));
+  // }, [description]);
 
   const fumiInput = ({ label, iconName, iconClass, onChangeText }) => (
     <Fumi
@@ -125,16 +144,30 @@ const CreateEventScreen = ({ route, firebase }) => {
     }
   );
 
-  // Location  
-  const LocationInput = fumiInput({
-      label: 'Add location',
-      iconName: 'map-marker',
-      iconClass: MaterialCommunityIcons,
-      onChangeText: setLocation, 
-    }
-  );
+  
+  // Location
+  const [location, setLocation] = useState(null);
+  const iconColor = location ? '#f95a25' : '#a3a3a3';
+
+  const [placeName, setPlaceName] = useState('Location');
+  const [placeAddress, setPlaceAddress] = useState('')
+  const LocationInput = () => {
+    return (
+      <FumiMap
+        label={placeName}
+        iconClass={MaterialCommunityIcons}
+        iconName={'map-marker'}
+        iconColor={iconColor}
+        iconSize={20}
+        iconWidth={40}
+        inputPadding={16}
+        onPress={() => navigation.navigate('ChooseLocation')}
+      />
+    )
+  }
+
   const OnlineLocationInput = fumiInput({
-      label: 'Meeting URL',
+      label: 'Meeting Link',
       iconName: 'web',
       iconClass: MaterialCommunityIcons,
       onChangeText: setLocation,
@@ -149,6 +182,18 @@ const CreateEventScreen = ({ route, firebase }) => {
   const [ sheetIsOpen, setSheetIsOpen ] = useState(false);
   const [ opacity, setOpacity ] = useState(new Animated.Value(0));
   const sheetRef = useRef(null);
+
+  // Handling location from route.params
+  const isFocused = useIsFocused();  
+  useEffect(() => {
+    if (route.params && route.params.location) {
+      const newLocation  = route.params.location;
+      const { placeName, placeAddress } = route.params;
+      setPlaceName(placeName);
+      setPlaceAddress(placeAddress);
+      setLocation(newLocation)
+    }    
+  }, [isFocused]);
 
   const renderBottomSheet = () => (
     <View
@@ -327,17 +372,28 @@ const CreateEventScreen = ({ route, firebase }) => {
     Keyboard.dismiss();
   };
 
+  const renderChooseGroup = (
+    <View style={styles.userInputContainer}>
+      <Avatar size="small" key={group.groupID} rounded source={{uri:group.uri}} />
+        <TouchableOpacity disabled={groups.length < 2} style={styles.userInputTouchable} onPress={ ()=> setShowGroup(!showGroup) }>
+          <Text style={[styles.groupNameText,{ color: isGroupChosenColor }]}> {group.groupName} </Text>                
+          { <MaterialIcons name="keyboard-arrow-right" size={24} color={isGroupChosenColor}/> }
+        </TouchableOpacity>
+    </View>
+  )
+
   return (
-  <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch'}]} edges={['right','top','left']}>
+  <SafeAreaView style={[screenStyles.safeArea,{alignItems:'stretch', backgroundColor:'white'}]} edges={['right','top','left']}>
     <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center', marginBottom: 0}} behavior="padding" enabled   keyboardVerticalOffset={0}>
       <View style={styles.headerContainer}>
         <View style={{flex:1,}}>
           <BackButton title={'Back'} navigation={navigation}/>
         </View>
         <View style={{flex:1, alignItems:'flex-end'}}>
-          <HeaderRightButton title='post' 
-          // enabled= {isPostEnabled} 
-          onPress={handlePost}/> 
+          <HeaderRightButton
+            title='post' 
+            enabled= {isPostEnabled} 
+            onPress={handlePost}/> 
         </View>
       </View>
       
@@ -370,61 +426,56 @@ const CreateEventScreen = ({ route, firebase }) => {
           buttons={eventTypes}
           containerStyle={{height: 40, borderRadius:5}}
         />
-        <FumiPicker
-          pickerVisible={pickerVisible}
-          togglePicker={togglePicker}
-          value={groupName}
-          editable={false}
-          label="Host"
-          iconClass={MaterialIcons}
-          iconName="group"
-          iconColor={'#f95a25'}
-          iconSize={20}
-          iconWidth={40}
-          inputPadding={16}
-        />
-        <Collapsible
-          collapsed={!pickerVisible}
-          duration={250}
-        >
-          <Picker
-            selectedValue={groupName}
-            onValueChange={(groupName, index) => {
-              setGroup(userGroups[index]);
-            }}>
-            { userGroups.map(({groupID, groupName}, index) => <Picker.Item key={groupID} label={groupName} value={groupName} />) }
-          </Picker>
-        </Collapsible>
-        { EventNameInput }
-        <CalendarTimePicker
-          isCollapsed={startCollapsed}
-          setCollapse={(isCollapsed) => handleToggle(isCollapsed, 'start')}
-          setParentDate={setStartDate}
-        />
-        <CalendarTimePicker
-          isCollapsed={endCollapsed}
-          setCollapse={(isCollapsed) => handleToggle(isCollapsed, 'end')}
-          setParentDate={setEndDate}
-        />
-        <MultiLine
-          value={description}
-          maxLines={4}
-          maxLength={280}
-          onChangeText={setDescription}
-          label="Description (use # for tags)"
-          iconClass={MaterialIcons}
-          iconName="description"
-        />
-        { ContactInput }
-        { eventTypes[selectedIndex] === 'In person' ? LocationInput : OnlineLocationInput }
-        <Button title='choose location' onPress={()=> navigation.navigate('ChooseLocation')}/>
-        <Button  
-          style={{ marginTop: 40, paddingBottom: 50, width:0.7*screenWidth, alignSelf:'center' }} 
-          buttonStyle={{backgroundColor:'#bad4da',borderRadius:10}}
-          titleStyle={{fontFamily:'Avenir-Light', fontSize: 18, fontWeight:'bold'}} 
-          title="Post" 
-          onPress={handlePost}
-        />
+        { renderChooseGroup }
+        
+        { !showGroup ? (
+            <View>
+              { EventNameInput }
+              <CalendarTimePicker
+                isCollapsed={startCollapsed}
+                setCollapse={(isCollapsed) => handleToggle(isCollapsed, 'start')}
+                setParentDate={setStartDate}
+              />
+              <CalendarTimePicker
+                isCollapsed={endCollapsed}
+                setCollapse={(isCollapsed) => handleToggle(isCollapsed, 'end')}
+                setParentDate={setEndDate}
+              />
+              <MultiLine
+                value={description}
+                maxLines={4}
+                maxLength={280}
+                onChangeText={setDescription}
+                label="Description (use # for tags)"
+                iconClass={MaterialIcons}
+                iconName="description"
+              />
+              { ContactInput }
+              { eventTypes[selectedIndex] === 'In person' ? LocationInput() : OnlineLocationInput }
+            </View>
+          ) : 
+          <View>
+            {
+              groups.map(item => 
+                <View key={item.groupID} style={styles.userInputContainer}>
+                  <Avatar 
+                    size="small" 
+                    rounded source={item.uri ? {uri:item.uri} : null} 
+                  />
+                  <TouchableOpacity 
+                    style={styles.userInputTouchable} 
+                    onPress={()=>{setGroup(item),setShowGroup(!showGroup)}}
+                  >
+                    <Text style={styles.groupNameText}> 
+                      {item.groupName}
+                    </Text>  
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+          </View>
+        }
+        
        </ScrollView>
 
       { sheetIsOpen && renderBackDrop() }
@@ -463,6 +514,22 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: '#000',
   },
+  userInputContainer:{
+    flexDirection:"row",
+    height:50,
+    alignItems:'center',
+    marginHorizontal:16
+  },
+  userInputTouchable:{
+    flexDirection:'row'
+  },
+  groupNameText:{
+    fontFamily:'Avenir-Light',
+    fontSize: 16,
+    fontWeight:'500',
+    marginLeft:16
+  },
+
 })
 
 async function uploadImageAsync(uri) {
