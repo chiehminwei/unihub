@@ -1,7 +1,7 @@
-import React,{useState, Component} from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, FlatList}  from 'react-native';
+import React from 'react';
+import {  FlatList, Dimensions}  from 'react-native';
 import FriendChatItem from './FriendChatItem';
-// import { styles } from '../stylesheets/styles';
+
 
 const users = [
   {
@@ -51,11 +51,12 @@ const users = [
 
 ];
 
-
+const deviceWidth = Dimensions.get('window').width;
 export default function FriendChatList({ navigation, scrollEnabled }) {
 
   return(
     <FlatList
+      style={{ width: deviceWidth }}
       scrollEnabled={ scrollEnabled }
       keyExtractor={ (item) => item.userID }
       data = { users }

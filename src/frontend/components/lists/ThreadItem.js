@@ -93,7 +93,7 @@ function ThreadItem ({ thread, firebase })  {
   }
 
   return(
-  <Card style={{ width:screenWidth, marginVertical:5, flex:1 }}  >
+  <Card style={{ width:screenWidth, marginVertical:5, flex:1 ,}}  >
   <Card.Content style={{paddingHorizontal:0}}>
     <TouchableOpacity onPress={ () => navigation.navigate('ThreadDetail',{thread, timeDifference})}>
     <View style={{ flex: 1, flexDirection: 'row', marginLeft: 12 }}>

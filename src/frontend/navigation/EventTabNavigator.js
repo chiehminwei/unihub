@@ -9,8 +9,8 @@ import  ParticipantScreen  from '~/screens/home/ParticipantScreen';
 
 const EventTab = createMaterialTopTabNavigator();
 
-export default function EventTabNavigator() {
-
+export default function EventTabNavigator({user}) {
+  console.log(user)
   
     return (
       <EventTab.Navigator
@@ -27,7 +27,7 @@ export default function EventTabNavigator() {
           >
           
         <EventTab.Screen name="Comments" component={CommentScreen} />
-        <EventTab.Screen name="Participants" component={ParticipantScreen} />
+        <EventTab.Screen name="Participants" children={()=><ParticipantScreen user={user}/>} />
       </EventTab.Navigator>
     );
   }

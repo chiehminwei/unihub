@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat';
-import { withFirebaseHOC } from '../../../firebase/config/Firebase';
+// import { withFirebaseHOC } from '../../../firebase/config/Firebase';
 import { description } from 'core-js/fn/symbol/match';
 
 const user =
@@ -29,6 +29,21 @@ const {userName,
       description,
       classyear } = user
 
+  // useEffect(() => {
+  //   setMessages([
+  //     {
+  //       _id: 1,
+  //       text: 'Hello developer',
+  //       createdAt: new Date(),
+  //       user: {
+  //         _id: userID, 
+  //         name: userName, 
+  //         avatar: uri ,
+  //       },
+  //     },
+  //   ])
+  // }, [])
+
   useEffect(() => {
     setMessages([
       {
@@ -36,9 +51,9 @@ const {userName,
         text: 'Hello developer',
         createdAt: new Date(),
         user: {
-          _id: userID, 
-          name: userName, 
-          avatar: uri ,
+          _id: 2,
+          name: 'React Native',
+          avatar: 'https://placeimg.com/140/140/any',
         },
       },
     ])
@@ -61,6 +76,7 @@ const {userName,
   )
 }
 
+export default ChatDetailScreen
 
 
-export default withFirebaseHOC(ChatDetailScreen);
+// export default withFirebaseHOC(ChatDetailScreen);

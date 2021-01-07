@@ -9,7 +9,7 @@ import GroupInfo from '~/screens/forum/GroupInfo'
 import { BackButton } from '../components/button/BackButton';
 import ImageSelector from '../components/ImageSelector';
 import ChooseLocationScreen from '~/screens/home/ChooseLocationScreen';
-// import ChatDetailScreen from '~/screens/chat/ChatDetailScreen';
+import ChatDetailScreen from '~/screens/chat/ChatDetailScreen';
 
 
 const Stack = createStackNavigator();
@@ -58,7 +58,7 @@ export default function AppStack() {
         component={GroupInfo}/>
       {/* <Stack.Screen options={{headerBackTitle: 'Back', title:''}}name='AllMemberList' component={AlllMemberlist}/> */}
 
-      {/* <Stack.Screen options={{headerShown: false}} name='ChatExample' component={ChatDetailScreen}/> */}
+      <Stack.Screen options={{headerShown: false}} name='ChatExample' component={ChatDetailScreen}/>
     </Stack.Navigator>
   );
 }

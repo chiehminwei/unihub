@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
               marginRight:20
             },
           plus: {
-              marginRight:20
+              marginRight:16
             },
           homesearch: {
               flex:1,

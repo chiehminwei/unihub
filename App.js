@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AppContainer from "~/navigation";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Firebase, { FirebaseProvider } from "~/../firebase";
-import { Provider as PaperProvider } from 'react-native-paper';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import * as Font from 'expo-font';
 import { AppLoading } from 'expo';
 
@@ -17,7 +17,14 @@ const fetchFont = () => {
     'Avenir-Black':require('./assets/fonts/Avenir-Black.ttf')
   })
 }
-
+const theme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#bad4da',
+    accent: '#bad4da',
+  },
+};
 export default function App() {
   const [fontLoaded, setFontLoaded]=useState(false)
 if (!fontLoaded) {
@@ -34,7 +41,7 @@ if (!fontLoaded) {
   return (
     <FirebaseProvider value={Firebase}>
       <SafeAreaProvider>
-        <PaperProvider> 
+        <PaperProvider theme={theme}> 
           <AppContainer />
         </PaperProvider>
       </SafeAreaProvider>

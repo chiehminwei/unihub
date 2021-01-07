@@ -42,7 +42,7 @@ const EventItem = ({ event, navigation }) => {
   const { groupName } = host;
   const { startDate, endDate } = time;
   const startDateStr = startDate.toDate().toLocaleDateString("en-US")
-
+  const isAddedtoCalendar = true
   return (
     <View style={{ margin:10, maxWidth:'95%', flex:1 , backgroundColor:'white', shadowOffset:{height:10, width:1}, shadowColor:'grey', shadowOpacity: 0.2,shadowRadius:10, elevation: 3}}> 
       <TouchableOpacity style={{flex:1}} onPress={ () => navigation.navigate('EventDetail', { event: event }) }>

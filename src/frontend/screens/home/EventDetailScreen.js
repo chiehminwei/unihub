@@ -6,6 +6,58 @@ import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { FAB, Portal, Provider } from 'react-native-paper';
 import  EventTabNavigator  from '../../navigation/EventTabNavigator'
 
+const users = [
+  {
+    userName: 'Yufan Wang',
+    numGroups: 10,
+    numFriends: 10,
+    userID: 'Uu123',
+    major: 'Mechanical Enginnering',
+    uri: 'https://picsum.photos/700',
+    description: 'Cool Guy',
+    classyear: 2020
+  },
+  {
+    userName: 'Jimmy Wei',
+    numGroups: 10,
+    numFriends: 10,
+    userID: 'Uu234',
+    major: 'Mechanical Enginnering',
+    uri: 'https://picsum.photos/700',
+    description: 'Cool Guy',
+    classyear: 2020
+  },
+
+  {
+    userName: 'Dawn Yao',
+    numGroups: 10,
+    numFriends: 10,
+    userID: 'Uu345',
+    major: 'Mechanical Enginnering',
+    uri: 'https://picsum.photos/700',
+    description: 'Cool Guy',
+    classyear: 2020
+  },
+
+  {
+    userName: 'Eric Li',
+    numGroups: 10,
+    numFriends: 10,
+    userID: 'Uu456',
+    major: 'Mechanical Enginnering',
+    uri: 'https://picsum.photos/700',
+    description: 'Cool Guy',
+    classyear: 2020
+  },
+
+
+
+];
+
+
+
+
+
   const deviceWidth = Dimensions.get('window').width;
   const FabGroup = (props) => {
     const [state, setState] = React.useState({ open: false });
@@ -40,8 +92,8 @@ import  EventTabNavigator  from '../../navigation/EventTabNavigator'
               onPress: () => share(event) ,
             },
             {
-              icon: props.isAddtoCalendar ? 'calendar-remove' :'calendar',
-              label: props.isAddtoCalendar ? 'Remove from calendar': 'Add to Calendar',
+              icon: props.isAddedtoCalendar ? 'calendar-remove' :'calendar',
+              label: props.isAddedtoCalendar ? 'Quit this event': 'Join this event',
               onPress: props.setCalendar,
             },
           ]}
@@ -117,8 +169,8 @@ const EventDetailScreen = ({ route, navigation, firebase }) => {
     startDateStr = startDate.toLocaleDateString("en-US");
   }
 
-  const [isAddtoCalendar, setCalendar] = React.useState(false)
-  const  onSetCalendar = () => setCalendar(!isAddtoCalendar);
+  const [isAddedtoCalendar, setCalendar] = React.useState(false)
+  const  onSetCalendar = () => setCalendar(!isAddedtoCalendar);
 
 
   return (
@@ -150,12 +202,12 @@ const EventDetailScreen = ({ route, navigation, firebase }) => {
           <View style={{marginHorizontal:20}}>
             <View style={{margin:5, flexDirection:'row', alignContent:'center', alignItems:'center'}}>
               <MaterialCommunityIcons 
-                name={ isAddtoCalendar ? 'calendar-check': 'calendar'}  
+                name={ isAddedtoCalendar ? 'calendar-check': 'calendar'}  
                 size={25}  
-                color={ isAddtoCalendar ? '#1c7085' : 'grey' }/>
+                color={ isAddedtoCalendar ? '#1c7085' : 'grey' }/>
               <Text 
                 style={{
-                  color: isAddtoCalendar ? '#1c7085' : '#2c2d2d', 
+                  color: isAddedtoCalendar ? '#1c7085' : '#2c2d2d', 
                   fontFamily:'Avenir-Light',
                   fontSize:18,
                   marginLeft:30}}>
@@ -175,7 +227,7 @@ const EventDetailScreen = ({ route, navigation, firebase }) => {
         </View>
 
         <View style={{ alignSelf: 'stretch', flex:1, marginTop: 50 }}>
-          <EventTabNavigator />
+          <EventTabNavigator user={users}/>
         </View>
           
       </ScrollView>
@@ -190,7 +242,7 @@ const EventDetailScreen = ({ route, navigation, firebase }) => {
       
       <FabGroup 
       setCalendar = {onSetCalendar} 
-      isAddtoCalendar={isAddtoCalendar}
+      isAddedtoCalendar={isAddedtoCalendar}
       uri={uri}
       eventName={eventName}
       description={description}/>
