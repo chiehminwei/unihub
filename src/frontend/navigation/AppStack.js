@@ -26,11 +26,7 @@ export default function AppStack() {
         component={CreateEventScreen} />    
       <Stack.Screen 
         options={{ 
-          headerLeft:() =>
-            (
-              <BackButton title={'Back'} />
-            ),
-          title:''
+          headerShown: false
         }} 
         name="ChooseLocation" 
         component={ChooseLocationScreen} />    

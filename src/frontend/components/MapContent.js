@@ -1,7 +1,7 @@
 import React,{ useState, Component } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import MapView, { Marker, Overlay } from 'react-native-maps';
+import MapView, { Marker, Overlay, PROVIDER_GOOGLE } from 'react-native-maps';
 import EventItem from '~/components/lists/EventItem';
 import Carousel from 'react-native-snap-carousel';
 
@@ -46,6 +46,7 @@ export default class MapContent extends Component {
     return (
       <View style={{flex:1    }}>
         <MapView
+          provider={PROVIDER_GOOGLE}
           ref={ref => this._map = ref}
           style={styles.mapStyle}
           region={this.state.region}
