@@ -1,83 +1,100 @@
-import React, { Component } from "react";
-import { StyleSheet, View } from 'react-native';
-import { Input } from 'react-native-elements';
-import PropTypes from "prop-types";
-import Fumi from './Fumi';
-import ParsedText from 'react-native-parsed-text';
-
-
-export default class MultiLine extends Component {
-
-  static propTypes = {
-    maxLines: PropTypes.number
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: props.value || ""
-    };
-  }
-
-  onChangeText = text => {
-    const { maxLines, onChangeText } = this.props;
-    const lines = text.split("\n");
-
-    if (lines.length <= (maxLines || 1)) {
-      onChangeText(text);
-      this.setState({ value: text });
-    }
- };
-
- render() {
-   const { onChangeText, multiline, value, style, ...other } = this.props;
-   return (
-    <View>
-      <ParsedText
-        style={styles.text}
-        parse={
-          [
-            {type: 'url',                       style: styles.url},
-            {type: 'phone',                     style: styles.phone},
-            {type: 'email',                     style: styles.email},
-            {pattern: /(^|\s)(#[a-z\d-]+)/g,    style: styles.hashTag},
-          ]
-        }
-        childrenProps={{allowFontScaling: false}}
-      >
-        {this.state.value}
-       </ParsedText>
-       { true && <Fumi
-         {...other}
-         multiline={true}
-         style={style}
-         value={this.state.value}
-         onChangeText={this.onChangeText}
-
-         // label={label}
-         // iconClass={iconClass}
-         // iconName={iconName}
-         iconColor={'#f95a25'}
-         iconSize={20}
-         iconWidth={40}
-         inputPadding={16}
-       /> }
-     </View>
-   );
- }
-}
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
-  url: {
-    color: '#1DA1F2',
+  wrapper: {
+    width: '90%',
+    height: 24,
+    position: 'relative',
+    alignSelf: 'center',
   },
-  phone: {
-    color: '#1DA1F2',
+  inputWrapper: {
+    position: 'absolute',
+    top: 0,
+    height: 24,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: 'gray',
   },
-  email: {
-    color: '#1DA1F2',
+  input: {
+    height: 24,
+    fontSize: 18,
+    width: '100%',
   },
-  hashTag: {
-    color: '#1DA1F2',
-  },
+  mention: {
+    color: '#1DA1F2'
+  }
 });
+
+const Multiline = (props) => {
+  const [content, setContent] = useState('');
+  const [formattedContent, setFormattedContent] = useState('');
+  const [tags, setTags] = useState([]);
+
+  const handleChangeText = (inputText) => {
+    const retLines = inputText.split("\n");
+    const formattedText = [];
+    const numLines = retLines.length;
+    const newTags = [];
+    retLines.forEach((retLine, lineIndex) => {
+      const words = retLine.split(" ");
+      const contentLength = words.length;
+      var format = /[ !#@$%^&*()_+\-=\[\]{};':"\\|,.<>\/?\n]/;
+      words.forEach((word,index) => {
+        if (
+          (word.startsWith("@") && !format.test(word.substr(1))) ||
+          (word.startsWith("#") && !format.test(word.substr(1)))
+        ) {
+          const mention = (
+            <Text key={index} style={styles.mention}>
+              {word}
+            </Text>
+          );
+          newTags.push(word);
+          if (index !== contentLength - 1) formattedText.push(mention, " ");
+          else formattedText.push(mention);
+        } else {
+          if (index !== contentLength - 1) return formattedText.push(word, " ");
+          else return formattedText.push(word);
+        }
+      });
+      if (lineIndex !== numLines - 1) formattedText.push('\n');
+    });
+
+    setContent(inputText);// still update your raw text, this will probably go to your api
+    setFormattedContent(formattedText);
+    setTags(newTags);
+
+    props.setDescription(inputText);
+    props.setTags(newTags);
+  };
+
+  const getTags = () => tags;
+  const getText = () => content;
+
+
+  return (
+    //--------render------------
+    <View style={{ margin: 15}}>
+    <TextInput
+      style={[styles.input,
+            {
+              paddingTop: 8,
+              paddingBottom: 8,
+              paddingHorizontal:8,
+              height: props.height,
+              backgroundColor:'#f1f7f8',
+              
+            }   
+          ]}
+      {...props}
+      multiline={true}
+      onChangeText={handleChangeText}
+     >
+      <Text>{formattedContent}</Text>
+    </TextInput>
+    </View>
+  )
+}
+
+export default Multiline;

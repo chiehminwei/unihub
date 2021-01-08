@@ -336,7 +336,7 @@ function CreateThreadScreen ({ firebase, navigation, route }) {
                 placeholder={'Your Post Title'}
                 multiline={false}/>
 
-              <Divider style={{marginVertical:10}}/>
+              <View style={{marginVertical:10}}/>
               <UserInput  
                 value={post} 
                 onChangeText={onChangePost}

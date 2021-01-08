@@ -12,6 +12,8 @@ import { screenStyles } from '~/stylesheets/screenStyles';
 const windowWidth = Dimensions.get('window').width;
 
 
+const API_KEY = 'AIzaSyBLUUDOAI5lHbzfym0O182Q1nD20Ru_8gQ';
+
 function ChooseLocationScreen() {
   const navigation = useNavigation();
 
@@ -30,6 +32,7 @@ function ChooseLocationScreen() {
 
   const marker = useRef(null);
   const _map = useRef(null);
+  const searchBox = useRef(null);
 
   const callout = () => {
     marker.current.showCallout();
@@ -42,6 +45,19 @@ function ChooseLocationScreen() {
       longitudeDelta: 0.01
     }
     setMarkerCoord(newRegion);
+
+    const { latitude, longitude } = newRegion;
+
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${latitude},${longitude}&key=${API_KEY}`)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        if (responseJson.results && responseJson.results[0]) {
+          const { formatted_address } = responseJson.results[0];
+          setAddress(formatted_address);
+          setName(formatted_address);
+          searchBox.current.setAddressText(formatted_address);
+        }
+      })
   }
 
   const onRegionChange = (region) => {
@@ -110,6 +126,7 @@ function ChooseLocationScreen() {
       
       <View style={{position:'absolute', top: 0, alignSelf:'center', flex:1,padding:5, width: windowWidth}}>
         <GooglePlacesAutocomplete
+          ref={searchBox}
           placeholder='Search'
           fetchDetails={true}
           returnKeyType={'search'}
@@ -132,7 +149,7 @@ function ChooseLocationScreen() {
             setTimeout(() => { callout(); }, 300);
           }}
           query={{
-            key: 'AIzaSyBLUUDOAI5lHbzfym0O182Q1nD20Ru_8gQ',
+            key: API_KEY,
             language: 'en',
           }}
           enableHighAccuracyLocation

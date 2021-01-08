@@ -106,12 +106,14 @@ const CreateEventScreen = ({ route, firebase }) => {
   const isGroupChosenColor = (group.groupID === groupPlaceHolder.groupID) ? 'grey' : 'black';
   const [ showGroup, setShowGroup ] = useState(false)
 
-  // Text Input
+  // Event
   const [eventName, setEventName] = useState('');
   const [description, setDescription] = useState('');
-  const [contact, setContact] = useState('');
   const [tags, setTags] = useState(null);
 
+
+  const [contact, setContact] = useState('');
+  
   // useEffect(() => {
   //   console.log(HASHTAG_FORMATTER(description))
   //   // setTags(findHashtags(description));
@@ -147,10 +149,17 @@ const CreateEventScreen = ({ route, firebase }) => {
   
   // Location
   const [location, setLocation] = useState(null);
-  const iconColor = location ? '#f95a25' : '#a3a3a3';
-
   const [placeName, setPlaceName] = useState('Location');
   const [placeAddress, setPlaceAddress] = useState('')
+
+  useEffect(() => {
+    if (!placeName) {
+      setPlaceName('Location');
+    }
+  }, [placeName])
+  
+  const iconColor = placeName !== 'Location' ? '#f95a25' : '#a3a3a3';
+
   const LocationInput = () => {
     return (
       <FumiMap
@@ -297,7 +306,6 @@ const CreateEventScreen = ({ route, firebase }) => {
     setURI(EMPTY_URI);
   }
 
-
   // Post
   const handlePost = async () => {
     // Upload image to Firebase Storage
@@ -323,7 +331,7 @@ const CreateEventScreen = ({ route, firebase }) => {
     const event = {
       eventName,
       description,
-      tags: ['TAG1', 'TAG2'], // TODO
+      tags,
       location,  // TODO
       time: {
         startDate,
@@ -337,6 +345,8 @@ const CreateEventScreen = ({ route, firebase }) => {
       creator: userInfo,
       host: group,
     };
+    console.log(event)
+    return
     try {
       const result = await firebase.createEvent(userID, groupID, event);
       navigation.navigate('EventDetail', { event });
@@ -392,7 +402,7 @@ const CreateEventScreen = ({ route, firebase }) => {
         <View style={{flex:1, alignItems:'flex-end'}}>
           <HeaderRightButton
             title='post' 
-            enabled= {isPostEnabled} 
+            enabled= {true} 
             onPress={handlePost}/> 
         </View>
       </View>
@@ -431,6 +441,16 @@ const CreateEventScreen = ({ route, firebase }) => {
         { !showGroup ? (
             <View>
               { EventNameInput }
+              <MultiLine
+                height={screenHeight * 0.2}
+                placeholder="Description (use # for tags)"
+                iconColor={'#f95a25'}
+                iconClass={MaterialIcons}
+                iconName="description"
+                setTags={setTags}
+                setDescription={setDescription}
+              />
+              
               <CalendarTimePicker
                 isCollapsed={startCollapsed}
                 setCollapse={(isCollapsed) => handleToggle(isCollapsed, 'start')}
@@ -441,15 +461,7 @@ const CreateEventScreen = ({ route, firebase }) => {
                 setCollapse={(isCollapsed) => handleToggle(isCollapsed, 'end')}
                 setParentDate={setEndDate}
               />
-              <MultiLine
-                value={description}
-                maxLines={4}
-                maxLength={280}
-                onChangeText={setDescription}
-                label="Description (use # for tags)"
-                iconClass={MaterialIcons}
-                iconName="description"
-              />
+
               { ContactInput }
               { eventTypes[selectedIndex] === 'In person' ? LocationInput() : OnlineLocationInput }
             </View>
