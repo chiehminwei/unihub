@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/vector-icons": "^10.0.0",
     "@react-native-community/datetimepicker": "2.4.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/picker": "1.6.0",
@@ -20,6 +21,7 @@
     "expo": "^38.0.8",
     "expo-asset": "~8.1.7",
     "expo-av": "~8.2.1",
+    "expo-cli": "^4.10.0",
     "expo-font": "~8.2.1",
     "expo-image-picker": "~8.3.0",
     "expo-images-picker": "^1.1.0",
@@ -27,6 +29,7 @@
     "expo-random": "~8.2.1",
     "firebase": "7.9.0",
     "formik": "2.1.4",
+    "global": "^4.4.0",
     "moment": "^2.29.1",
     "nanoid": "^3.1.9",
     "random-uuid-v4": "^0.0.9",
@@ -36,7 +39,6 @@
     "react-native-animated-multistep": "^1.0.8",
     "react-native-calendars": "^1.343.0",
     "react-native-collapsible": "^1.5.3",
-    "react-native-comments": "^1.1.9",
     "react-native-date-picker": "^3.2.2",
     "react-native-elements": "2.1",
     "react-native-gesture-handler": "~1.6.0",
@@ -71,7 +73,8 @@
     "babel-preset-expo": "^8.2.3",
     "eslint": "^7.7.0",
     "eslint-config-universe": "^4.0.0",
-    "prettier": "^2.1.1"
+    "prettier": "^2.1.1",
+    "typescript": "~3.9.5"
   },
   "eslintConfig": {
     "extends": "universe/native"

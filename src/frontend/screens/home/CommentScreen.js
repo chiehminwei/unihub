@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { ScrollView, Image, StyleSheet } from "react-native";
 
 // import styles from "./styles";
-import Comments from "react-native-comments";
+// import Comments from "react-native-comments";
 import * as commentActions from "./ExampleActions";
 import moment from "moment";
 
@@ -126,7 +126,7 @@ export default class CommentScreen extends Component {
         ref={"scrollView"}
       >
 
-        {this.state.comments.length ? (
+        {/* {this.state.comments.length ? (
           <Comments
             data={data}
             //To compare is user the owner
@@ -258,7 +258,7 @@ export default class CommentScreen extends Component {
               }, 3000);
             }}
           />
-        ) : null}
+        ) : null} */}
       </ScrollView>
     );
   }
